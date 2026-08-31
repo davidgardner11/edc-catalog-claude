@@ -27,7 +27,8 @@ npm `latest` is TypeScript 7.x. We pin 6.0.3 and do not move.
 require to parse and type-check `.vue` SFCs. On TS 7, SFC type-checking does not work at all. TS 6.0
 is the final JS-based compiler and the designated 5.9 → 7.0 bridge.
 **Consequence:** Never run `typescript@latest`. `tsconfig.json` sets `"ignoreDeprecations": "6.0"`;
-clearing those deprecation warnings *is* the eventual 7.1 migration.
+clearing those warnings — `baseUrl`, `moduleResolution: node`, `outFile`, ES5 target — *is* the
+eventual 7.1 migration.
 **Revisit when:** TS 7.1 restores the compiler API and `vue-tsc` declares support.
 
 ## ADR-003 — Vite is not a direct dependency

@@ -20,39 +20,23 @@ The interesting engineering is not the grid. It is three things:
 
 ## Decisions
 
-Locked in from clarification:
+Each row links to its ADR in `docs/decisions.md`, which carries the reasoning and any open questions.
+Change a decision there, not here.
 
-| Area | Decision |
-| --- | --- |
-| Data | Real, researched via web search. `capturedAt` stamped on every price/score. |
-| Images | Real product photos, downloaded and committed. Max 5, min 1 per pack. |
-| Swatches | Rigid 8-cell grid, 4 cols × 2 rows. ≤8 → ghost cells. >8 → cell 8 is a `>` pager, 7 colorways/page, wrapping (ADR-015). |
-| Contrast | Precomputed at ingest via sharp, **plus** a scrim fallback when neither color clears AA. |
-| Image tech | sharp at ingest → AVIF + WebP at 640w/1280w → plain `<img srcset>`. No `@nuxt/image`, no IPX. |
-| Shell | Search + filter + sort, responsive ranked grid, card detail view. |
-| Pricing | Lowest of brand-direct plus 1–2 major retailers, so "lowest available price" is a true claim (ADR-017). |
-| Images in git | Not committed. `public/images/` is gitignored; a clone runs `pnpm ingest` (ADR-012). |
-
-Answering the two questions you left open:
-
-- **Image delivery** — `@nuxt/image` is not worth it here. It exists to optimize images at request
-  time behind IPX; our images are static, known at build, and finite (≤100 files). Doing the work
-  once in the ingest script with sharp and emitting plain `<img srcset>` removes a module, a runtime
-  dependency, and a whole class of dev/prod divergence. Confirmed by your answer.
-- **State & data** — **no store at all.** The catalog is a static JSON imported at build time, so
-  there is no async data lifecycle to manage. The only real state is filter/search/sort, and that
-  lives in a single composable backed by **URL query params** (`useRoute`/`useRouter`). Result:
-  filtered views are bookmarkable and survive reload, and Pinia/`useState` are unnecessary. Carousel
-  index is local `ref` state inside each card — it is per-card and nobody else needs it.
-
-Calls I made that are one-line reversals if you disagree:
-
-- **Version drift.** You specified Nuxt 3; current is **Nuxt 4.5.2**. Same Vue 3.5 core, actively
-  maintained, `app/` as the default source dir. Planning on Nuxt 4.
-- **"2x3 grid"** is ambiguous — 2 cols × 3 rows, or 3 × 2? The bottom-left div is wide and short, so
-  the grid is now **4 columns × 2 rows** with a paging control — see ADR-015. Resolved.
-- **Detail view is a real route** (`/pack/[slug]`), prerendered and linkable, rather than a modal.
-  Simpler, shareable, SSG-friendly. Modal-over-route is an easy later upgrade.
+| Area | Decision | ADR |
+| --- | --- | --- |
+| Framework | Nuxt 4.5.2, not the Nuxt 3 of the original spec. Source under `app/`. | 001 |
+| Scope | 20 packs, 1–5 images each — cut from 100 packs / 3–9 images. | 008 |
+| Data | Real, researched via web search. `capturedAt` on every price and score. | 009 |
+| Images | Real product photos, 1–5 per pack. **Not committed** — `public/images/` is gitignored, so a clone must run `pnpm ingest`. | 009, 012 |
+| Image tech | sharp at ingest → AVIF + WebP at 640w/1280w → plain `<img srcset>`. No `@nuxt/image`, no IPX. | 005 |
+| Contrast | Precomputed at ingest, plus a scrim fallback when neither white nor black clears AA. | 006 |
+| Swatches | 8 cells, 4 cols × 2 rows. ≤8 → ghost-pad. >8 → cell 8 is a wrapping `>` pager, 7 per page. | 015, 016 |
+| Pricing | Lowest across brand-direct plus 1–2 major retailers, so "lowest available price" is a true claim. | 017 |
+| State | No store. Catalog is a build-time JSON import; filter/sort in URL query params; carousel and pager index local `ref`. | 004 |
+| Detail view | Prerendered `/pack/[slug]` route, not a modal. | 013 |
+| Shell | Search + filter + sort, responsive ranked grid, card detail view. | — |
+| Ranking | **Pending reweight toward popularity — blocks Phase 5.** | 018 |
 
 ---
 
@@ -70,21 +54,10 @@ vitest                  unit tests for pure logic
 @playwright/test        E2E, via the playwright-tester skill
 ```
 
-**Version rationale** (checked against npm `dist-tags`, not assumed):
-
-- **Vue 3.5.42 is already the newest stable.** There is no Vue 4. Vue 3.6 exists only as `rc.6`, and
-  Nuxt 4.5.2 declares `vue: ^3.5.40`. Nothing to gain by moving.
-- **Vite is not a direct dependency.** Nuxt owns it through `@nuxt/vite-builder`. Declaring it in
-  `package.json` only creates the opportunity for a version conflict.
-- **TypeScript must stay on the 6.x line.** npm `latest` is 7.0.2 and it is a real stable release,
-  but TS 7.0 shipped *without* the programmatic compiler API, which `@vue/compiler-sfc` and `vue-tsc`
-  require to parse and type-check `.vue` SFCs. Vue SFC type-checking therefore cannot run on TS 7 at
-  all until the API returns in 7.1. **6.0.3** — the final JS-based compiler, stable since March 2026
-  and explicitly designed as the 5.9 → 7.0 bridge — is the correct ceiling. Set
-  `"ignoreDeprecations": "6.0"` in `tsconfig.json` and resolve deprecation warnings (`baseUrl`,
-  `moduleResolution: node`, `outFile`) as they appear; that work *is* the 7.1 migration.
-- **Tailwind 4.3.3 is current.** v4 is CSS-first: no `tailwind.config.js`, theme tokens declared with
-  `@theme` inside `main.css`.
+**Version rationale.** The table's annotations are the short form; **ADR-001** (Nuxt 4), **ADR-002**
+(TypeScript ceiling), and **ADR-003** (Vite not declared) carry the reasoning. Two facts with no ADR:
+Vue 3.5.42 is already newest-stable (3.6 is `rc` only; Nuxt 4.5.2 declares `vue: ^3.5.40`), and
+Tailwind v4 is CSS-first — no `tailwind.config.js`, theme tokens in `@theme`.
 
 `nuxt.config.ts` per the [official Tailwind/Nuxt guide](https://tailwindcss.com/docs/installation/framework-guides/nuxt):
 `@tailwindcss/vite` in `vite.plugins`, `@import "tailwindcss";` in `app/assets/css/main.css`,
@@ -285,19 +258,15 @@ page, and `ceil(n/7)` page counts), pager wraparound last→first.
 
 ## Risks
 
-- **Image licensing.** Product photos are copyrighted. Downloading them for a local-only personal
-  catalog is low-risk, but this should not be publicly deployed without permission. The fetcher will
-  respect `robots.txt` and rate-limit. Worth a note in the README.
-- **Retailer blocking.** Amazon in particular blocks automated fetches. Fallback order is
-  brand-direct → REI/Huckberry/Backcountry → manual URL capture into `data/sources/{slug}.json`.
-  This is why source URLs are data, not hardcoded scraping logic.
-- **Stale prices/scores.** Point-in-time by nature. `capturedAt` is stored and surfaced in the detail
-  view so the catalog never implies live pricing.
-- **Ranking is subjective.** Addressed by approving the list above before any ingest runs, and by
-  committing the per-pack rationale into `data/seed.ts` so the ordering stays auditable.
-- **TypeScript 7.1 is a scheduled follow-up**, not a surprise. When the compiler API returns and
-  `vue-tsc` supports it, the upgrade is: clear remaining 6.0 deprecation warnings, drop
-  `ignoreDeprecations`, bump. Nothing in this plan's design blocks it.
+Recorded as ADR consequences rather than duplicated here:
+
+| Risk | Handled by |
+| --- | --- |
+| Product photos are copyrighted | **ADR-012** — not committed; repo redistributes nothing |
+| Retailers block automated fetches | **ADR-009** — fallback brand-direct → major retailer → manual capture; source URLs are data, not hardcoded scraping |
+| Prices and scores go stale | **ADR-009** — `capturedAt` stored and surfaced; never presented as live |
+| Ranking is subjective | **ADR-018** — open; per-pack rationale committed to `data/seed.ts` so ordering stays auditable |
+| TypeScript 7 breaks `vue-tsc` | **ADR-002** — pinned 6.0.3 with a documented 7.1 upgrade path |
 
 ---
 
