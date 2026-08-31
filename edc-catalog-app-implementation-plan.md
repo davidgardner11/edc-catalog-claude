@@ -283,3 +283,209 @@ both ends with n=1 and n=5, swatch padding/overflow at counts 0/3/6/9.
 - **TypeScript 7.1 is a scheduled follow-up**, not a surprise. When the compiler API returns and
   `vue-tsc` supports it, the upgrade is: clear remaining 6.0 deprecation warnings, drop
   `ignoreDeprecations`, bump. Nothing in this plan's design blocks it.
+
+---
+
+# Supervising this build with subagents
+
+Written for a human operator. Commands are given verbatim; type them at the Claude Code prompt
+unless marked as a shell command.
+
+## Three facts that shape everything below
+
+1. **Subagents do not inherit your conversation.** A subagent starts fresh with its own system
+   prompt, your delegation message, `CLAUDE.md`, and a git status snapshot. It does *not* get
+   conversation history, prior tool results, or anything you discussed earlier. Every handoff must
+   therefore be **self-contained** — this is the single most common way delegated work goes wrong.
+2. **`CLAUDE.md` is the shared substrate.** It *is* passed to every subagent. That is why the version
+   pins and invariants live there rather than in chat. If a rule matters to more than one agent, it
+   belongs in `CLAUDE.md`, not in a handoff message.
+3. **`/agents` no longer opens a creation wizard** (changed in v2.1.198; this project is on 2.1.252).
+   It now just prints a reminder. Create agents by writing the file or asking Claude to.
+
+## Agent roster
+
+Already in `.claude/agents/`:
+
+| Agent | Owns |
+| --- | --- |
+| `frontend-specialist` | `app/` — Vue SFCs, Tailwind, card + carousel, a11y, responsive layout |
+| `data-pipeline-specialist` | `scripts/` and `data/` — ingest, sharp, contrast precompute, zod |
+
+**Add these three.** Ask Claude in the main session:
+
+```
+Create .claude/agents/research-curator.md — a subagent that researches EDC backpack
+product data and writes data/sources/{slug}.json. Tools: WebSearch, WebFetch, Read,
+Write, Edit, Grep, Glob. It must record price+retailer+url, score+scale+source, colorways,
+specs, and image URLs, always with capturedAt. It never writes app code and never runs
+the ingest scripts. Give it effort: high and model: sonnet.
+```
+
+```
+Create .claude/agents/test-engineer.md — a subagent owning tests/ and *.test.ts. Vitest
+for pure logic in app/utils/, Playwright for browser-only behavior. Tools: Read, Write,
+Edit, Grep, Glob, Bash. It writes and fixes tests but never changes app code to make a
+test pass — it reports the defect instead.
+```
+
+```
+Create .claude/agents/build-tooling-specialist.md — a subagent owning package.json,
+nuxt.config.ts, tsconfig.json, and vitest/playwright config. Its prime directive is the
+version ceiling in CLAUDE.md: TypeScript never above 6.0.3, vite never added as a direct
+dependency, no tailwind.config.js. Tools: Read, Write, Edit, Bash, Grep, Glob.
+```
+
+`build-tooling-specialist` is optional — see Phase 1 below for why you may prefer to keep scaffolding
+in the main session.
+
+Deliberately **not** added: a backend agent (there is no server) and a code-review agent (the
+built-in `/code-review` skill already covers it).
+
+## Invoking an agent
+
+| Form | Behavior |
+| --- | --- |
+| `@agent-frontend-specialist <brief>` | **Guarantees** that agent runs. Use this for every handoff below. |
+| `Use the frontend-specialist to ...` | Natural language; Claude may or may not delegate. |
+| `/subtask <brief>` | A **fork** — inherits your full conversation. Use when context matters more than isolation. |
+| `claude --agent <name>` | Shell. Makes that agent the whole session's default. |
+
+Resume a finished agent by just saying so: `Continue the card work and now add the dot indicators.`
+
+## Phase-by-phase handoff script
+
+Follow the plan's build order. Run one phase at a time and review at each gate.
+
+### Phase 1 — Scaffold (main session, not delegated)
+
+One-time foundational work where the version pins are easiest to get wrong. Do it where you can
+watch it:
+
+```
+Scaffold the Nuxt app per CLAUDE.md. Pin nuxt 4.5.2, vue 3.5.42, typescript 6.0.3,
+tailwindcss 4.3.3 and @tailwindcss/vite 4.3.3, sharp 0.35.4, zod, vitest. Do not add vite
+as a direct dependency. Use pnpm. Wire Tailwind via the @tailwindcss/vite plugin in
+nuxt.config.ts with app/assets/css/main.css. Set "ignoreDeprecations": "6.0" in tsconfig.
+Then run pnpm install and pnpm dev to confirm a blank page renders.
+```
+
+**Gate:** `pnpm dev` serves; `grep -E '"(typescript|vite)"' package.json` shows `6.0.3` and no `vite`.
+
+### Phase 2 — Types and fixtures
+
+```
+@agent-frontend-specialist Create app/types/backpack.ts exactly as specified in
+edc-catalog-app-implementation-plan.md (Data model section), plus app/data/fixtures.ts
+with 3 hand-written packs using placeholder image paths. One fixture must have 3
+colorways, one exactly 6, one 9 — so the swatch grid's pad and overflow paths are both
+exercised. No components yet.
+```
+
+### Phase 3 — Card components
+
+```
+@agent-frontend-specialist Build the card against the fixtures: BackpackCard,
+CardCarousel, CardLabel, ColorwayGrid, PriceBlock, ScoreBlock. Read the Components
+section of edc-catalog-app-implementation-plan.md first. Put pure logic in app/utils/
+(contrast, format, color) so it is unit-testable. Render all 3 fixtures on the index page.
+Do not build the toolbar or detail route yet.
+```
+
+**Gate — check these by hand, they are the spec:** card is 5:7; image region is exactly 65%;
+clicking right advances and wraps last→first; clicking left wraps first→last; **the label does not
+shift by a pixel across images**; every card shows exactly 6 swatch cells.
+
+### Phase 4 — Ingest pipeline
+
+```
+@agent-data-pipeline-specialist Build the ingest pipeline per the Ingest pipeline section
+of edc-catalog-app-implementation-plan.md: fetch-images, process-images, analyze-label,
+build-catalog, plus the zod schema and a pnpm ingest script. Prove it end-to-end on 3
+packs only. Mirror the contrast math into app/utils/contrast.ts so it stays unit-testable.
+```
+
+**Gate:** re-running `pnpm ingest` on unchanged inputs produces byte-identical output, and re-running
+after deleting `public/images/` does **not** re-download (it rebuilds from `.ingest-cache/`).
+
+### Phase 5 — Research the 20 (batched)
+
+Run in batches of 5 so you can course-correct. Ranks are in the plan's ranked-20 table.
+
+```
+@agent-research-curator Research packs 1-5 from the ranked table in
+edc-catalog-app-implementation-plan.md. Write data/sources/{slug}.json for each: image
+URLs (1-5, prefer brand-direct), lowest findable price with retailer and URL, review score
+with its real scale and source, colorways, and specs. Stamp capturedAt on price and score.
+If a host blocks you, fall back brand-direct → major retailer → report it as needing manual
+capture. Do not run the ingest scripts.
+```
+
+Then: `@agent-data-pipeline-specialist Run the ingest for the 5 packs just captured and report anything that failed.`
+
+**Gate:** spot-check two packs' prices and scores against the live sites yourself. This is researched
+data and it can be wrong.
+
+### Phase 6 — Catalog shell
+
+```
+@agent-frontend-specialist Add the catalog shell: CatalogToolbar with search over name and
+brand, filters for brand/color/price/score, and sort by rank, price, or score. State goes
+in app/composables/useCatalogFilters.ts backed by URL query params. Add the prerendered
+/pack/[slug] detail route. Sorting by score must use score/scale normalized to 0-1, never
+the raw score.
+```
+
+### Phase 7 — Tests
+
+```
+@agent-test-engineer Write the test suite per the Verification section of
+edc-catalog-app-implementation-plan.md. Vitest for app/utils (contrast picker with
+known-luminance fixtures, score and price formatters, carousel wraparound at both ends
+with n=1 and n=5, swatch padding at counts 0/3/6/9). Playwright for the browser-only
+behaviors, especially that the label's text and bounding box are identical across every
+image in a carousel. If a test fails because the app is wrong, report it — do not edit app
+code to make it pass.
+```
+
+## Supervision gates
+
+- Between phases, review the actual diff — never take a summary at face value: `git diff` /
+  `git diff --stat`
+- Run `/code-review` after Phases 3, 4, and 6.
+- `/context` to watch context pressure; `/clear` between phases, since the plan file and `CLAUDE.md`
+  carry the state forward and your chat history does not reach subagents anyway.
+- Commit at every gate so a bad agent run is one `git reset --hard` away.
+
+## Running agents in parallel
+
+`frontend-specialist` and `data-pipeline-specialist` own **disjoint paths** (`app/` vs
+`scripts/` + `data/`), so Phases 3 and 4 can run concurrently. Send both handoffs in one message.
+
+For anything where paths might overlap, add `isolation: worktree` to the agent's frontmatter so it
+works in its own git worktree instead of your checkout.
+
+Defaults worth knowing: subagents may nest up to 3 levels deep, and up to 20 run concurrently.
+Constrain via `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` (set `1` to disable nesting) and
+`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS` in `.claude/settings.json`.
+
+## Optional: turn the handoffs into slash commands
+
+If you will repeat a handoff (Phase 5 runs four times), save it as a command. A file at
+`.claude/commands/research-batch.md` creates `/research-batch`:
+
+```markdown
+---
+description: Hand a batch of pack ranks to the research curator
+argument-hint: [start-rank] [end-rank]
+disable-model-invocation: true
+---
+
+@agent-research-curator Research packs $0 through $1 from the ranked table in
+${CLAUDE_PROJECT_DIR}/edc-catalog-app-implementation-plan.md. Write
+data/sources/{slug}.json for each per the Phase 5 brief. Stamp capturedAt. Do not run
+the ingest scripts.
+```
+
+Then Phase 5 becomes `/research-batch 1 5`, `/research-batch 6 10`, and so on.
+`disable-model-invocation: true` keeps Claude from firing it on its own.
