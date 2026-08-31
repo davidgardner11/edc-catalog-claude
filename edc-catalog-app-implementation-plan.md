@@ -11,10 +11,10 @@ Scope was deliberately cut from the original ask during clarification: **20 pack
 downloaded locally), not generated or synthetic. Everything above 20 is a later batch — the code
 treats the count as data, so growing to 100 is a data job, not a code change.
 
-The interesting engineering is not the grid. It is three things: an **ingest pipeline** that turns
-research into typed, optimized, build-time assets; a **precomputed contrast decision** so the label
-over each photo picks white or black without runtime work; and a **carousel whose label never moves
-or re-renders** while the image beneath it cycles.
+The interesting engineering is not the grid. It is three things: 
+1. an **ingest pipeline** that turns research into typed, optimized, build-time 
+2. assets; a **precomputed contrast decision** so the label over each photo picks white or black without runtime work; and 
+3. a **carousel whose label never moves or re-renders** while the image beneath it cycles.
 
 ---
 
@@ -26,10 +26,12 @@ Locked in from clarification:
 | --- | --- |
 | Data | Real, researched via web search. `capturedAt` stamped on every price/score. |
 | Images | Real product photos, downloaded and committed. Max 5, min 1 per pack. |
-| Swatches | Rigid 6-cell grid. Under 6 → ghost cells. Over 6 → 5 swatches + `+N` badge. |
+| Swatches | Rigid 8-cell grid, 4 cols × 2 rows. ≤8 → ghost cells. >8 → cell 8 is a `>` pager, 7 colorways/page, wrapping (ADR-015). |
 | Contrast | Precomputed at ingest via sharp, **plus** a scrim fallback when neither color clears AA. |
 | Image tech | sharp at ingest → AVIF + WebP at 640w/1280w → plain `<img srcset>`. No `@nuxt/image`, no IPX. |
 | Shell | Search + filter + sort, responsive ranked grid, card detail view. |
+| Pricing | Lowest of brand-direct plus 1–2 major retailers, so "lowest available price" is a true claim (ADR-017). |
+| Images in git | Not committed. `public/images/` is gitignored; a clone runs `pnpm ingest` (ADR-012). |
 
 Answering the two questions you left open:
 
@@ -48,7 +50,7 @@ Calls I made that are one-line reversals if you disagree:
 - **Version drift.** You specified Nuxt 3; current is **Nuxt 4.5.2**. Same Vue 3.5 core, actively
   maintained, `app/` as the default source dir. Planning on Nuxt 4.
 - **"2x3 grid"** is ambiguous — 2 cols × 3 rows, or 3 × 2? The bottom-left div is wide and short, so
-  **3 columns × 2 rows** fits far better. One class flip if you meant the other.
+  the grid is now **4 columns × 2 rows** with a paging control — see ADR-015. Resolved.
 - **Detail view is a real route** (`/pack/[slug]`), prerendered and linkable, rather than a modal.
   Simpler, shareable, SSG-friendly. Modal-over-route is an easy later upgrade.
 
@@ -112,7 +114,7 @@ export type Backpack = {
   name: string
   brand: string
   images: CarouselImage[]         // 1..5, ordered; [0] is primary
-  colorways: Colorway[]           // 0..N; grid renders 6 cells
+  colorways: Colorway[]           // 0..N; grid renders 8 cells, pages above 8
   price: { amountUsd: number; retailer: string; url: string; capturedAt: string }
   review: { score: number; scale: number; source: string; url: string; capturedAt: string }
   specs?: { capacityLiters?: number; weightGrams?: number; dimensions?: string; material?: string }
@@ -125,7 +127,12 @@ is the easy bug here.
 
 ---
 
-## The ranked 20 (approved before ingest)
+## The ranked 20 — PENDING REWEIGHT (ADR-018)
+
+> **Do not start Phase 5 against this table.** It ranks on critical acclaim alone. The brief asked
+> for "popular, beloved, **and** acclaimed," and a reweight toward popularity is agreed but not yet
+> applied — it will change *membership*, not just order. Blocked on defining what "popular" means
+> operationally (see ADR-018). The table below is the acclaim-ranked baseline it will be derived from.
 
 Assembled from cross-source consensus rather than any single list: Carryology Carry Awards, Pack
 Hacker brand flagships, HiConsumption's ranked 15, and the Nomads Nation tier list. Rationale below
@@ -154,9 +161,11 @@ gets committed alongside each entry in `data/seed.ts` so the ordering is auditab
 | 19 | Arktype | Dashpack II | Minimalist favorite |
 | 20 | Filson | Dryden Ballistic Nylon | Heritage/professional entry |
 
-Spread: **$60–$435**, **14–30L**, 19 distinct brands. Aer appears twice, which is defensible given
-it is the most consistently acclaimed EDC brand, but #5 is the natural swap slot if you want 20/20
-brand diversity.
+Spread: **$60–$435**, **14–30L**, 19 distinct brands (Aer appears twice).
+
+Reweighting toward popularity will likely drop the low-volume boutique entries — KILLSPENCER at $895,
+Arktype, The Brown Buffalo — in favor of higher-volume packs, and lift Osprey Daylite well above its
+current #14.
 
 ---
 
@@ -197,7 +206,7 @@ app/pages/pack/[slug].vue        detail route, prerendered
 app/components/BackpackCard.vue  5:7 shell, grid-rows-[65fr_35fr]
 app/components/CardCarousel.vue  image swap, click zones, dots
 app/components/CardLabel.vue     name + brand, absolutely positioned, pointer-events-none
-app/components/ColorwayGrid.vue  rigid 6 cells, ghost padding, +N badge
+app/components/ColorwayGrid.vue  rigid 8 cells (4×2), ghost padding, wrapping `>` pager
 app/components/PriceBlock.vue    $249 bold / retailer beneath
 app/components/ScoreBlock.vue    4.4/5.0
 app/components/CatalogToolbar.vue
@@ -217,9 +226,13 @@ requirement, enforced structurally rather than by hoping. Image `[0]` eager, res
 preloaded on first interaction to avoid a swap flash. `aria-label`s on both zones, ArrowLeft/Right
 on the container, dot indicators, and an `aria-live` "Image 3 of 5".
 
-**Swatches.** `grid grid-cols-3 grid-rows-2 gap-1`, always 6 cells rendered. `colorways.slice(0, 5)`
-plus a `+N` cell when `length > 6`; ghost cells (dashed, muted) fill the remainder when under.
-Geometry is therefore identical on all 20 cards.
+**Swatches.** `grid grid-cols-4 grid-rows-2 gap-1`, always 8 cells rendered (ADR-015). At `n <= 8`,
+show all and ghost-pad (dashed, muted) the remainder. At `n > 8`, cell 8 becomes a `>` pager and each
+page shows 7 colorways: `colorways.slice(page * 7, page * 7 + 7)`, with `pages = Math.ceil(n / 7)`
+and `page = (page + 1) % pages` on click — wrapping, like the carousel (ADR-016). The pager stays in
+cell 8 on every page including a partial last one, so the hit target never moves. Its handler calls
+`stopPropagation` so it neither advances the carousel nor navigates to the detail route. Geometry is
+therefore identical on all 20 cards.
 
 **Formatting.** Score `${score.toFixed(1)}/${scale.toFixed(1)}` → `4.4/5.0`, `8.1/10.0`. Price via
 `Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })`, dropping `.00` when whole.
@@ -248,14 +261,16 @@ Steps 1–4 are the ones worth your review; step 5 is mechanical once the pipeli
 **Unit (`vitest`)** — the pure logic, which is where the real bugs live:
 `contrast.ts` (known-luminance fixtures: pure white bg → black label, pure black → white, mid-gray →
 `needsScrim`), score formatter across both scales, price formatter, carousel modulo wraparound at
-both ends with n=1 and n=5, swatch padding/overflow at counts 0/3/6/9.
+both ends with n=1 and n=5, swatch paging at counts 0/4/8/9/15/22 (boundary at 8, partial final
+page, and `ceil(n/7)` page counts), pager wraparound last→first.
 
 **E2E (`playwright-tester` skill)** — the behaviors that are only observable in a browser:
 - card bounding box matches 5:7 within tolerance; image region is 65% of card height
 - clicking the right half advances; from the last image it lands on the first
 - clicking the left half retreats; from the first image it lands on the last
 - **label text and bounding-box position are byte-identical across all N images** (the core spec)
-- exactly 6 swatch cells on every card, whatever the colorway count
+- exactly 8 swatch cells on every card, whatever the colorway count; the `>` pager sits in cell 8
+  on every page, and clicking it from the last page returns to the first
 - rendered score matches `/^\d+\.\d\/\d+\.\d$/`
 
 **Manual / build:**
@@ -378,8 +393,9 @@ Then run pnpm install and pnpm dev to confirm a blank page renders.
 @agent-frontend-specialist Create app/types/backpack.ts exactly as specified in
 edc-catalog-app-implementation-plan.md (Data model section), plus app/data/fixtures.ts
 with 3 hand-written packs using placeholder image paths. One fixture must have 3
-colorways, one exactly 6, one 9 — so the swatch grid's pad and overflow paths are both
-exercised. No components yet.
+colorways, one exactly 8, one 15 — so the swatch grid's ghost-pad path, its exact-fill
+boundary, and its multi-page pager (including a partial final page) are all exercised.
+No components yet.
 ```
 
 ### Phase 3 — Card components
@@ -394,7 +410,8 @@ Do not build the toolbar or detail route yet.
 
 **Gate — check these by hand, they are the spec:** card is 5:7; image region is exactly 65%;
 clicking right advances and wraps last→first; clicking left wraps first→last; **the label does not
-shift by a pixel across images**; every card shows exactly 6 swatch cells.
+shift by a pixel across images**; every card shows exactly 8 swatch cells, and the `>` pager wraps
+from the last page back to the first.
 
 ### Phase 4 — Ingest pipeline
 
@@ -415,8 +432,9 @@ Run in batches of 5 so you can course-correct. Ranks are in the plan's ranked-20
 ```
 @agent-research-curator Research packs 1-5 from the ranked table in
 edc-catalog-app-implementation-plan.md. Write data/sources/{slug}.json for each: image
-URLs (1-5, prefer brand-direct), lowest findable price with retailer and URL, review score
-with its real scale and source, colorways, and specs. Stamp capturedAt on price and score.
+URLs (1-5, prefer brand-direct), the lowest price found across brand-direct plus 1-2 major
+retailers with the winning retailer and URL (ADR-017), review score with its real scale and
+source, colorways, and specs. Stamp capturedAt on price and score.
 If a host blocks you, fall back brand-direct → major retailer → report it as needing manual
 capture. Do not run the ingest scripts.
 ```
@@ -442,7 +460,7 @@ the raw score.
 @agent-test-engineer Write the test suite per the Verification section of
 edc-catalog-app-implementation-plan.md. Vitest for app/utils (contrast picker with
 known-luminance fixtures, score and price formatters, carousel wraparound at both ends
-with n=1 and n=5, swatch padding at counts 0/3/6/9). Playwright for the browser-only
+with n=1 and n=5, swatch paging at counts 0/4/8/9/15/22). Playwright for the browser-only
 behaviors, especially that the label's text and bounding box are identical across every
 image in a carousel. If a test fails because the app is wrong, report it — do not edit app
 code to make it pass.

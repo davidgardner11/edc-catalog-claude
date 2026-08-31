@@ -49,8 +49,17 @@ These are non-obvious and easy to get wrong. Verify before changing any dependen
   recompute contrast at runtime, and never sample a canvas in a component.
 - **Review scores use per-pack scales** (`review.scale` is 5.0 or 10.0). Display raw
   `score`/`scale`; any sorting or filtering must use `score / scale` normalized to 0–1.
-- **Colorway grid is rigidly 6 cells.** Pad with ghost cells under 6; show 5 plus a `+N` badge over 6.
-  Card geometry must be identical across every card.
+- **Colorway grid is rigidly 8 cells** — 4 columns × 2 rows (ADR-015). At 8 or fewer colorways, show
+  them all and ghost-pad the remainder. Above 8, cell 8 becomes a clickable `>` pager and each page
+  shows 7 colorways; page count is `ceil(n / 7)`. The pager occupies cell 8 on *every* page,
+  including a partial final one — a control that moves is harder to hit and reads as a different
+  control. Card geometry must be identical across every card.
+- **Everything cyclable wraps** (ADR-016). Carousel: last→first, first→last. Colorway pager: last
+  page→first page. Modulo arithmetic, never bounds-clamping; no control is ever rendered disabled.
+- **The card has three click interactions**: carousel prev, carousel next, and the colorway pager —
+  plus card-body navigation to the detail route. The pager's handler must `stopPropagation` so it
+  neither advances the carousel nor navigates. Every one is a real `<button>` with an `aria-label`,
+  and page/image changes are announced via `aria-live`.
 
 Always prioritize accessibility, semantic HTML, and mobile-first responsive design. Carousel controls
 are real `<button>` elements with `aria-label`s and keyboard support, not click handlers on a div.

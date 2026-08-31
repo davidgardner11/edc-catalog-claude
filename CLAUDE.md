@@ -91,7 +91,13 @@ Two derived fields are computed once at ingest and must never be recomputed at r
   `<img>` and is never keyed to the image index — enforce structurally, not by convention.
 - **Card geometry is uniform across every card.** `aspect-[5/7]`, and the 65/35 split uses
   `grid-rows-[65fr_35fr]` rather than percentage heights so content cannot shift it. The colorway
-  grid always renders exactly 6 cells: ghost-padded under 6, five plus a `+N` badge over 6.
+  grid always renders exactly **8 cells (4 cols × 2 rows)**: ghost-padded at 8 or fewer; above 8,
+  cell 8 becomes a `>` pager showing 7 colorways per page. The pager stays in cell 8 on every page,
+  including a partial last page.
+- **Everything cyclable on a card wraps.** The carousel (last→first, first→last) and the colorway
+  pager (last page→first page). Use modulo, never bounds-clamping, and never render a disabled
+  control. The pager's handler must `stopPropagation` so it does not also advance the carousel or
+  navigate to the detail route.
 
 ## Subagents
 

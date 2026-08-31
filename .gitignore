@@ -11,11 +11,10 @@ dist/
 # ingest pipeline: downloaded originals, never committed
 .ingest-cache/
 
-# NOTE: this repo is public. Before the first ingest run, decide whether
-# processed product photos under public/images/ should be committed at all —
-# they are sourced from brand/retailer CDNs and are copyrighted.
-# To keep them out of git, uncomment:
-# public/images/
+# Product photos are sourced from brand/retailer CDNs and are copyrighted.
+# This repo is public, so they are not committed (ADR-012).
+# A fresh clone must run `pnpm ingest` to populate them.
+public/images/
 
 # env & local config
 .env

@@ -107,25 +107,26 @@ on read preserves both.
 `score / scale`**. This is the easiest bug in the project to introduce.
 
 ## ADR-011 — Rigid 6-cell colorway grid
-**2026-08-31 · Accepted**
+**2026-08-31 · Superseded by ADR-015**
 
 3 columns × 2 rows. Under 6 colorways: ghost-pad. Over 6: five swatches plus a `+N` badge.
 
 **Why:** Card geometry must be identical across every card or the grid looks broken. A flexible grid
 would use space better but would misalign card bottoms.
-**Consequence:** 3×2 was chosen over 2×3 because the bottom-left region is wide and short. One class
-change if that reads wrong in practice.
+**Superseded because:** a `+N` badge shows a count but gives no way to *see* the remaining colorways.
+ADR-015 replaces it with a paged grid that makes every colorway reachable.
 
-## ADR-012 — Public repository; product images decision deferred
-**2026-08-31 · Open**
+## ADR-012 — Public repository; product images are not committed
+**2026-08-31 · Accepted**
 
-Repo is public at `davidgardner11/edc-catalog-claude`.
+Repo is public at `davidgardner11/edc-catalog-claude`. `public/images/` is gitignored.
 
-**Why:** Owner's explicit choice. Fine for plan and code as they stand.
-**Open question:** Whether processed product photos under `public/images/` should be committed at
-all, since they come from brand and retailer CDNs and are copyrighted. `.gitignore` carries a
-commented-out `public/images/` entry for exactly this.
-**Decide before:** the first full ingest run (plan Phase 5).
+**Why:** Public visibility was the owner's explicit choice. Committing photos sourced from brand and
+retailer CDNs would make the repository redistribute copyrighted material, and ~100 binaries in git
+history are removable only by a force-push rewrite.
+**Consequence:** A fresh clone renders nothing until `pnpm ingest` runs. This adds no new workflow —
+`app/data/catalog.json` is already generated (ADR-014), so ingest was always a required setup step.
+The README must say so.
 
 ## ADR-013 — Detail view is a route, not a modal
 **2026-08-31 · Accepted**
@@ -143,3 +144,70 @@ them directly means the next ingest silently reverts the change.
 **Consequence:** Content changes go to `data/seed.ts` or `data/sources/{slug}.json`, then re-run.
 Originals cache in gitignored `.ingest-cache/` so image processing can be retuned without re-fetching
 from any retailer. `pnpm ingest` on unchanged inputs must produce byte-identical output.
+
+## ADR-015 — Paged 4×2 colorway grid
+**2026-08-31 · Accepted · supersedes ADR-011**
+
+8 cells, 4 columns × 2 rows.
+
+- **≤ 8 colorways:** all shown. No pager. Ghost-pad any unused cells.
+- **> 8 colorways:** cell 8 becomes a clickable `>` pager. Each page shows 7 colorways plus the
+  pager, so page count is `ceil(n / 7)`.
+- The pager **wraps**: `>` on the last page returns to the first, exactly like the image carousel
+  (ADR-016 records why that consistency matters).
+
+**Why:** A `+N` badge reported a count without making the colorways reachable. Paging makes every
+colorway viewable while keeping card geometry rigidly identical, which is the constraint that
+survives from ADR-011.
+
+**Consequences:**
+- The pager always occupies **cell 8**, even on a partial final page (a 9-colorway pack shows two
+  colorways, five ghost cells, then `>`). A control that moves is harder to hit and reads as a
+  different control.
+- Colorway paging is a **third** click interaction on the card, after carousel prev/next. Its
+  handler must `stopPropagation` so it neither advances the carousel nor triggers card-body
+  navigation to the detail route.
+- Page index is local `ref` state per card, resetting on unmount — same treatment as carousel index
+  (ADR-004).
+- `>` is a real `<button>` with an `aria-label` naming the destination page, and page changes are
+  announced via `aria-live`.
+
+## ADR-016 — Wrap-around is the card's single interaction idiom
+**2026-08-31 · Accepted**
+
+Both cyclable controls on a card wrap rather than dead-ending: the image carousel (last → first,
+first → last) and the colorway pager (last page → first page).
+
+**Why:** One learned behavior covers every control on the card. A user who discovers that images
+cycle can predict what the colorway pager does without trying it.
+**Consequence:** No control is ever rendered disabled, so no card needs a disabled visual state.
+Implement with modulo arithmetic, never bounds-clamping.
+
+## ADR-017 — Price is the lowest of 2–3 compared retailers
+**2026-08-31 · Accepted**
+
+Per pack, check brand-direct plus one or two major retailers and store the minimum, with the
+retailer that offered it.
+
+**Why:** The card labels this figure "lowest available price." Recording a single findable price and
+calling it "lowest" would be an unverified claim. Comparing a small set makes the label true.
+**Consequences:**
+- Roughly triples Phase 5 research time versus single-source capture. Accepted deliberately; the
+  20-pack scope cut (ADR-008) leaves room for it.
+- `capturedAt` remains mandatory (ADR-009) — "lowest" is true as of that timestamp, never live.
+- The data model stores the winning price and retailer. If per-retailer comparison later needs to be
+  visible in the detail view, that is a schema change and a new ADR.
+
+## ADR-018 — Ranked 20 reweighted toward popularity
+**2026-08-31 · Open**
+
+The initial list was ranked on critical acclaim (Carryology, Pack Hacker, HiConsumption, Nomads
+Nation). The brief asked for "popular, beloved, **and** acclaimed"; acclaim was over-weighted.
+
+**Why:** A catalog topped by boutique packs misrepresents what people actually carry.
+**Open question:** What "popular" means operationally — units sold (not public), retailer review
+counts (measurable), brand search volume, or enthusiast-community mindshare. These produce
+materially different lists.
+**Consequence when settled:** membership changes, not just ordering; low-volume boutique entries
+give way to higher-volume packs.
+**Decide before:** Phase 5 research begins.
