@@ -1,0 +1,34 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# nuxt build output
+.nuxt/
+.output/
+dist/
+.data/
+
+# ingest pipeline: downloaded originals, never committed
+.ingest-cache/
+
+# NOTE: this repo is public. Before the first ingest run, decide whether
+# processed product photos under public/images/ should be committed at all —
+# they are sourced from brand/retailer CDNs and are copyrighted.
+# To keep them out of git, uncomment:
+# public/images/
+
+# env & local config
+.env
+.env.*
+!.env.example
+
+# editor / os
+.DS_Store
+*.log
+.vscode/
+.idea/
+
+# test artifacts
+test-results/
+playwright-report/
+coverage/
