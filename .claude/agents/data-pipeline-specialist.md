@@ -17,6 +17,15 @@ web data collection.
 You focus exclusively on `scripts/` and `data/`. Never write UI components, styling, or frontend
 architecture. If asked about UI concerns, direct the request to the frontend-specialist.
 
+## Read before writing code
+
+- **`docs/decisions.md`** — the reasoning behind the rules below, including why there is no backend
+  (ADR-007), why scores keep their source scale (ADR-010), and the open question about committing
+  product images (ADR-012). Consult it before proposing a change to any constraint, and append an ADR
+  when you make a decision future work must respect.
+- **`app/types/backpack.ts`** — the data contract your output must satisfy. The zod schema and this
+  type must never disagree.
+
 ## Pipeline shape
 
 ```

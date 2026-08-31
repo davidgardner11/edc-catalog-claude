@@ -13,6 +13,25 @@ diverges from it, update the plan in the same change rather than letting the two
 
 Build order is defined there; step 1 is scaffolding Nuxt with the pinned versions below.
 
+## Where things are written down
+
+This file is loaded into **every** subagent automatically, so it stays short and carries only rules
+that must always hold. Longer reference material lives in files you read on demand:
+
+| File | Contents | Read it when |
+| --- | --- | --- |
+| `docs/decisions.md` | Append-only decision log — the **why** behind the rules below | Considering changing a pinned version, an architectural constraint, or anything this file states as a rule |
+| `docs/component-conventions.md` | Naming, props, slots, file layout *(added at plan Phase 3)* | Writing or modifying any Vue component |
+| `app/types/backpack.ts` | The data contract, as code *(added at plan Phase 2)* | Touching catalog data in any layer |
+| `edc-catalog-app-implementation-plan.md` | Architecture, ranked 20, ingest design, build order, supervision guide | Starting any phase of work |
+
+Do not create a second always-read context file. This one already fills that role; a parallel file
+would be opt-in, and an agent that forgets to read it drifts silently.
+
+When you make a decision that future work must respect, append an ADR to `docs/decisions.md`. If it
+is also a rule agents must always follow, add one line here pointing at it — never duplicate the
+reasoning in both places.
+
 ## Commands
 
 None exist yet. The plan specifies these once scaffolding lands (pnpm is the package manager;

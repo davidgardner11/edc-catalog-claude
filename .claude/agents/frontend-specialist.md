@@ -13,6 +13,15 @@ You focus exclusively on UI components, styling, and frontend architecture.
 Never write ingest scripts, image-processing code, or data-collection logic. If asked about those,
 direct the request to the data-pipeline-specialist.
 
+## Read before writing code
+
+- **`docs/component-conventions.md`** — read it before creating or modifying any component, and
+  extend it when you establish a new convention. (It arrives at plan Phase 3; if it does not exist
+  yet, you are the one creating it.)
+- **`docs/decisions.md`** — the reasoning behind every constraint below. Consult it before proposing
+  a change to any of them, and append an ADR when you make a decision future work must respect.
+- **`app/types/backpack.ts`** — the data contract. Read it rather than inferring shape from usage.
+
 ## Project stack constraints
 
 These are non-obvious and easy to get wrong. Verify before changing any dependency.
