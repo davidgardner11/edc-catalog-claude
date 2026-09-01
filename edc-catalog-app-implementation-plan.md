@@ -124,7 +124,7 @@ popularity nudge, not a popularity ranking. See ADR-018 to strengthen it.
 | 7 | Bellroy | Classic Backpack Plus | — | = |
 | 8 | Mystery Ranch | Urban Assault 24 | 10 (REI) — below threshold | = |
 | 9 | Able Carry | Max EDC 26L | 320 (DTC) | +1 |
-| 10 | Black Ember | Citadel R2 ⚠️ **discontinued — see ADR-019 before researching** | — | −1 |
+| 10 | Black Ember | Citadel R3 25L *(replaces discontinued R2; rank inherited — ADR-019)* | — | −1 |
 | 11 | WANDRD | PRVKE 21 | 3,031 (DTC) | **+4** |
 | 12 | Alpaka | Elements Backpack Pro | 629 (DTC) | = |
 | 13 | Osprey | Daylite Plus 20L | 515 (REI) | +1 |

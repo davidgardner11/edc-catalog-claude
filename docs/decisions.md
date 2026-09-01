@@ -238,23 +238,29 @@ production before spending research effort on it.
 re-run the blend. Until then this ordering is acclaim with a light popularity nudge, and should be
 described that way rather than as a popularity ranking.
 
-## ADR-019 — Black Ember Citadel R2 is discontinued
-**2026-08-31 · Open**
+## ADR-019 — Black Ember Citadel R2 replaced by Citadel R3 25L at rank 10
+**2026-08-31 · Accepted**
 
-Rank 10 is Black Ember Citadel R2. The model no longer appears on `blackember.com`; the line has
-moved to Citadel R3 and Citadel H2.
+Rank 10 was Black Ember Citadel R2, which no longer appears on `blackember.com`. It is replaced by
+the **Citadel R3 25L**, keeping rank 10.
 
-**Why this blocks work:** a discontinued product has no live price, no current colorways, and no
-first-party product images — so Phase 5 cannot research it regardless of ADR-018's review-count gap.
+**Why R3 and not H2:** the R3 is the direct successor in the same line — reviewers describe it as an
+overhaul of the R2 (less stiff fabric, real external pocketing, toned-down modularity). The H2 is a
+refinement *of the R3* with a half-zip opening and bottle pockets — a sibling variant, not the
+succession. R3 ships in 20L and 25L; **25L** matches the R2's capacity.
 
-**Options:**
-1. Substitute the current model (Citadel R3 or H2), keeping Black Ember on the list at rank 10. The
-   acclaim ranking was earned by the R2, so this inherits a rank the new model has not been reviewed
-   into.
-2. Drop Black Ember and promote the next candidate, leaving 19 brands across 20 slots unchanged.
+**Why keep the rank:** rank 10 was earned by the R2's critical reception, and the R3 has not been
+reviewed into that position independently. This is a deliberate inheritance, accepted because the
+alternative — dropping Black Ember — loses a distinct brand from a 19-brand list. Revisit if R3
+coverage suggests it belongs elsewhere.
 
-**Decide before:** Phase 5 reaches rank 10. The ranked-20 table carries a ⚠️ marker until then.
+**Consequences:**
+- The ranked-20 table names Citadel R3 25L; no ⚠️ marker remains.
+- The R2's acclaim placement carries forward, so `data/seed.ts` must note in `rationale` that the
+  rank was inherited rather than earned by this model.
+- Any review score captured must come from the **R3**, not from R2 reviews (ADR-009: real data).
 
-**Generalisation:** Phase 5 must confirm each pack is still in production *before* researching it.
-Other entries may have the same problem — Incase ICON Slim and Arktype Dashpack II are the most
-likely, being older models from smaller brands.
+**Generalisation that survives:** Phase 5 must confirm each pack is still in production *before*
+researching it — a discontinued model has no live price, current colorways, or first-party images.
+Incase ICON Slim and Arktype Dashpack II are the next most likely to have the same problem, being
+older models from smaller brands. This check is the `research-curator`'s first instruction.

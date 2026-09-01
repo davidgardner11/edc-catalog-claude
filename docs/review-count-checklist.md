@@ -14,6 +14,16 @@ single pack; counts are only ever compared within a channel.
 **If a page shows variants** (20L vs 24L, different fabrics), use the variant named in the table and
 note if the count is shared across variants.
 
+**One channel per pack — the rule that makes or breaks this.** Several packs sell both direct and
+through retailers. Peak Design is on `peakdesign.com` *and* REI; Osprey is on `osprey.com` *and* REI.
+The counts already collected used the channel named in the table (REI for both), so a count taken
+from the other channel is not comparable and silently corrupts the tier. **Use the channel the table
+names.** If a pack turns out to be unavailable there, record which channel you used instead so the
+tier can be assigned against the right peer group.
+
+**Record the total, not a filtered view.** Some widgets default to "reviews with photos" or a single
+variant. Use the unfiltered total for the product.
+
 ## Already collected
 
 | # | Pack | Channel | Count | Rating |
@@ -35,7 +45,7 @@ note if the count is shared across variants.
 | 5 | Aer City Pack Pro 2 | DTC | `aersf.com/products/city-pack-pro-2-20l` (20L variant) | | |
 | 7 | Bellroy Classic Backpack Plus | DTC | `bellroy.com/products/classic-backpack-plus` | | |
 | 8 | Mystery Ranch Urban Assault 24 | REI | `rei.com/product/157798/mystery-ranch-urban-assault-pack-24-liters` — search found 10; please confirm | | |
-| 10 | Black Ember Citadel R2 | DTC | ⚠️ **appears discontinued** — `blackember.com` now lists Citadel R3 / H2. See note below | | |
+| 10 | Black Ember Citadel R3 25L | DTC | `blackember.com` — search "Citadel R3", 25L variant (replaces the discontinued R2, ADR-019) | | |
 | 14 | Mission Workshop The Rhake VX | DTC | `missionworkshop.com/products/rhake-laptop-backpack` | | |
 | 15 | Topo Designs Rover Pack Tech | REI | `rei.com/product/237180/topo-designs-rover-pack` — search found ~29; please confirm | | |
 | 16 | The Brown Buffalo ConcealPack 21L | DTC | `thebrownbuffalo.com` — search "Conceal" | | |
@@ -56,13 +66,8 @@ One line per pack, `rank | count | rating`. Skip any you couldn't find; blanks s
 
 Then the blend re-runs and the ranking updates.
 
-## Open data issue — Black Ember Citadel R2 (rank 10)
+## Resolved
 
-The R2 does not appear on Black Ember's current site; the line has moved to Citadel R3 and Citadel
-H2. This affects Phase 5 independently of review counts — a discontinued pack has no live price,
-no current colorways, and no first-party product images.
-
-Options: substitute the current Citadel (R3 or H2) and keep Black Ember on the list, or drop the
-brand and promote the next candidate. Worth deciding before ingest; it will need an ADR either way.
-Other packs may have the same problem — Phase 5 research should confirm each is still in production
-before spending effort on it.
+The Black Ember entry at rank 10 was the discontinued Citadel R2; it is now Citadel R3 25L per
+ADR-019. Phase 5 must still confirm each remaining pack is in production before researching it —
+Incase ICON Slim and Arktype Dashpack II are the next most likely to be superseded.
