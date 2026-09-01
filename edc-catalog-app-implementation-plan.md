@@ -38,7 +38,7 @@ Change a decision there, not here.
 | State | No store. Catalog is a build-time JSON import; filter/sort in URL query params; carousel and pager index local `ref`. | 004 |
 | Detail view | Prerendered `/pack/[slug]` route, not a modal. | 013 |
 | Shell | Search + filter + sort, responsive ranked grid, card detail view. | — |
-| Ranking | `0.6 × acclaim + 0.4 × popularity`, popularity tiered within channel. Low confidence: 6/20 packs scored. | 018 |
+| Ranking | Pure critical acclaim. Popularity investigated and abandoned as impractical to measure. | 018 |
 
 ---
 
@@ -105,40 +105,38 @@ is the easy bug here.
 
 ## The ranked 20
 
-Ranked `0.6 × acclaim + 0.4 × popularity` (ADR-018). Acclaim is cross-source critical consensus;
-popularity is a review-count tier scored **within each pack's own channel**, because DTC and
-wholesale counts are not comparable. Counts under 50 are treated as insufficient evidence, and packs
-with no retrievable count fall back to their acclaim value.
+Ranked on **cross-source critical acclaim** — Carryology Carry Awards, Pack Hacker, HiConsumption,
+Nomads Nation. There is no popularity term; ADR-018 records why it was investigated and abandoned.
+This ordering is editorial judgment, not arithmetic, so each entry's basis is committed to
+`data/seed.ts` as `rationale` and stays auditable.
 
-**Confidence is low: only 6 of 20 packs yielded a usable count.** This is acclaim with a light
-popularity nudge, not a popularity ranking. See ADR-018 to strengthen it.
+| # | Brand | Model | Basis |
+| --- | --- | --- | --- |
+| 1 | EVERGOODS | Civic Panel Loader 24L V3 | Carry Awards IX champion; repeatedly named best EDC pack made |
+| 2 | Peak Design | Everyday Backpack V2 30L | Carryology award; MagLatch; most recognizable EDC pack |
+| 3 | GORUCK | GR1 26L | Cult status, lifetime guarantee, "toughest pack" across lists |
+| 4 | Aer | Travel Pack 3 | "One of the most beloved EDC go-anywhere packs ever" |
+| 5 | Aer | City Pack Pro 2 20L (base fabric) | S-tier; the zero-regret daily driver |
+| 6 | Tom Bihn | Synapse 19 | Long-running cult classic, US-made |
+| 7 | Bellroy | Classic Backpack Plus | Best-selling gateway EDC pack |
+| 8 | Mystery Ranch | Urban Assault 24 | The 3-Zip design icon |
+| 9 | Black Ember | Citadel R3 25L | Best weatherproof; modular hardshell. *Replaces discontinued R2; rank inherited — ADR-019* |
+| 10 | Able Carry | Max EDC 26L | Enthusiast darling, Carry Awards regular |
+| 11 | Mission Workshop | The Rhake VX | Best commuter/cycling; weatherproof VX |
+| 12 | Alpaka | Elements Backpack Pro | Best modern value |
+| 13 | Topo Designs | Rover Pack Tech | Heritage design, accessible price |
+| 14 | Osprey | Daylite Plus 20L | Highest-volume seller on the list |
+| 15 | WANDRD | PRVKE 21 | Photo/EDC crossover standard |
+| 16 | The Brown Buffalo | ConcealPack 21L | Best small-batch |
+| 17 | Incase | ICON Slim | Long-standing tech-EDC staple |
+| 18 | Chrome Industries | Barrage Cargo | Messenger heritage, weatherproof roll-top |
+| 19 | Arktype | Dashpack II | Minimalist favorite |
+| 20 | Filson | Dryden Ballistic Nylon | Heritage/professional entry |
 
-| # | Brand | Model | Reviews (channel) | vs acclaim |
-| --- | --- | --- | --- | --- |
-| 1 | EVERGOODS | Civic Panel Loader 24L V3 | — | = |
-| 2 | Peak Design | Everyday Backpack V2 30L | 1,612 (REI) | = |
-| 3 | GORUCK | GR1 26L | — | = |
-| 4 | Aer | Travel Pack 3 | — | = |
-| 5 | Aer | City Pack Pro 2 **20L** (base fabric — not Ultra or X-Pac) | — | = |
-| 6 | Tom Bihn | Synapse 19 | 395 (DTC) | = |
-| 7 | Bellroy | Classic Backpack Plus | — | = |
-| 8 | Mystery Ranch | Urban Assault 24 | 10 (REI) — below threshold | = |
-| 9 | Able Carry | Max EDC 26L | 320 (DTC) | +1 |
-| 10 | Black Ember | Citadel R3 25L *(replaces discontinued R2; rank inherited — ADR-019)* | — | −1 |
-| 11 | WANDRD | PRVKE 21 | 3,031 (DTC) | **+4** |
-| 12 | Alpaka | Elements Backpack Pro | 629 (DTC) | = |
-| 13 | Osprey | Daylite Plus 20L | 515 (REI) | +1 |
-| 14 | Mission Workshop | The Rhake VX | — | −3 |
-| 15 | Topo Designs | Rover Pack Tech | 29 (REI) — below threshold | −2 |
-| 16 | The Brown Buffalo | ConcealPack 21L | — | = |
-| 17 | Incase | ICON Slim | — | = |
-| 18 | Chrome Industries | Barrage Cargo | — | = |
-| 19 | Arktype | Dashpack II | — | = |
-| 20 | Filson | Dryden Ballistic Nylon | — | = |
+Spread: **$60–$435**, **14–30L**, 19 distinct brands (Aer twice).
 
-Spread: **$60–$435**, **14–30L**, 19 distinct brands (Aer twice). Membership is unchanged from the
-acclaim-only list — with 14 of 20 packs unscored, the blend can reorder but cannot change who is on
-it.
+**Before researching any pack, confirm it is still in production** (ADR-019). Incase ICON Slim and
+Arktype Dashpack II are the most likely to have been superseded.
 
 ---
 
@@ -148,8 +146,8 @@ Research is mine (WebSearch/WebFetch); the scripts are deterministic and re-runn
 failure in one pack never forces a full re-fetch.
 
 ```
-data/seed.ts              ranked 20: slug, name, brand, brandUrl, acclaimRank, rationale
-                          (acclaimRank + rationale let the ADR-018 blend be recomputed and audited)
+data/seed.ts              ranked 20: slug, name, brand, brandUrl, rank, rationale
+                          (rank is the acclaim rank; rationale keeps the ordering auditable)
 data/sources/{slug}.json  research output: image URLs, price+retailer+url, score+scale+source, specs
 scripts/fetch-images.ts   download ≤5 images → .ingest-cache/{slug}/  (gitignored, rate-limited)
 scripts/process-images.ts sharp → public/images/{slug}/{n}-{w}.{avif,webp}  (w ∈ 640, 1280)
@@ -267,7 +265,7 @@ Recorded as ADR consequences rather than duplicated here:
 | Product photos are copyrighted | **ADR-012** — not committed; repo redistributes nothing |
 | Retailers block automated fetches | **ADR-009** — fallback brand-direct → major retailer → manual capture; source URLs are data, not hardcoded scraping |
 | Prices and scores go stale | **ADR-009** — `capturedAt` stored and surfaced; never presented as live |
-| Ranking is subjective | **ADR-018** — accepted, low confidence (6/20 scored); per-pack acclaim rank and rationale committed to `data/seed.ts` so ordering stays auditable |
+| Ranking is subjective | **ADR-018** — acknowledged as editorial; per-pack `rationale` committed to `data/seed.ts` so the ordering stays auditable |
 | TypeScript 7 breaks `vue-tsc` | **ADR-002** — pinned 6.0.3 with a documented 7.1 upgrade path |
 
 ---

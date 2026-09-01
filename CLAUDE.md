@@ -24,7 +24,6 @@ that must always hold. Longer reference material lives in files you read on dema
 | `docs/decisions.md` | Append-only decision log — the **why** behind the rules below | Considering changing a pinned version, an architectural constraint, or anything this file states as a rule |
 | `docs/component-conventions.md` | Naming, props, slots, file layout *(added at plan Phase 3)* | Writing or modifying any Vue component |
 | `app/types/backpack.ts` | The data contract, as code *(added at plan Phase 2)* | Touching catalog data in any layer |
-| `docs/review-count-checklist.md` | Manual review-count collection for the ranking blend | Strengthening the popularity signal, or before Phase 5 research |
 | `README.md` | Setup, commands, project overview | Onboarding, or when setup steps change |
 | `edc-catalog-app-implementation-plan.md` | Architecture, ranked 20, ingest design, build order, supervision guide | Starting any phase of work |
 

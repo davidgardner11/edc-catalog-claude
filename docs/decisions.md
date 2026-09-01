@@ -201,48 +201,49 @@ calling it "lowest" would be an unverified claim. Comparing a small set makes th
 - The data model stores the winning price and retailer. If per-retailer comparison later needs to be
   visible in the detail view, that is a schema change and a new ADR.
 
-## ADR-018 — Ranking blends acclaim with channel-relative review counts
-**2026-08-31 · Accepted (low confidence — see coverage)**
+## ADR-018 — Ranking is pure critical acclaim; popularity abandoned
+**2026-08-31 · Accepted**
 
-Ranking is `0.6 × acclaim + 0.4 × popularity`, where acclaim is the cross-source critical ranking
-(Carryology, Pack Hacker, HiConsumption, Nomads Nation) and popularity is a review-count tier.
+The 20 are ranked on cross-source critical acclaim alone (Carryology, Pack Hacker, HiConsumption,
+Nomads Nation). There is no popularity term.
 
-**Why tiers, not raw counts:** counts are not comparable across distribution models. Most acclaimed
-EDC brands are direct-to-consumer, so their only review pool is their own site; mass-market packs
-sell through REI/Amazon. Tom Bihn's 395 is on its *sole* channel; Mystery Ranch's 10 is on *one of
-many*. Ranking those against each other measures distribution model, not popularity. DTC brand sites
-are also moderated and cluster near 4.9 against REI's 4.5–4.7. Packs are therefore tiered 1–5
-**within their own channel**, and tiers — not counts — enter the blend.
+**Popularity was investigated and abandoned as impractical to measure.** The attempt and why it
+failed, so this is not re-litigated:
 
-**Guards:**
-- Counts below 50 are treated as *insufficient evidence*, not as unpopularity. Otherwise Mystery
-  Ranch would drop six places on 10 REI reviews while also selling through channels we never checked.
-- A pack with no retrievable count scores its acclaim value, so the blend is neutral rather than
-  penalising packs that merely hide their numbers.
+1. **Retailer review counts are not comparable across distribution models.** Most acclaimed EDC
+   brands are direct-to-consumer, so their only review pool is their own site; mass-market packs sell
+   through REI and Amazon. Tom Bihn's 395 reviews are on its *sole* channel; Mystery Ranch's 10 are
+   on *one of many*. Ranking those against each other measures distribution model, not popularity.
+   DTC brand sites are also moderated and cluster near 4.9 against REI's 4.5–4.7.
+2. **A channel-relative tiering scheme fixed the comparability problem but not the coverage one.**
+   Only 6 of 20 packs yielded a usable count: REI product pages time out on automated fetch, GORUCK
+   publishes no on-page count, Evergoods renders reviews in a Loox iframe, and Aer, Bellroy, Black
+   Ember and Chrome render theirs dynamically.
+3. **At that coverage the term did nothing.** With 14 of 20 packs falling back to acclaim-only, the
+   blend could reorder slightly but could not change membership. It moved exactly one pack
+   meaningfully. A 0.4 weight standing on 30% coverage is false precision, not a signal.
+4. **Units sold — the only true popularity measure — is not public** for any of these brands.
 
-**Coverage — the material weakness:** only **6 of 20** packs yielded a usable count. REI product
-pages time out on direct fetch (counts arrived only when a search snippet happened to include them),
-GORUCK publishes no on-page count, Evergoods renders reviews in a Loox iframe, and Aer, Bellroy,
-Black Ember and Chrome render theirs dynamically.
+**Decision:** delete the popularity term rather than keep a weight that implies a rigour the data
+cannot support. The ranking is editorial and says so.
 
-**Outcome:** membership did **not** change — no pack entered or left. Only WANDRD PRVKE 21 moved
-meaningfully (15 → 11, on 3,031 reviews). The earlier expectation in this ADR that reweighting would
-change membership was wrong; it cannot, when 14 of 20 packs fall back to acclaim-only.
+**Consequence:** `rank` in `data/seed.ts` *is* the acclaim rank; there is no separate `acclaimRank`.
+Each entry carries a `rationale` naming the sources behind its placement, so the ordering stays
+auditable as judgment rather than arithmetic.
 
-**Open data issue:** Black Ember Citadel R2 (rank 10) appears discontinued — the line has moved to
-Citadel R3 / H2. This blocks Phase 5 for that pack independently of review counts, and needs its own
-ADR: substitute the current model, or drop the brand. Phase 5 should confirm each pack is still in
-production before spending research effort on it.
+**Not affected:** each pack's **review score** (`4.4/5.0`, `8.1/10.0`) is a card field and stays —
+see ADR-010. What was dropped is review *count* as a ranking input, not review score as content.
 
-**To strengthen:** supply counts manually from a browser (these sites do not block a human) and
-re-run the blend. Until then this ordering is acclaim with a light popularity nudge, and should be
-described that way rather than as a popularity ranking.
+**If revisited:** the blocker is data collection, not method. Counts gathered by hand from a browser
+(these sites do not block a human) would restore the option, and the channel-relative tiering in the
+history of this file is the method to reuse.
 
 ## ADR-019 — Black Ember Citadel R2 replaced by Citadel R3 25L at rank 10
 **2026-08-31 · Accepted**
 
-Rank 10 was Black Ember Citadel R2, which no longer appears on `blackember.com`. It is replaced by
-the **Citadel R3 25L**, keeping rank 10.
+Black Ember Citadel R2 no longer appears on `blackember.com`. It is replaced by the
+**Citadel R3 25L**, inheriting the R2's acclaim rank of **9**. (This entry read "rank 10" while the
+ADR-018 blend was in force; dropping the popularity term restored the acclaim ordering.)
 
 **Why R3 and not H2:** the R3 is the direct successor in the same line — reviewers describe it as an
 overhaul of the R2 (less stiff fabric, real external pocketing, toned-down modularity). The H2 is a
@@ -255,7 +256,7 @@ alternative — dropping Black Ember — loses a distinct brand from a 19-brand 
 coverage suggests it belongs elsewhere.
 
 **Consequences:**
-- The ranked-20 table names Citadel R3 25L; no ⚠️ marker remains.
+- The ranked-20 table names Citadel R3 25L at rank 9; no ⚠️ marker remains.
 - The R2's acclaim placement carries forward, so `data/seed.ts` must note in `rationale` that the
   rank was inherited rather than earned by this model.
 - Any review score captured must come from the **R3**, not from R2 reviews (ADR-009: real data).
