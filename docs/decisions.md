@@ -199,16 +199,34 @@ calling it "lowest" would be an unverified claim. Comparing a small set makes th
 - The data model stores the winning price and retailer. If per-retailer comparison later needs to be
   visible in the detail view, that is a schema change and a new ADR.
 
-## ADR-018 — Ranked 20 reweighted toward popularity
-**2026-08-31 · Open**
+## ADR-018 — Ranking blends acclaim with channel-relative review counts
+**2026-08-31 · Accepted (low confidence — see coverage)**
 
-The initial list was ranked on critical acclaim (Carryology, Pack Hacker, HiConsumption, Nomads
-Nation). The brief asked for "popular, beloved, **and** acclaimed"; acclaim was over-weighted.
+Ranking is `0.6 × acclaim + 0.4 × popularity`, where acclaim is the cross-source critical ranking
+(Carryology, Pack Hacker, HiConsumption, Nomads Nation) and popularity is a review-count tier.
 
-**Why:** A catalog topped by boutique packs misrepresents what people actually carry.
-**Open question:** What "popular" means operationally — units sold (not public), retailer review
-counts (measurable), brand search volume, or enthusiast-community mindshare. These produce
-materially different lists.
-**Consequence when settled:** membership changes, not just ordering; low-volume boutique entries
-give way to higher-volume packs.
-**Decide before:** Phase 5 research begins.
+**Why tiers, not raw counts:** counts are not comparable across distribution models. Most acclaimed
+EDC brands are direct-to-consumer, so their only review pool is their own site; mass-market packs
+sell through REI/Amazon. Tom Bihn's 395 is on its *sole* channel; Mystery Ranch's 10 is on *one of
+many*. Ranking those against each other measures distribution model, not popularity. DTC brand sites
+are also moderated and cluster near 4.9 against REI's 4.5–4.7. Packs are therefore tiered 1–5
+**within their own channel**, and tiers — not counts — enter the blend.
+
+**Guards:**
+- Counts below 50 are treated as *insufficient evidence*, not as unpopularity. Otherwise Mystery
+  Ranch would drop six places on 10 REI reviews while also selling through channels we never checked.
+- A pack with no retrievable count scores its acclaim value, so the blend is neutral rather than
+  penalising packs that merely hide their numbers.
+
+**Coverage — the material weakness:** only **6 of 20** packs yielded a usable count. REI product
+pages time out on direct fetch (counts arrived only when a search snippet happened to include them),
+GORUCK publishes no on-page count, Evergoods renders reviews in a Loox iframe, and Aer, Bellroy,
+Black Ember and Chrome render theirs dynamically.
+
+**Outcome:** membership did **not** change — no pack entered or left. Only WANDRD PRVKE 21 moved
+meaningfully (15 → 11, on 3,031 reviews). The earlier expectation in this ADR that reweighting would
+change membership was wrong; it cannot, when 14 of 20 packs fall back to acclaim-only.
+
+**To strengthen:** supply counts manually from a browser (these sites do not block a human) and
+re-run the blend. Until then this ordering is acclaim with a light popularity nudge, and should be
+described that way rather than as a popularity ranking.

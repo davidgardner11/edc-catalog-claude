@@ -36,14 +36,14 @@ Change a decision there, not here.
 | State | No store. Catalog is a build-time JSON import; filter/sort in URL query params; carousel and pager index local `ref`. | 004 |
 | Detail view | Prerendered `/pack/[slug]` route, not a modal. | 013 |
 | Shell | Search + filter + sort, responsive ranked grid, card detail view. | — |
-| Ranking | **Pending reweight toward popularity — blocks Phase 5.** | 018 |
+| Ranking | `0.6 × acclaim + 0.4 × popularity`, popularity tiered within channel. Low confidence: 6/20 packs scored. | 018 |
 
 ---
 
 ## Stack
 
 ```
-nuxt          4.5.2     SSG via `nuxt generate`. Requires Node ^22.19 || ^24.11 || >=26 (local: 24.19 ✓)
+nuxt          4.5.2     SSG via `nuxt generate`. Requires Node ^24.11 || >=26 (local: 24.19 ✓)
 vue           3.5.42    newest stable — see below
 vite          8.2.2     NOT declared in package.json; @nuxt/vite-builder@4.5.2 pins vite ^8.2.0
 typescript    6.0.3     hard ceiling — see below
@@ -100,45 +100,42 @@ is the easy bug here.
 
 ---
 
-## The ranked 20 — PENDING REWEIGHT (ADR-018)
+## The ranked 20
 
-> **Do not start Phase 5 against this table.** It ranks on critical acclaim alone. The brief asked
-> for "popular, beloved, **and** acclaimed," and a reweight toward popularity is agreed but not yet
-> applied — it will change *membership*, not just order. Blocked on defining what "popular" means
-> operationally (see ADR-018). The table below is the acclaim-ranked baseline it will be derived from.
+Ranked `0.6 × acclaim + 0.4 × popularity` (ADR-018). Acclaim is cross-source critical consensus;
+popularity is a review-count tier scored **within each pack's own channel**, because DTC and
+wholesale counts are not comparable. Counts under 50 are treated as insufficient evidence, and packs
+with no retrievable count fall back to their acclaim value.
 
-Assembled from cross-source consensus rather than any single list: Carryology Carry Awards, Pack
-Hacker brand flagships, HiConsumption's ranked 15, and the Nomads Nation tier list. Rationale below
-gets committed alongside each entry in `data/seed.ts` so the ordering is auditable.
+**Confidence is low: only 6 of 20 packs yielded a usable count.** This is acclaim with a light
+popularity nudge, not a popularity ranking. See ADR-018 to strengthen it.
 
-| # | Brand | Model | Basis |
-| --- | --- | --- | --- |
-| 1 | EVERGOODS | Civic Panel Loader 24L V3 | Carry Awards IX champion; repeatedly named best EDC pack made |
-| 2 | Peak Design | Everyday Backpack V2 30L | Carryology award; MagLatch; most recognizable EDC pack |
-| 3 | GORUCK | GR1 26L | Cult status, lifetime guarantee, "toughest pack" across lists |
-| 4 | Aer | Travel Pack 3 | "One of the most beloved EDC go-anywhere packs ever" |
-| 5 | Aer | City Pack Pro 2 | S-tier; zero-regret daily driver |
-| 6 | Tom Bihn | Synapse 19 | Long-running cult classic, US-made |
-| 7 | Bellroy | Classic Backpack Plus | Best-selling gateway EDC pack |
-| 8 | Mystery Ranch | Urban Assault 24 | The 3-Zip design icon |
-| 9 | Black Ember | Citadel R2 | Best weatherproof; modular hardshell |
-| 10 | Able Carry | Max EDC 26L | Enthusiast darling, Carry Awards regular |
-| 11 | Mission Workshop | The Rhake VX | Best commuter/cycling; weatherproof VX |
-| 12 | Alpaka | Elements Backpack Pro | Best modern value |
-| 13 | Topo Designs | Rover Pack Tech | Heritage design, accessible price |
-| 14 | Osprey | Daylite Plus 20L | Highest-volume seller on the list |
-| 15 | WANDRD | PRVKE 21 | Photo/EDC crossover standard |
-| 16 | The Brown Buffalo | ConcealPack 21L | Best small-batch |
-| 17 | Incase | ICON Slim | Long-standing tech-EDC staple |
-| 18 | Chrome Industries | Barrage Cargo | Messenger heritage, weatherproof roll-top |
-| 19 | Arktype | Dashpack II | Minimalist favorite |
-| 20 | Filson | Dryden Ballistic Nylon | Heritage/professional entry |
+| # | Brand | Model | Reviews (channel) | vs acclaim |
+| --- | --- | --- | --- | --- |
+| 1 | EVERGOODS | Civic Panel Loader 24L V3 | — | = |
+| 2 | Peak Design | Everyday Backpack V2 30L | 1,612 (REI) | = |
+| 3 | GORUCK | GR1 26L | — | = |
+| 4 | Aer | Travel Pack 3 | — | = |
+| 5 | Aer | City Pack Pro 2 | — | = |
+| 6 | Tom Bihn | Synapse 19 | 395 (DTC) | = |
+| 7 | Bellroy | Classic Backpack Plus | — | = |
+| 8 | Mystery Ranch | Urban Assault 24 | 10 (REI) — below threshold | = |
+| 9 | Able Carry | Max EDC 26L | 320 (DTC) | +1 |
+| 10 | Black Ember | Citadel R2 | — | −1 |
+| 11 | WANDRD | PRVKE 21 | 3,031 (DTC) | **+4** |
+| 12 | Alpaka | Elements Backpack Pro | 629 (DTC) | = |
+| 13 | Osprey | Daylite Plus 20L | 515 (REI) | +1 |
+| 14 | Mission Workshop | The Rhake VX | — | −3 |
+| 15 | Topo Designs | Rover Pack Tech | 29 (REI) — below threshold | −2 |
+| 16 | The Brown Buffalo | ConcealPack 21L | — | = |
+| 17 | Incase | ICON Slim | — | = |
+| 18 | Chrome Industries | Barrage Cargo | — | = |
+| 19 | Arktype | Dashpack II | — | = |
+| 20 | Filson | Dryden Ballistic Nylon | — | = |
 
-Spread: **$60–$435**, **14–30L**, 19 distinct brands (Aer appears twice).
-
-Reweighting toward popularity will likely drop the low-volume boutique entries — KILLSPENCER at $895,
-Arktype, The Brown Buffalo — in favor of higher-volume packs, and lift Osprey Daylite well above its
-current #14.
+Spread: **$60–$435**, **14–30L**, 19 distinct brands (Aer twice). Membership is unchanged from the
+acclaim-only list — with 14 of 20 packs unscored, the blend can reorder but cannot change who is on
+it.
 
 ---
 
