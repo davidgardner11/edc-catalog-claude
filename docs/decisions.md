@@ -227,6 +227,11 @@ Black Ember and Chrome render theirs dynamically.
 meaningfully (15 → 11, on 3,031 reviews). The earlier expectation in this ADR that reweighting would
 change membership was wrong; it cannot, when 14 of 20 packs fall back to acclaim-only.
 
+**Open data issue:** Black Ember Citadel R2 (rank 10) appears discontinued — the line has moved to
+Citadel R3 / H2. This blocks Phase 5 for that pack independently of review counts, and needs its own
+ADR: substitute the current model, or drop the brand. Phase 5 should confirm each pack is still in
+production before spending research effort on it.
+
 **To strengthen:** supply counts manually from a browser (these sites do not block a human) and
 re-run the blend. Until then this ordering is acclaim with a light popularity nudge, and should be
 described that way rather than as a popularity ranking.
