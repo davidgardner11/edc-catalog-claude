@@ -92,6 +92,8 @@ change. Rank is stored per pack rather than derived from array position.
 No synthetic or AI-generated placeholder imagery.
 
 **Why:** Explicit product requirement; the catalog is meant to be genuinely useful.
+**Scope:** This governs **catalog content only.** Development fixtures may use placeholder images —
+they never ship in `catalog.json` and exist so components can be built before research happens.
 **Consequence:** Prices and review scores are point-in-time snapshots and carry `capturedAt`; the UI
 must never imply live pricing. Real photos are copyrighted — see ADR-012. The ingest fetcher must
 respect `robots.txt`, rate-limit, and fall back (brand-direct → major retailer → manual capture)
@@ -235,3 +237,24 @@ production before spending research effort on it.
 **To strengthen:** supply counts manually from a browser (these sites do not block a human) and
 re-run the blend. Until then this ordering is acclaim with a light popularity nudge, and should be
 described that way rather than as a popularity ranking.
+
+## ADR-019 — Black Ember Citadel R2 is discontinued
+**2026-08-31 · Open**
+
+Rank 10 is Black Ember Citadel R2. The model no longer appears on `blackember.com`; the line has
+moved to Citadel R3 and Citadel H2.
+
+**Why this blocks work:** a discontinued product has no live price, no current colorways, and no
+first-party product images — so Phase 5 cannot research it regardless of ADR-018's review-count gap.
+
+**Options:**
+1. Substitute the current model (Citadel R3 or H2), keeping Black Ember on the list at rank 10. The
+   acclaim ranking was earned by the R2, so this inherits a rank the new model has not been reviewed
+   into.
+2. Drop Black Ember and promote the next candidate, leaving 19 brands across 20 slots unchanged.
+
+**Decide before:** Phase 5 reaches rank 10. The ranked-20 table carries a ⚠️ marker until then.
+
+**Generalisation:** Phase 5 must confirm each pack is still in production *before* researching it.
+Other entries may have the same problem — Incase ICON Slim and Arktype Dashpack II are the most
+likely, being older models from smaller brands.

@@ -5,7 +5,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Status
 
 **Pre-implementation.** No application code exists yet — no `package.json`, no `app/`, no scripts.
-The repository currently holds the plan, agent definitions, and `.gitignore`.
+The repository holds this file, the implementation plan, `docs/`, `.claude/agents/`, `README.md`,
+and `.gitignore`.
 
 `edc-catalog-app-implementation-plan.md` is the source of truth for architecture, data model, the
 ranked pack list, ingest design, and build order. Read it before starting work. When implementation
@@ -24,6 +25,7 @@ that must always hold. Longer reference material lives in files you read on dema
 | `docs/component-conventions.md` | Naming, props, slots, file layout *(added at plan Phase 3)* | Writing or modifying any Vue component |
 | `app/types/backpack.ts` | The data contract, as code *(added at plan Phase 2)* | Touching catalog data in any layer |
 | `docs/review-count-checklist.md` | Manual review-count collection for the ranking blend | Strengthening the popularity signal, or before Phase 5 research |
+| `README.md` | Setup, commands, project overview | Onboarding, or when setup steps change |
 | `edc-catalog-app-implementation-plan.md` | Architecture, ranked 20, ingest design, build order, supervision guide | Starting any phase of work |
 
 Do not create a second always-read context file. This one already fills that role; a parallel file
@@ -83,6 +85,11 @@ Two derived fields are computed once at ingest and must never be recomputed at r
 `labelColor` (white or black, by WCAG relative luminance sampled over the label's bounding box) and
 `needsScrim`. Do not sample a canvas in a component.
 
+Images are emitted per width as `public/images/{slug}/{n}-{w}.{avif,webp}` for `w ∈ {640, 1280}`.
+`CarouselImage.base` omits the width and extension; the component builds
+`` `${base}-${w}.avif ${w}w` `` from `widths`. `width`/`height` are the intrinsic size of the
+**largest** variant and exist to hold aspect ratio, keeping CLS at zero.
+
 ### Invariants that are easy to break
 
 - **Review scales differ per pack.** `review.scale` is 5.0 (retailer) or 10.0 (enthusiast review
@@ -102,11 +109,15 @@ Two derived fields are computed once at ingest and must never be recomputed at r
 
 ## Subagents
 
-`.claude/agents/` defines two scoped specialists; prefer them over general edits in their areas.
+`.claude/agents/` defines five scoped specialists; prefer them over general edits in their areas.
 
-- **`frontend-specialist`** — Vue SFCs, Nuxt pages/layouts, Tailwind, accessibility, responsive layout.
-- **`data-pipeline-specialist`** — `scripts/` and `data/`: ingest, sharp processing, contrast
-  precomputation, zod validation.
+- **`frontend-specialist`** — `app/`: Vue SFCs, Tailwind, accessibility, responsive layout.
+- **`data-pipeline-specialist`** — `scripts/` and `data/`: ingest, sharp, contrast precompute, zod.
+- **`research-curator`** — web research into `data/sources/{slug}.json`; never runs ingest.
+- **`test-engineer`** — `tests/` and `*.test.ts`; reports defects rather than editing app code to
+  make a test pass.
+- **`build-tooling-specialist`** — `package.json`, `nuxt.config.ts`, `tsconfig.json`, runner config;
+  enforces the version ceilings above.
 
 There is deliberately no backend agent; this project has no server.
 

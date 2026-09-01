@@ -2,7 +2,7 @@
 
 ## Context
 
-There is no code yet — `/Users/davidgardner/Code/davidgardner11/edc-catalog-claude` is empty. We are
+No application code exists yet — the repository holds planning and configuration only. We are
 building a local-only, statically-generated web catalog of acclaimed Everyday Carry backpacks,
 presented as playing-card-shaped cards (5:7 portrait) in a browsable, filterable grid.
 
@@ -11,9 +11,11 @@ Scope was deliberately cut from the original ask during clarification: **20 pack
 downloaded locally), not generated or synthetic. Everything above 20 is a later batch — the code
 treats the count as data, so growing to 100 is a data job, not a code change.
 
-The interesting engineering is not the grid. It is three things: 
-1. an **ingest pipeline** that turns research into typed, optimized, build-time 
-2. assets; a **precomputed contrast decision** so the label over each photo picks white or black without runtime work; and 
+The interesting engineering is not the grid. It is three things:
+
+1. an **ingest pipeline** that turns research into typed, optimized, build-time assets;
+2. a **precomputed contrast decision** so the label over each photo picks white or black without
+   runtime work; and
 3. a **carousel whose label never moves or re-renders** while the image beneath it cycles.
 
 ---
@@ -43,7 +45,7 @@ Change a decision there, not here.
 ## Stack
 
 ```
-nuxt          4.5.2     SSG via `nuxt generate`. Requires Node ^24.11 || >=26 (local: 24.19 ✓)
+nuxt          4.5.2     SSG via `nuxt generate`. Requires Node ^22.19 || ^24.11 || >=26 (local: 24.19 ✓)
 vue           3.5.42    newest stable — see below
 vite          8.2.2     NOT declared in package.json; @nuxt/vite-builder@4.5.2 pins vite ^8.2.0
 typescript    6.0.3     hard ceiling — see below
@@ -73,8 +75,9 @@ that file listed in `css:`. Prerender everything: `nitro.prerender.crawlLinks = 
 export type Colorway = { name: string; hex: string; family: ColorFamily }
 
 export type CarouselImage = {
-  base: string              // "/images/aer-travel-pack-3/2"
-  width: number             // intrinsic, for CLS-free layout
+  base: string              // "/images/aer-travel-pack-3/2" — width + extension appended
+  widths: number[]          // [640, 1280]; srcset is `${base}-${w}.avif ${w}w`
+  width: number             // intrinsic of the LARGEST variant, for aspect ratio / CLS
   height: number
   alt: string
   labelColor: 'white' | 'black'   // precomputed
@@ -116,12 +119,12 @@ popularity nudge, not a popularity ranking. See ADR-018 to strengthen it.
 | 2 | Peak Design | Everyday Backpack V2 30L | 1,612 (REI) | = |
 | 3 | GORUCK | GR1 26L | — | = |
 | 4 | Aer | Travel Pack 3 | — | = |
-| 5 | Aer | City Pack Pro 2 | — | = |
+| 5 | Aer | City Pack Pro 2 **20L** (base fabric — not Ultra or X-Pac) | — | = |
 | 6 | Tom Bihn | Synapse 19 | 395 (DTC) | = |
 | 7 | Bellroy | Classic Backpack Plus | — | = |
 | 8 | Mystery Ranch | Urban Assault 24 | 10 (REI) — below threshold | = |
 | 9 | Able Carry | Max EDC 26L | 320 (DTC) | +1 |
-| 10 | Black Ember | Citadel R2 | — | −1 |
+| 10 | Black Ember | Citadel R2 ⚠️ **discontinued — see ADR-019 before researching** | — | −1 |
 | 11 | WANDRD | PRVKE 21 | 3,031 (DTC) | **+4** |
 | 12 | Alpaka | Elements Backpack Pro | 629 (DTC) | = |
 | 13 | Osprey | Daylite Plus 20L | 515 (REI) | +1 |
@@ -145,10 +148,11 @@ Research is mine (WebSearch/WebFetch); the scripts are deterministic and re-runn
 failure in one pack never forces a full re-fetch.
 
 ```
-data/seed.ts              hand-curated ranked 20: slug, name, brand, brand URL
+data/seed.ts              ranked 20: slug, name, brand, brandUrl, acclaimRank, rationale
+                          (acclaimRank + rationale let the ADR-018 blend be recomputed and audited)
 data/sources/{slug}.json  research output: image URLs, price+retailer+url, score+scale+source, specs
 scripts/fetch-images.ts   download ≤5 images → .ingest-cache/{slug}/  (gitignored, rate-limited)
-scripts/process-images.ts sharp → public/images/{slug}/{n}.{avif,webp} at 640w + 1280w
+scripts/process-images.ts sharp → public/images/{slug}/{n}-{w}.{avif,webp}  (w ∈ 640, 1280)
 scripts/analyze-label.ts  sharp → labelColor + needsScrim per image
 scripts/build-catalog.ts  merge + zod validate → app/data/catalog.json
 ```
@@ -213,7 +217,8 @@ therefore identical on all 20 cards.
 
 1. **Scaffold** — Nuxt 4 + Tailwind 4 + TS, `pnpm dev` renders a blank page.
 2. **Types + fixtures** — `app/types/backpack.ts` and 3 hand-written fixture packs with placeholder
-   images, so components can be built and tested before any research happens.
+   images, so components can be built and tested before any research happens. ADR-009's ban on
+   synthetic imagery governs catalog content, not dev fixtures.
 3. **Card components** — build the whole card against fixtures. This is where the 65/35 split,
    carousel wraparound, fixed label, and swatch grid get nailed down.
 4. **Ingest pipeline** — scripts + zod schema, proven end-to-end on 3 real packs.
@@ -262,7 +267,7 @@ Recorded as ADR consequences rather than duplicated here:
 | Product photos are copyrighted | **ADR-012** — not committed; repo redistributes nothing |
 | Retailers block automated fetches | **ADR-009** — fallback brand-direct → major retailer → manual capture; source URLs are data, not hardcoded scraping |
 | Prices and scores go stale | **ADR-009** — `capturedAt` stored and surfaced; never presented as live |
-| Ranking is subjective | **ADR-018** — open; per-pack rationale committed to `data/seed.ts` so ordering stays auditable |
+| Ranking is subjective | **ADR-018** — accepted, low confidence (6/20 scored); per-pack acclaim rank and rationale committed to `data/seed.ts` so ordering stays auditable |
 | TypeScript 7 breaks `vue-tsc` | **ADR-002** — pinned 6.0.3 with a documented 7.1 upgrade path |
 
 ---
@@ -286,39 +291,21 @@ unless marked as a shell command.
 
 ## Agent roster
 
-Already in `.claude/agents/`:
-
 | Agent | Owns |
 | --- | --- |
 | `frontend-specialist` | `app/` — Vue SFCs, Tailwind, card + carousel, a11y, responsive layout |
 | `data-pipeline-specialist` | `scripts/` and `data/` — ingest, sharp, contrast precompute, zod |
 
-**Add these three.** Ask Claude in the main session:
+All five now exist:
 
-```
-Create .claude/agents/research-curator.md — a subagent that researches EDC backpack
-product data and writes data/sources/{slug}.json. Tools: WebSearch, WebFetch, Read,
-Write, Edit, Grep, Glob. It must record price+retailer+url, score+scale+source, colorways,
-specs, and image URLs, always with capturedAt. It never writes app code and never runs
-the ingest scripts. Give it effort: high and model: sonnet.
-```
+| Agent | Owns |
+| --- | --- |
+| `research-curator` | Web research → `data/sources/{slug}.json`. Confirms a pack is still in production before researching it (ADR-019). |
+| `test-engineer` | `tests/` and `*.test.ts`. Reports defects; never edits app code to make a test pass. |
+| `build-tooling-specialist` | `package.json`, `nuxt.config.ts`, `tsconfig.json`, runner config. Enforces the version ceilings. |
 
-```
-Create .claude/agents/test-engineer.md — a subagent owning tests/ and *.test.ts. Vitest
-for pure logic in app/utils/, Playwright for browser-only behavior. Tools: Read, Write,
-Edit, Grep, Glob, Bash. It writes and fixes tests but never changes app code to make a
-test pass — it reports the defect instead.
-```
-
-```
-Create .claude/agents/build-tooling-specialist.md — a subagent owning package.json,
-nuxt.config.ts, tsconfig.json, and vitest/playwright config. Its prime directive is the
-version ceiling in CLAUDE.md: TypeScript never above 6.0.3, vite never added as a direct
-dependency, no tailwind.config.js. Tools: Read, Write, Edit, Bash, Grep, Glob.
-```
-
-`build-tooling-specialist` is optional — see Phase 1 below for why you may prefer to keep scaffolding
-in the main session.
+`build-tooling-specialist` is optional for Phase 1 — see below for why you may prefer to scaffold in
+the main session where you can watch the pins land.
 
 Deliberately **not** added: a backend agent (there is no server) and a code-review agent (the
 built-in `/code-review` skill already covers it).
@@ -348,7 +335,9 @@ Scaffold the Nuxt app per CLAUDE.md. Pin nuxt 4.5.2, vue 3.5.42, typescript 6.0.
 tailwindcss 4.3.3 and @tailwindcss/vite 4.3.3, sharp 0.35.4, zod, vitest. Do not add vite
 as a direct dependency. Use pnpm. Wire Tailwind via the @tailwindcss/vite plugin in
 nuxt.config.ts with app/assets/css/main.css. Set "ignoreDeprecations": "6.0" in tsconfig.
-Then run pnpm install and pnpm dev to confirm a blank page renders.
+Add every script from the CLAUDE.md command table to package.json now — dev, generate,
+ingest, test — even where the underlying code does not exist yet, so the table is never
+aspirational. Then run pnpm install and pnpm dev to confirm a blank page renders.
 ```
 
 **Gate:** `pnpm dev` serves; `grep -E '"(typescript|vite)"' package.json` shows `6.0.3` and no `vite`.
@@ -371,13 +360,16 @@ No components yet.
 CardCarousel, CardLabel, ColorwayGrid, PriceBlock, ScoreBlock. Read the Components
 section of edc-catalog-app-implementation-plan.md first. Put pure logic in app/utils/
 (contrast, format, color) so it is unit-testable. Render all 3 fixtures on the index page.
-Do not build the toolbar or detail route yet.
+Do not build the toolbar or detail route yet. Finally, write docs/component-conventions.md
+recording the conventions you actually established — naming, props, slots, file layout —
+not conventions invented in advance.
 ```
 
 **Gate — check these by hand, they are the spec:** card is 5:7; image region is exactly 65%;
 clicking right advances and wraps last→first; clicking left wraps first→last; **the label does not
 shift by a pixel across images**; every card shows exactly 8 swatch cells, and the `>` pager wraps
-from the last page back to the first.
+from the last page back to the first. `docs/component-conventions.md` exists and describes the
+components as built.
 
 ### Phase 4 — Ingest pipeline
 
