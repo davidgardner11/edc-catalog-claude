@@ -112,10 +112,10 @@ There is deliberately no backend agent; this project has no server.
 
 ## Repository
 
-Public: `davidgardner11/edc-catalog-claude`. Because it is public, decide before the first ingest run
-whether processed product photos under `public/images/` should be committed at all — they come from
-brand and retailer CDNs and are copyrighted. `.gitignore` carries a commented-out `public/images/`
-entry for exactly this choice.
+Public: `davidgardner11/edc-catalog-claude`. Product photos come from brand and retailer CDNs and are
+copyrighted, so **`public/images/` is gitignored and never committed** (ADR-012). A fresh clone
+renders nothing until `pnpm ingest` runs — the same is already true of `app/data/catalog.json`, so
+ingest was always a required setup step. Do not commit images "just to make the clone work."
 
 The ingest fetcher must respect `robots.txt`, rate-limit, and fall back (brand-direct → major
 retailer → manual URL capture) rather than retrying a blocked host in a loop.
