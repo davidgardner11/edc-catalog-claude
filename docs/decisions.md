@@ -58,15 +58,6 @@ module, a runtime dependency, and a class of dev/prod divergence.
 **Consequence:** Ingest emits AVIF + WebP at 640w and 1280w. Components use plain `<img>` with
 intrinsic `width`/`height` (which is also what keeps CLS at zero).
 
-## ADR-006 — Label contrast precomputed, with a scrim fallback
-**2026-08-31 · Accepted**
-
-**Why:** Runtime canvas sampling costs work on every page load and can flash the wrong color before
-it resolves. Images are local and static, so the answer never changes — compute it once. Neither
-pure white nor pure black clears WCAG AA on some busy product photos, hence the scrim.
-**Consequence:** Ingest writes `labelColor` and `needsScrim` per image. Components never sample a
-canvas. The math is mirrored in `app/utils/contrast.ts` to stay unit-testable.
-
 ## ADR-007 — No backend, and therefore no backend agent
 **2026-08-31 · Accepted**
 
@@ -299,3 +290,45 @@ judge the run by its exit code.
 
 **Also:** `nuxt generate` leaves a `dist` **symlink** to `.output/public`. `.gitignore` said `dist/`,
 whose trailing slash does not match a symlink, so it was reported untracked; the entry is now `dist`.
+
+## ADR-021 — Card is three bands (65/15/20); the label moves off the photo
+**2026-09-02 · Accepted**
+
+The card was 5:7 split two ways — 65% carousel with the brand/model label **overlaid on the photo**,
+35% meta row. It is now split three ways:
+
+| Band | Height | Contents |
+| --- | --- | --- |
+| 1 | `65fr` | image carousel, unchanged — now completely unobstructed |
+| 2 | `15fr` | brand (uppercase, tracking-wider, `text-[10px]`) over model name (bold, `text-xs sm:text-sm`, `truncate`) |
+| 3 | `20fr` | the meta row, unchanged in content: colorway grid \| price \| score, now explicitly 3 columns |
+
+**Why:** the photo is the product, and an overlay label competes with it. Giving the name its own
+band buys a clean image and legible type at every card size, for 15% of the card height taken from
+the meta row — which at 20% still fits two rows of swatches plus two text lines.
+
+**Still `fr`, not `%`.** The layout sketch that prompted this used `h-[65%] / h-[15%] / h-[20%]`.
+Kept as `grid-rows-[65fr_15fr_20fr]` instead: fractional rows are what make the split exact and
+immune to content pushing it around, which is the whole reason the original 65/35 rule was written.
+Percentage heights would reintroduce that bug. The ratios are exactly as specified; only the unit
+differs.
+
+**Consequences:**
+- `BackpackCard.vue` is `grid-rows-[65fr_15fr_20fr]`. `CardLabel.vue` is in normal flow in band 2,
+  no longer `absolute` / `pointer-events-none`.
+- The carousel's click zones no longer need to be layered above anything, and the colorway pager can
+  no longer accidentally advance the image — it is outside the carousel entirely. Keep its
+  `stopPropagation` for the card-level navigate-to-detail handler.
+- "**The label must not move or re-render as images cycle**" is now guaranteed *structurally*: it
+  lives in a different grid row, so nothing that changes on image swap can touch it. This was
+  previously the project's headline risk, enforced by careful stacking. It is now free. The E2E
+  assertion stays as a cheap regression guard, demoted from "the core spec".
+- Model name must `truncate`; a wrapping name would grow band 2 and break the ratio.
+- Band 3's three regions become explicit columns. Column 3 shows the score over `review.source`,
+  mirroring column 2's price over `price.retailer`. (The prompting sketch wrote "Verified" on that
+  second line; read as the source label, since no such field exists and ADR-009 forbids inventing
+  one.)
+- Worst case to verify is the **260px** card: 364px tall → band 2 = 55px, band 3 = 73px.
+- The photo carries no text, so nothing needs to be made legible against it. `CarouselImage` is
+  `base` / `widths` / `width` / `height` / `alt` and nothing more; the ingest pipeline is
+  fetch-images → process-images → build-catalog.

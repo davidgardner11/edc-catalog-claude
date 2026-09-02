@@ -41,12 +41,14 @@ These are non-obvious and easy to get wrong. Verify before changing any dependen
 
 ## Domain rules
 
-- **Card geometry is fixed.** `aspect-[5/7]`, `min-w-[260px] max-w-[320px]`. The 65/35 split uses
-  `grid-rows-[65fr_35fr]`, never percentage heights — content must not be able to shift it.
-- **The carousel label must never move or re-render** when the image changes. The label is a sibling
-  of the `<img>` and is never keyed to the image index. Enforce this structurally.
-- **`labelColor` and `needsScrim` are precomputed at ingest** and read from the catalog data. Never
-  recompute contrast at runtime, and never sample a canvas in a component.
+- **Card geometry is fixed.** `aspect-[5/7]`, `min-w-[260px] max-w-[320px]`, inner
+  `grid grid-rows-[65fr_15fr_20fr]` — three bands: carousel 65%, brand+name 15%, meta row 20%
+  (ADR-021). Use `fr`, never percentage heights — content must not be able to shift the split.
+- **Nothing overlays the photo.** The brand/model label lives in band 2, its own grid row, so it
+  cannot move or re-render as images cycle. Do not reintroduce a label over the image. The model name
+  uses `truncate`; a wrapping name would grow band 2 and break the ratio.
+- **Band 3 is three columns** — colorway grid, price over `price.retailer`, score over
+  `review.source`.
 - **Review scores use per-pack scales** (`review.scale` is 5.0 or 10.0). Display raw
   `score`/`scale`; any sorting or filtering must use `score / scale` normalized to 0–1.
 - **Colorway grid is rigidly 8 cells** — 4 columns × 2 rows (ADR-015). At 8 or fewer colorways, show
@@ -57,8 +59,8 @@ These are non-obvious and easy to get wrong. Verify before changing any dependen
 - **Everything cyclable wraps** (ADR-016). Carousel: last→first, first→last. Colorway pager: last
   page→first page. Modulo arithmetic, never bounds-clamping; no control is ever rendered disabled.
 - **The card has three click interactions**: carousel prev, carousel next, and the colorway pager —
-  plus card-body navigation to the detail route. The pager's handler must `stopPropagation` so it
-  neither advances the carousel nor navigates. Every one is a real `<button>` with an `aria-label`,
+  plus card-body navigation to the detail route. The pager sits outside the carousel band, so it
+  cannot advance the image; its handler must still `stopPropagation` so it does not navigate. Every one is a real `<button>` with an `aria-label`,
   and page/image changes are announced via `aria-live`.
 
 Always prioritize accessibility, semantic HTML, and mobile-first responsive design. Carousel controls

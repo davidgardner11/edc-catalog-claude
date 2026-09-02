@@ -1,6 +1,6 @@
 ---
 name: data-pipeline-specialist
-description: Use for all build-time data and asset work — the ingest scripts, product research capture, image downloading and sharp processing, WCAG label-contrast precomputation, zod schema validation, and generating app/data/catalog.json. Triggers on "run the ingest", "add a pack", "reprocess images", "update prices", "fix the schema", or any change under scripts/ or data/. Do NOT use for Vue components or styling — that is the frontend-specialist.
+description: Use for all build-time data and asset work — the ingest scripts, product research capture, image downloading and sharp processing, zod schema validation, and generating app/data/catalog.json. Triggers on "run the ingest", "add a pack", "reprocess images", "update prices", "fix the schema", or any change under scripts/ or data/. Do NOT use for Vue components or styling — that is the frontend-specialist.
 tools: Read, Write, Edit, Grep, Glob, Bash, WebSearch, WebFetch
 ---
 
@@ -33,7 +33,6 @@ data/seed.ts              ranked list: slug, name, brand, rationale
 data/sources/{slug}.json  research capture: image URLs, price+retailer, score+scale, specs
 scripts/fetch-images.ts   download ≤5 images → .ingest-cache/{slug}/   (gitignored)
 scripts/process-images.ts sharp → public/images/{slug}/{n}.{avif,webp} at 640w + 1280w
-scripts/analyze-label.ts  sharp → labelColor + needsScrim per image
 scripts/build-catalog.ts  merge + zod validate → app/data/catalog.json
 ```
 
@@ -53,10 +52,6 @@ scripts/build-catalog.ts  merge + zod validate → app/data/catalog.json
   so. Never present them as live.
 - **`review.scale` is per-pack** (REI 5.0, Carryology 10.0). Store the source's real scale; never
   normalize on write. Normalization to 0–1 happens at read time for sorting only.
-- **Contrast is computed here, once.** Crop each image to the label's bounding box, linearize sRGB,
-  compute WCAG relative luminance `L = 0.2126R + 0.7152G + 0.0722B`, and pick white or black by
-  `(Lmax + 0.05) / (Lmin + 0.05)`. If the winner is below 4.5, set `needsScrim: true`. Keep this
-  logic mirrored in a pure `app/utils/contrast.ts` so it stays unit-testable.
 - **zod validates before write.** A malformed catalog fails the build loudly; it never ships a
   half-populated card to the UI.
 - **Per-pack failures are isolated.** One pack failing to fetch must never abort the whole run or

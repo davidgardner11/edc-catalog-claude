@@ -11,12 +11,11 @@ Scope was deliberately cut from the original ask during clarification: **20 pack
 downloaded locally), not generated or synthetic. Everything above 20 is a later batch — the code
 treats the count as data, so growing to 100 is a data job, not a code change.
 
-The interesting engineering is not the grid. It is three things:
+The interesting engineering is not the grid. It is two things:
 
-1. an **ingest pipeline** that turns research into typed, optimized, build-time assets;
-2. a **precomputed contrast decision** so the label over each photo picks white or black without
-   runtime work; and
-3. a **carousel whose label never moves or re-renders** while the image beneath it cycles.
+1. an **ingest pipeline** that turns research into typed, optimized, build-time assets; and
+2. **rigid card geometry** — every card is 5:7 split 65/15/20, and nothing in the data can push those
+   bands around, whatever the image count, name length, or colorway count.
 
 ---
 
@@ -32,7 +31,7 @@ Change a decision there, not here.
 | Data | Real, researched via web search. `capturedAt` on every price and score. | 009 |
 | Images | Real product photos, 1–5 per pack. **Not committed** — `public/images/` is gitignored, so a clone must run `pnpm ingest`. | 009, 012 |
 | Image tech | sharp at ingest → AVIF + WebP at 640w/1280w → plain `<img srcset>`. No `@nuxt/image`, no IPX. | 005 |
-| Contrast | Precomputed at ingest, plus a scrim fallback when neither white nor black clears AA. | 006 |
+| Card layout | 5:7 split into three bands: 65% carousel / 15% brand+name / 20% meta. | 021 |
 | Swatches | 8 cells, 4 cols × 2 rows. ≤8 → ghost-pad. >8 → cell 8 is a wrapping `>` pager, 7 per page. | 015, 016 |
 | Pricing | Lowest across brand-direct plus 1–2 major retailers, so "lowest available price" is a true claim. | 017 |
 | State | No store. Catalog is a build-time JSON import; filter/sort in URL query params; carousel and pager index local `ref`. | 004 |
@@ -80,8 +79,6 @@ export type CarouselImage = {
   width: number             // intrinsic of the LARGEST variant, for aspect ratio / CLS
   height: number
   alt: string
-  labelColor: 'white' | 'black'   // precomputed
-  needsScrim: boolean             // precomputed; true when winner < 4.5:1
 }
 
 export type Backpack = {
@@ -151,22 +148,11 @@ data/seed.ts              ranked 20: slug, name, brand, brandUrl, rank, rational
 data/sources/{slug}.json  research output: image URLs, price+retailer+url, score+scale+source, specs
 scripts/fetch-images.ts   download ≤5 images → .ingest-cache/{slug}/  (gitignored, rate-limited)
 scripts/process-images.ts sharp → public/images/{slug}/{n}-{w}.{avif,webp}  (w ∈ 640, 1280)
-scripts/analyze-label.ts  sharp → labelColor + needsScrim per image
 scripts/build-catalog.ts  merge + zod validate → app/data/catalog.json
 ```
 
 Orchestrated by `pnpm ingest`. `.ingest-cache/` holds originals so image processing can be re-tuned
 without re-hitting any retailer.
-
-**Contrast math** (`scripts/analyze-label.ts`, mirrored in a pure `app/utils/contrast.ts` for tests):
-
-1. Crop only the **label's bounding box** — not the whole image. The label sits in the lower-left of
-   the top 65% region; sample exactly that rect.
-2. Linearize sRGB, compute WCAG relative luminance `L = 0.2126R + 0.7152G + 0.0722B`.
-3. `contrast(a, b) = (Lmax + 0.05) / (Lmin + 0.05)`; pick whichever of white/black scores higher.
-4. If the winner is still `< 4.5`, set `needsScrim: true` — the card renders a bottom-up
-   `linear-gradient` scrim behind the label. This is what saves busy product photos where neither
-   pure color is legible.
 
 ---
 
@@ -175,36 +161,69 @@ without re-hitting any retailer.
 ```
 app/pages/index.vue              toolbar + grid
 app/pages/pack/[slug].vue        detail route, prerendered
-app/components/BackpackCard.vue  5:7 shell, grid-rows-[65fr_35fr]
-app/components/CardCarousel.vue  image swap, click zones, dots
-app/components/CardLabel.vue     name + brand, absolutely positioned, pointer-events-none
-app/components/ColorwayGrid.vue  rigid 8 cells (4×2), ghost padding, wrapping `>` pager
-app/components/PriceBlock.vue    $249 bold / retailer beneath
-app/components/ScoreBlock.vue    4.4/5.0
+app/components/BackpackCard.vue  5:7 shell, grid-rows-[65fr_15fr_20fr]
+app/components/CardCarousel.vue  band 1 — image swap, click zones, dots
+app/components/CardLabel.vue     band 2 — brand over name, normal flow, its own band
+app/components/ColorwayGrid.vue  band 3 col 1 — rigid 8 cells (4×2), ghost padding, wrapping `>` pager
+app/components/PriceBlock.vue    band 3 col 2 — $249 bold / retailer beneath
+app/components/ScoreBlock.vue    band 3 col 3 — 4.4/5.0 / source beneath
 app/components/CatalogToolbar.vue
 app/composables/useCatalogFilters.ts   URL-query-backed filter/sort state
-app/utils/{contrast,format,color}.ts   pure, unit-tested
+app/utils/{format,color}.ts            pure, unit-tested
 ```
 
-**Card geometry.** `aspect-[5/7] min-w-[260px] max-w-[320px] rounded-xl border shadow-sm
-overflow-hidden`, inner `grid grid-rows-[65fr_35fr]`. Using fractional grid rows rather than
-percentage heights is what makes the 65/35 split exact and immune to content pushing it around.
+**Card geometry.** Three bands, top to bottom (ADR-021):
 
-**Carousel.** Two full-height `<button>` zones (left/right halves) layered *above* the label, which
-is `pointer-events-none` — so a click anywhere in the image region, label included, cycles. Wrap is
-plain modulo: `(i + 1) % n` and `(i - 1 + n) % n`. The label is a **sibling** of the `<img>`, never
-keyed to the image index, so it cannot move or re-render when the image swaps — that is the
-requirement, enforced structurally rather than by hoping. Image `[0]` eager, rest lazy, neighbors
-preloaded on first interaction to avoid a swap flash. `aria-label`s on both zones, ArrowLeft/Right
-on the container, dot indicators, and an `aria-live` "Image 3 of 5".
+```
++-------------------------------------------------------------+
+|                                                             |
+|                  BAND 1 — 65fr  (CardCarousel)              |
+|           clean, unobstructed image carousel                |
+|              (1-5 high-res product photos)                  |
+|      [ left 50% = prev, wraps ] [ right 50% = next, wraps ] |
+|                                                             |
+|                    * * * * *  (dots)                        |
++=============================================================+
+|                  BAND 2 — 15fr  (CardLabel)                 |
+|  BRAND NAME        uppercase, tracking-wider, text-[10px]   |
+|  Backpack Model    bold, text-xs sm:text-sm, truncate       |
++-------------------------------------------------------------+
+|                  BAND 3 — 20fr  (meta row, 3 cols)          |
+|  [ ColorwayGrid  ] | [ PriceBlock ] | [ ScoreBlock       ]  |
+|  [  o o o o      ] | [  $279      ] | [  4.8/5.0         ]  |
+|  [  o o o >      ] | [  Retailer  ] | [  review.source   ]  |
++-------------------------------------------------------------+
+```
+
+Shell is `aspect-[5/7] min-w-[260px] max-w-[320px] rounded-xl border shadow-sm overflow-hidden`,
+inner `grid grid-rows-[65fr_15fr_20fr]`. **Use `fr`, not `h-[65%]`/`h-[15%]`/`h-[20%]`** — fractional
+grid rows are what make the split exact and immune to content pushing it around; percentage heights
+reintroduce exactly the shifting this rule exists to prevent. Band 3 is `grid grid-cols-3` (or
+`grid-cols-[auto_1fr_1fr]` if the swatch column needs to size to its 4 columns). At the 260–320px
+width range the card is 364–448px tall, so band 2 gets 55–67px for two text lines and band 3 gets
+73–90px for two rows of swatches — tight but sufficient; verify at 260px, the worst case.
+
+**Carousel.** Two full-height `<button>` zones (left/right halves) fill the band — a click anywhere
+in the image region cycles. Wrap is plain modulo: `(i + 1) % n` and `(i - 1 + n) % n`. Nothing
+overlays the photo, so the zones need no z-index games and no `pointer-events-none` sibling. Image
+`[0]` eager, rest lazy, neighbors preloaded on first interaction to avoid a swap flash. `aria-label`s
+on both zones, ArrowLeft/Right on the container, dot indicators, and an `aria-live` "Image 3 of 5".
+
+**Label.** Brand over name, in normal flow inside band 2 — a **different grid row** from the
+carousel, not a sibling stacked on the image. The old requirement (the label must not move or
+re-render as images cycle) is now satisfied by the layout itself: nothing that changes on image swap
+is inside band 2, so it cannot move. Keep the E2E assertion anyway as a cheap regression guard, but
+it is no longer the load-bearing risk it was. Name uses `truncate`, so a long model name shortens
+rather than wrapping the band taller.
 
 **Swatches.** `grid grid-cols-4 grid-rows-2 gap-1`, always 8 cells rendered (ADR-015). At `n <= 8`,
 show all and ghost-pad (dashed, muted) the remainder. At `n > 8`, cell 8 becomes a `>` pager and each
 page shows 7 colorways: `colorways.slice(page * 7, page * 7 + 7)`, with `pages = Math.ceil(n / 7)`
 and `page = (page + 1) % pages` on click — wrapping, like the carousel (ADR-016). The pager stays in
 cell 8 on every page including a partial last one, so the hit target never moves. Its handler calls
-`stopPropagation` so it neither advances the carousel nor navigates to the detail route. Geometry is
-therefore identical on all 20 cards.
+`stopPropagation` so it does not navigate to the detail route. Geometry is therefore identical on all
+20 cards. (Band 3 is outside the carousel's click zones now, so the pager no longer risks advancing
+the image — but keep `stopPropagation` for the card-level navigation handler.)
 
 **Formatting.** Score `${score.toFixed(1)}/${scale.toFixed(1)}` → `4.4/5.0`, `8.1/10.0`. Price via
 `Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })`, dropping `.00` when whole.
@@ -217,8 +236,8 @@ therefore identical on all 20 cards.
 2. **Types + fixtures** — `app/types/backpack.ts` and 3 hand-written fixture packs with placeholder
    images, so components can be built and tested before any research happens. ADR-009's ban on
    synthetic imagery governs catalog content, not dev fixtures.
-3. **Card components** — build the whole card against fixtures. This is where the 65/35 split,
-   carousel wraparound, fixed label, and swatch grid get nailed down.
+3. **Card components** — build the whole card against fixtures. This is where the 65/15/20 split,
+   carousel wraparound, and swatch grid get nailed down.
 4. **Ingest pipeline** — scripts + zod schema, proven end-to-end on 3 real packs.
 5. **Research + ingest 20** — the slow part, run in batches of ~5. Now cheap to verify, because the
    UI already exists.
@@ -231,17 +250,19 @@ Steps 1–4 are the ones worth your review; step 5 is mechanical once the pipeli
 
 ## Verification
 
-**Unit (`vitest`)** — the pure logic, which is where the real bugs live:
-`contrast.ts` (known-luminance fixtures: pure white bg → black label, pure black → white, mid-gray →
-`needsScrim`), score formatter across both scales, price formatter, carousel modulo wraparound at
-both ends with n=1 and n=5, swatch paging at counts 0/4/8/9/15/22 (boundary at 8, partial final
-page, and `ceil(n/7)` page counts), pager wraparound last→first.
+**Unit (`vitest`)** — the pure logic, which is where the real bugs live: score formatter across both
+scales, price formatter, carousel modulo wraparound at both ends with n=1 and n=5, swatch paging at
+counts 0/4/8/9/15/22 (boundary at 8, partial final page, and `ceil(n/7)` page counts), pager
+wraparound last→first.
 
 **E2E (`playwright-tester` skill)** — the behaviors that are only observable in a browser:
-- card bounding box matches 5:7 within tolerance; image region is 65% of card height
+- card bounding box matches 5:7 within tolerance; the three bands measure 65% / 15% / 20% of card
+  height, and stay at those ratios for the longest name and the largest colorway count in the fixtures
 - clicking the right half advances; from the last image it lands on the first
 - clicking the left half retreats; from the first image it lands on the last
-- **label text and bounding-box position are byte-identical across all N images** (the core spec)
+- **label text and bounding-box position are byte-identical across all N images** — now structurally
+  guaranteed by the band split (ADR-021), kept as a regression guard
+- band 2 never wraps to a second line: a very long model name truncates instead
 - exactly 8 swatch cells on every card, whatever the colorway count; the `>` pager sits in cell 8
   on every page, and clicking it from the last page returns to the first
 - rendered score matches `/^\d+\.\d\/\d+\.\d$/`
@@ -292,7 +313,7 @@ unless marked as a shell command.
 | Agent | Owns |
 | --- | --- |
 | `frontend-specialist` | `app/` — Vue SFCs, Tailwind, card + carousel, a11y, responsive layout |
-| `data-pipeline-specialist` | `scripts/` and `data/` — ingest, sharp, contrast precompute, zod |
+| `data-pipeline-specialist` | `scripts/` and `data/` — ingest, sharp, zod |
 | `research-curator` | Web research → `data/sources/{slug}.json`. Confirms a pack is still in production before researching it (ADR-019). |
 | `test-engineer` | `tests/` and `*.test.ts`. Reports defects; never edits app code to make a test pass. |
 | `build-tooling-specialist` | `package.json`, `nuxt.config.ts`, `tsconfig.json`, runner config. Enforces the version ceilings. |
@@ -353,25 +374,24 @@ No components yet.
 @agent-frontend-specialist Build the card against the fixtures: BackpackCard,
 CardCarousel, CardLabel, ColorwayGrid, PriceBlock, ScoreBlock. Read the Components
 section of edc-catalog-app-implementation-plan.md first. Put pure logic in app/utils/
-(contrast, format, color) so it is unit-testable. Render all 3 fixtures on the index page.
+(format, color) so it is unit-testable. Render all 3 fixtures on the index page.
 Do not build the toolbar or detail route yet. Finally, write docs/component-conventions.md
 recording the conventions you actually established — naming, props, slots, file layout —
 not conventions invented in advance.
 ```
 
-**Gate — check these by hand, they are the spec:** card is 5:7; image region is exactly 65%;
-clicking right advances and wraps last→first; clicking left wraps first→last; **the label does not
-shift by a pixel across images**; every card shows exactly 8 swatch cells, and the `>` pager wraps
-from the last page back to the first. `docs/component-conventions.md` exists and describes the
-components as built.
+**Gate — check these by hand, they are the spec:** card is 5:7; the bands measure **65% / 15% / 20%**
+of card height; clicking right advances and wraps last→first; clicking left wraps first→last; **the
+label does not shift by a pixel across images**; a long model name truncates rather than growing
+band 2; every card shows exactly 8 swatch cells, and the `>` pager wraps from the last page back to
+the first. `docs/component-conventions.md` exists and describes the components as built.
 
 ### Phase 4 — Ingest pipeline
 
 ```
 @agent-data-pipeline-specialist Build the ingest pipeline per the Ingest pipeline section
-of edc-catalog-app-implementation-plan.md: fetch-images, process-images, analyze-label,
-build-catalog, plus the zod schema and a pnpm ingest script. Prove it end-to-end on 3
-packs only. Mirror the contrast math into app/utils/contrast.ts so it stays unit-testable.
+of edc-catalog-app-implementation-plan.md: fetch-images, process-images, build-catalog,
+plus the zod schema and a pnpm ingest script. Prove it end-to-end on 3 packs only.
 ```
 
 **Gate:** re-running `pnpm ingest` on unchanged inputs produces byte-identical output, and re-running
@@ -410,9 +430,9 @@ the raw score.
 
 ```
 @agent-test-engineer Write the test suite per the Verification section of
-edc-catalog-app-implementation-plan.md. Vitest for app/utils (contrast picker with
-known-luminance fixtures, score and price formatters, carousel wraparound at both ends
-with n=1 and n=5, swatch paging at counts 0/4/8/9/15/22). Playwright for the browser-only
+edc-catalog-app-implementation-plan.md. Vitest for app/utils (score and price
+formatters, carousel wraparound at both ends with n=1 and n=5, swatch paging at
+counts 0/4/8/9/15/22). Playwright for the browser-only
 behaviors, especially that the label's text and bounding box are identical across every
 image in a carousel. If a test fails because the app is wrong, report it — do not edit app
 code to make it pass.

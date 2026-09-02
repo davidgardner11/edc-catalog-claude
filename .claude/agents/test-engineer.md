@@ -21,8 +21,6 @@ test destroys the only signal the suite exists to provide.
 
 **Vitest — pure logic in `app/utils/`.** Fast, exhaustive, no browser:
 
-- `contrast.ts` — known-luminance fixtures: pure white background → black label; pure black → white;
-  mid-gray → `needsScrim: true`. The WCAG formula is `(Lmax + 0.05) / (Lmin + 0.05)`.
 - score formatter across both scales — `4.4/5.0` and `8.1/10.0` (ADR-010)
 - price formatter — whole dollars drop `.00`
 - carousel wraparound at both ends, with `n = 1` and `n = 5` (`n = 1` is the case that breaks naive

@@ -91,10 +91,6 @@ must never be hand-edited. To change catalog content, edit `data/seed.ts` or
 `data/sources/{slug}.json` and re-run. Originals are cached in gitignored `.ingest-cache/` so image
 processing can be retuned without re-fetching from any retailer.
 
-Two derived fields are computed once at ingest and must never be recomputed at runtime: each image's
-`labelColor` (white or black, by WCAG relative luminance sampled over the label's bounding box) and
-`needsScrim`. Do not sample a canvas in a component.
-
 Images are emitted per width as `public/images/{slug}/{n}-{w}.{avif,webp}` for `w ∈ {640, 1280}`.
 `CarouselImage.base` omits the width and extension; the component builds
 `` `${base}-${w}.avif ${w}w` `` from `widths`. `width`/`height` are the intrinsic size of the
@@ -105,24 +101,28 @@ Images are emitted per width as `public/images/{slug}/{n}-{w}.{avif,webp}` for `
 - **Review scales differ per pack.** `review.scale` is 5.0 (retailer) or 10.0 (enthusiast review
   sites). Display uses raw `score`/`scale`; **sorting and filtering must use `score / scale`
   normalized to 0–1.** Conflating these is the easiest bug to introduce here.
-- **The carousel label must not move or re-render** when the image changes. It is a sibling of the
-  `<img>` and is never keyed to the image index — enforce structurally, not by convention.
-- **Card geometry is uniform across every card.** `aspect-[5/7]`, and the 65/35 split uses
-  `grid-rows-[65fr_35fr]` rather than percentage heights so content cannot shift it. The colorway
-  grid always renders exactly **8 cells (4 cols × 2 rows)**: ghost-padded at 8 or fewer; above 8,
-  cell 8 becomes a `>` pager showing 7 colorways per page. The pager stays in cell 8 on every page,
-  including a partial last page.
+- **Card geometry is uniform across every card.** `aspect-[5/7]`, inner
+  `grid grid-rows-[65fr_15fr_20fr]` — three bands: carousel 65%, brand+name 15%, meta row 20%
+  (ADR-021). Use `fr`, **never** `h-[65%]`/`h-[15%]`/`h-[20%]`; fractional rows are what keep the
+  split exact and immune to content pushing it around. The model name must `truncate` — a wrapping
+  name grows band 2 and breaks the ratio. Band 3 is three columns: colorway grid, price over
+  retailer, score over `review.source`.
+- **The carousel label must not move or re-render** when the image changes. Since ADR-021 this is
+  structural for free: the label lives in band 2, a different grid row from the carousel, so nothing
+  that changes on image swap can reach it. Do not reintroduce an overlay label on the card.
+- **The colorway grid always renders exactly 8 cells (4 cols × 2 rows)**: ghost-padded at 8 or fewer;
+  above 8, cell 8 becomes a `>` pager showing 7 colorways per page. The pager stays in cell 8 on
+  every page, including a partial last page.
 - **Everything cyclable on a card wraps.** The carousel (last→first, first→last) and the colorway
   pager (last page→first page). Use modulo, never bounds-clamping, and never render a disabled
-  control. The pager's handler must `stopPropagation` so it does not also advance the carousel or
-  navigate to the detail route.
+  control. The pager's handler must `stopPropagation` so it does not navigate to the detail route.
 
 ## Subagents
 
 `.claude/agents/` defines five scoped specialists; prefer them over general edits in their areas.
 
 - **`frontend-specialist`** — `app/`: Vue SFCs, Tailwind, accessibility, responsive layout.
-- **`data-pipeline-specialist`** — `scripts/` and `data/`: ingest, sharp, contrast precompute, zod.
+- **`data-pipeline-specialist`** — `scripts/` and `data/`: ingest, sharp, zod.
 - **`research-curator`** — web research into `data/sources/{slug}.json`; never runs ingest.
 - **`test-engineer`** — `tests/` and `*.test.ts`; reports defects rather than editing app code to
   make a test pass.

@@ -50,14 +50,15 @@ gitignored), so re-running to retune image processing does not re-download anyth
 
 _(pending — Phase 3)_
 
-Each card is a 5:7 portrait split 65 / 35:
+Each card is a 5:7 portrait split into three bands — 65 / 15 / 20 ([ADR-021](./docs/decisions.md)):
 
-- **Top 65%** — an infinite image carousel. Clicking the right half advances, the left half retreats,
-  and both wrap. The brand/model label overlays the image and never moves or re-renders as images
-  cycle. Its color is white or black, whichever wins on WCAG contrast, precomputed at ingest.
-- **Bottom 35%** — three regions: an 8-cell colorway grid (4×2, with a wrapping `>` pager above 8
+- **Top 65%** — an infinite image carousel, completely unobstructed. Clicking the right half
+  advances, the left half retreats, and both wrap.
+- **Middle 15%** — the brand in small uppercase over the model name in bold. Because it is its own
+  grid row rather than an overlay, it cannot move or re-render as the images cycle.
+- **Bottom 20%** — three columns: an 8-cell colorway grid (4×2, with a wrapping `>` pager above 8
   colorways), the lowest available price with its retailer, and the review score shown against its
-  own scale (`4.4/5.0`, `8.1/10.0`).
+  own scale (`4.4/5.0`, `8.1/10.0`) over its source.
 
 ## Architecture
 
@@ -68,7 +69,7 @@ _(pending — expanded as the build lands)_
 - **No state library** — the catalog is a build-time JSON import; filter and sort state lives in URL
   query params
 - **Ingest pipeline** (`scripts/`) — downloads images, processes them with sharp into AVIF + WebP at
-  two widths, precomputes label contrast, and validates the catalog with zod
+  two widths, and validates the catalog with zod
 
 Full detail in the [implementation plan](./edc-catalog-app-implementation-plan.md); the reasoning
 behind each choice is in [`docs/decisions.md`](./docs/decisions.md).
@@ -82,7 +83,7 @@ app/
   assets/css/main.css  Tailwind entry + @theme tokens
   components/          card, carousel, swatches                  (pending — Phase 3)
   composables/         URL-query-backed filter/sort state        (pending — Phase 6)
-  utils/               pure logic: contrast, format, color       (pending — Phase 3)
+  utils/               pure logic: format, color                 (pending — Phase 3)
   types/backpack.ts    the data contract                         (pending — Phase 2)
   data/catalog.json    build artifact from `pnpm ingest`         (pending — Phase 4)
 scripts/

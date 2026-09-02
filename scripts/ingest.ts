@@ -4,7 +4,7 @@
  *
  * Not implemented yet: the pipeline lands in Phase 4 of
  * edc-catalog-app-implementation-plan.md as fetch-images → process-images →
- * analyze-label → build-catalog. This stub exists so the command table in
+ * build-catalog. This stub exists so the command table in
  * CLAUDE.md and README.md is never aspirational, and so a fresh clone gets a
  * clear message rather than "command not found".
  */
