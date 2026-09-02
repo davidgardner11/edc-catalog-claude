@@ -71,6 +71,12 @@ that file listed in `css:`. Prerender everything: `nitro.prerender.crawlLinks = 
 `app/types/backpack.ts` — the contract everything else is written against.
 
 ```ts
+// Closed set; ingest maps free-form marketing names ("Desert Palm") onto it and
+// the Phase 6 colour filter facets on exactly these values (ADR-022).
+export type ColorFamily =
+  | 'black' | 'grey'  | 'white' | 'navy'   | 'blue' | 'green' | 'olive'
+  | 'tan'   | 'brown' | 'red'   | 'orange' | 'purple' | 'multi'
+
 export type Colorway = { name: string; hex: string; family: ColorFamily }
 
 export type CarouselImage = {
@@ -130,10 +136,18 @@ This ordering is editorial judgment, not arithmetic, so each entry's basis is co
 | 19 | Arktype | Dashpack II | Minimalist favorite |
 | 20 | Filson | Dryden Ballistic Nylon | Heritage/professional entry |
 
-Spread: **$60–$435**, **14–30L**, 19 distinct brands (Aer twice).
+Spread: **$60–$435**, 19 distinct brands (Aer twice). Capacity spread is **not yet stated** — the
+figure previously here ("14–30L") was wrong at both ends and is withdrawn pending Phase 5 (ADR-023).
 
 **Before researching any pack, confirm it is still in production** (ADR-019). Incase ICON Slim and
 Arktype Dashpack II are the most likely to have been superseded.
+
+**Capacity is unverified for most of this table** (ADR-023). Four spot-checks in 2026-09 found two
+problems: the **Aer Travel Pack 3 is 35L**, above the 30L ceiling the old spread claimed and arguably
+outside "EDC" — Aer also sells a **28L Travel Pack 3 Small**, and Phase 5 must decide which one rank 4
+means; and the **Incase ICON Slim is now 19L**, not the 14.5L that produced the old 14L floor.
+Verified fine: Chrome Barrage Cargo 18→22L, Arktype Dashpack 15L. Capture `capacityLiters` for every
+pack in Phase 5, then restate the spread from the data.
 
 ---
 
@@ -153,6 +167,19 @@ scripts/build-catalog.ts  merge + zod validate → app/data/catalog.json
 
 Orchestrated by `pnpm ingest`. `.ingest-cache/` holds originals so image processing can be re-tuned
 without re-hitting any retailer.
+
+**What the zod schema must enforce beyond the TypeScript types.** The types are structural; several
+invariants are not expressible in them and belong in the schema, so bad data fails the build rather
+than reaching a component:
+
+- `Colorway.hex` matches `/^#[0-9a-f]{6}$/i` — typed `string`, so components may assume a valid
+  6-digit hex only because the schema guarantees it.
+- `Colorway.family` is one of the `ColorFamily` members (ADR-022) — ingest maps onto it, so a
+  typo'd family must fail loudly rather than silently vanish from the Phase 6 colour filter.
+- `images` has length 1–5; `widths` is exactly `[640, 1280]`; `rank` is 1–20 and unique; `slug` is
+  unique and matches `/^[a-z0-9-]+$/`.
+- `review.scale` is 5 or 10; `review.score` is `> 0` and `<= scale`.
+- Both `capturedAt` values parse as ISO dates.
 
 ---
 
@@ -361,7 +388,7 @@ aspirational. Then run pnpm install and pnpm dev to confirm a blank page renders
 
 ```
 @agent-frontend-specialist Create app/types/backpack.ts exactly as specified in
-edc-catalog-app-implementation-plan.md (Data model section), plus app/data/fixtures.ts
+implementation-plan.md (Data model section), plus app/data/fixtures.ts
 with 3 hand-written packs using placeholder image paths. One fixture must have 3
 colorways, one exactly 8, one 15 — so the swatch grid's ghost-pad path, its exact-fill
 boundary, and its multi-page pager (including a partial final page) are all exercised.
@@ -373,7 +400,7 @@ No components yet.
 ```
 @agent-frontend-specialist Build the card against the fixtures: BackpackCard,
 CardCarousel, CardLabel, ColorwayGrid, PriceBlock, ScoreBlock. Read the Components
-section of edc-catalog-app-implementation-plan.md first. Put pure logic in app/utils/
+section of implementation-plan.md first. Put pure logic in app/utils/
 (format, color) so it is unit-testable. Render all 3 fixtures on the index page.
 Do not build the toolbar or detail route yet. Finally, write docs/component-conventions.md
 recording the conventions you actually established — naming, props, slots, file layout —
@@ -390,7 +417,7 @@ the first. `docs/component-conventions.md` exists and describes the components a
 
 ```
 @agent-data-pipeline-specialist Build the ingest pipeline per the Ingest pipeline section
-of edc-catalog-app-implementation-plan.md: fetch-images, process-images, build-catalog,
+of implementation-plan.md: fetch-images, process-images, build-catalog,
 plus the zod schema and a pnpm ingest script. Prove it end-to-end on 3 packs only.
 ```
 
@@ -403,7 +430,7 @@ Run in batches of 5 so you can course-correct. Ranks are in the plan's ranked-20
 
 ```
 @agent-research-curator Research packs 1-5 from the ranked table in
-edc-catalog-app-implementation-plan.md. Write data/sources/{slug}.json for each: image
+implementation-plan.md. Write data/sources/{slug}.json for each: image
 URLs (1-5, prefer brand-direct), the lowest price found across brand-direct plus 1-2 major
 retailers with the winning retailer and URL (ADR-017), review score with its real scale and
 source, colorways, and specs. Stamp capturedAt on price and score.
@@ -430,7 +457,7 @@ the raw score.
 
 ```
 @agent-test-engineer Write the test suite per the Verification section of
-edc-catalog-app-implementation-plan.md. Vitest for app/utils (score and price
+implementation-plan.md. Vitest for app/utils (score and price
 formatters, carousel wraparound at both ends with n=1 and n=5, swatch paging at
 counts 0/4/8/9/15/22). Playwright for the browser-only
 behaviors, especially that the label's text and bounding box are identical across every
@@ -472,7 +499,7 @@ disable-model-invocation: true
 ---
 
 @agent-research-curator Research packs $0 through $1 from the ranked table in
-${CLAUDE_PROJECT_DIR}/edc-catalog-app-implementation-plan.md. Write
+${CLAUDE_PROJECT_DIR}/implementation-plan.md. Write
 data/sources/{slug}.json for each per the Phase 5 brief. Stamp capturedAt. Do not run
 the ingest scripts.
 ```

@@ -7,7 +7,7 @@ Local-only and statically generated — there is no server, no API, and no datab
 
 > **Status: Phase 1 (scaffold) complete.** `pnpm dev` serves a placeholder page. Sections below
 > marked _(pending)_ are filled in as the build progresses. See
-> [`edc-catalog-app-implementation-plan.md`](./edc-catalog-app-implementation-plan.md) for the
+> [`implementation-plan.md`](./implementation-plan.md) for the
 > architecture, ranked pack list, and build order.
 
 ---
@@ -71,7 +71,7 @@ _(pending — expanded as the build lands)_
 - **Ingest pipeline** (`scripts/`) — downloads images, processes them with sharp into AVIF + WebP at
   two widths, and validates the catalog with zod
 
-Full detail in the [implementation plan](./edc-catalog-app-implementation-plan.md); the reasoning
+Full detail in the [implementation plan](./implementation-plan.md); the reasoning
 behind each choice is in [`docs/decisions.md`](./docs/decisions.md).
 
 ## Project layout

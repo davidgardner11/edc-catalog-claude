@@ -13,7 +13,7 @@ test destroys the only signal the suite exists to provide.
 
 ## Read before writing tests
 
-- **`edc-catalog-app-implementation-plan.md`** — the Verification section lists the required cases.
+- **`implementation-plan.md`** — the Verification section lists the required cases.
 - **`docs/decisions.md`** — several ADRs *are* testable assertions; ADR-010, ADR-015, ADR-016 in
   particular.
 

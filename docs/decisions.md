@@ -332,3 +332,67 @@ differs.
 - The photo carries no text, so nothing needs to be made legible against it. `CarouselImage` is
   `base` / `widths` / `width` / `height` / `alt` and nothing more; the ingest pipeline is
   fetch-images → process-images → build-catalog.
+
+## ADR-022 — `ColorFamily` is a closed 13-member union
+**2026-09-02 · Accepted**
+
+The plan's data model typed `Colorway.family` as `ColorFamily` but never defined it. Defined now, in
+`app/types/backpack.ts`:
+
+```
+'black' | 'grey' | 'white' | 'navy' | 'blue' | 'green' | 'olive'
+| 'tan' | 'brown' | 'red' | 'orange' | 'purple' | 'multi'
+```
+
+**Why a closed union rather than `string`:** this is the backing type for the Phase 6 colour filter.
+A facet list that grows with the data is not a filter — it is a legend. Closing the set forces ingest
+to map free-form marketing names ("Desert Palm", "Peppercorn", "Ranger Green") onto a fixed
+vocabulary, which is the only way the filter stays usable at 20 packs or at 100.
+
+**Why these members:**
+- `navy` split from `blue`, `olive` split from `green` — both are disproportionately common in this
+  category and near-black navy is a different purchase decision from saturated blue. Collapsing them
+  would leave one enormous facet doing no work.
+- `tan` absorbs khaki/sand/desert; `brown` absorbs coyote/peppercorn.
+- `multi` covers camo, colour-block, and prints, which no single family describes.
+- No `yellow` or `pink` — vanishingly rare above 14L, and a facet with zero or one hit is noise.
+  Widening a union is non-breaking, so starting small is cheap to reverse.
+
+**Consequences:**
+- Ingest (Phase 4) maps onto **exactly** these values; the toolbar (Phase 6) facets on **exactly**
+  these values. If either re-derives its own list they will silently disagree, which is why this is
+  an ADR rather than a comment.
+- The zod schema validates `family` against the union, so a typo fails the build instead of quietly
+  dropping a colorway out of the filter.
+- Lowercase single words, so values go straight into URL query params (filter state is URL-backed,
+  ADR-004) with no encoding or casing step.
+
+## ADR-023 — The "14–30L" capacity spread was wrong and is withdrawn
+**2026-09-02 · Accepted**
+
+The ranked-20 table carried a derived summary line: `Spread: $60–$435, 14–30L, 19 distinct brands`.
+Phase 2 fixture work raised the capacity figure as suspect. Four spot-checks confirmed it is wrong at
+**both** ends:
+
+| Pack | Claimed basis | Actual (verified 2026-09-02) |
+| --- | --- | --- |
+| Aer Travel Pack 3 (rank 4) | within 30L ceiling | **35L** — Travel Pack 3 *Small* is 28L |
+| Incase ICON Slim (rank 17) | the 14L floor | **19L** current; 14.5L was the superseded generation |
+| Chrome Barrage Cargo (rank 18) | — | 18→22L ✓ |
+| Arktype Dashpack (rank 19) | — | 15L ✓ |
+
+**Why withdraw rather than restate:** only 4 of 20 packs have been checked. Replacing one unverified
+precise claim with another would repeat the mistake. The line now says capacity is not yet stated and
+points here; Phase 5 captures `capacityLiters` for every pack and the spread is restated from data.
+
+**The open question this exposes — is rank 4 a 35L travel pack?** The catalog is *Everyday Carry*
+backpacks. 35L is luggage-adjacent, and the entry's basis ("one of the most beloved EDC go-anywhere
+packs ever") describes the Travel Pack *line*, not that specific volume. Aer's 28L **Travel Pack 3
+Small** sits far more naturally in an EDC list and is the same design. **Phase 5 must pick one**, by
+ADR-019's precedent: prefer the variant that matches the catalog's purpose, and record in
+`data/seed.ts` `rationale` that the acclaim attaches to the line. Not resolved here because it is an
+editorial ranking call on researched data, and no research has happened yet.
+
+**Consequence:** treat *every* capacity in the ranked-20 table as unverified until Phase 5. The two
+errors found were in the two packs already flagged as likely superseded (ADR-019) plus one nobody
+suspected, which is the actual lesson — the table's specs were never sourced.

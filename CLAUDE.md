@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 `pnpm dev` and `pnpm generate` both work; the index page is a placeholder. No types, fixtures,
 components, or real ingest code yet.
 
-`edc-catalog-app-implementation-plan.md` is the source of truth for architecture, data model, the
+`implementation-plan.md` is the source of truth for architecture, data model, the
 ranked pack list, ingest design, and build order. Read it before starting work. When implementation
 diverges from it, update the plan in the same change rather than letting the two drift.
 
@@ -26,7 +26,7 @@ that must always hold. Longer reference material lives in files you read on dema
 | `docs/component-conventions.md` | Naming, props, slots, file layout *(added at plan Phase 3)* | Writing or modifying any Vue component |
 | `app/types/backpack.ts` | The data contract, as code *(added at plan Phase 2)* | Touching catalog data in any layer |
 | `README.md` | Setup, commands, project overview | Onboarding, or when setup steps change |
-| `edc-catalog-app-implementation-plan.md` | Architecture, ranked 20, ingest design, build order, supervision guide | Starting any phase of work |
+| `implementation-plan.md` | Architecture, ranked 20, ingest design, build order, supervision guide | Starting any phase of work |
 
 Do not create a second always-read context file. This one already fills that role; a parallel file
 would be opt-in, and an agent that forgets to read it drifts silently.
@@ -98,6 +98,13 @@ Images are emitted per width as `public/images/{slug}/{n}-{w}.{avif,webp}` for `
 
 ### Invariants that are easy to break
 
+- **`ColorFamily` is a closed union of 13 values** (ADR-022), defined in `app/types/backpack.ts`.
+  Ingest maps free-form colorway names onto exactly those members and the toolbar's colour filter
+  facets on exactly those members — if either side invents its own list they disagree silently. Widen
+  the union in the type file; never work around it with a loose `string`.
+- **Capacities in the plan's ranked-20 table are unverified** (ADR-023). The stated capacity spread
+  was wrong at both ends and has been withdrawn. Do not quote a capacity range until Phase 5 captures
+  `capacityLiters` per pack.
 - **Review scales differ per pack.** `review.scale` is 5.0 (retailer) or 10.0 (enthusiast review
   sites). Display uses raw `score`/`scale`; **sorting and filtering must use `score / scale`
   normalized to 0–1.** Conflating these is the easiest bug to introduce here.
