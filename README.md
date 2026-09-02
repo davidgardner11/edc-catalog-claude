@@ -5,8 +5,8 @@ playing-card-proportioned cards (5:7 portrait) in a browsable, filterable grid.
 
 Local-only and statically generated — there is no server, no API, and no database.
 
-> **Status: pre-implementation.** Planning is complete; no application code exists yet. Sections
-> below marked _(pending)_ are filled in as the build progresses. See
+> **Status: Phase 1 (scaffold) complete.** `pnpm dev` serves a placeholder page. Sections below
+> marked _(pending)_ are filled in as the build progresses. See
 > [`edc-catalog-app-implementation-plan.md`](./edc-catalog-app-implementation-plan.md) for the
 > architecture, ranked pack list, and build order.
 
@@ -28,6 +28,9 @@ pnpm ingest      # downloads + processes product images, builds app/data/catalog
 pnpm dev         # http://localhost:3000
 ```
 
+**Until Phase 4, `pnpm ingest` is a stub** that exits 1 with a pointer to the plan. The scaffold
+renders without it.
+
 `pnpm ingest` is network-bound on a cold run. It caches originals in `.ingest-cache/` (also
 gitignored), so re-running to retune image processing does not re-download anything. Deleting
 `public/images/` and re-running rebuilds from that cache without touching the network.
@@ -40,7 +43,8 @@ gitignored), so re-running to retune image processing does not re-download anyth
 | `pnpm generate` | Static build to `.output/public` |
 | `pnpm ingest` | Regenerate `app/data/catalog.json` and `public/images/` from `data/` |
 | `pnpm test` | Vitest unit tests |
-| `npx playwright test` | End-to-end tests |
+| `pnpm typecheck` | `nuxt typecheck` via vue-tsc |
+| `npx playwright test` | End-to-end tests _(not installed until Phase 7)_ |
 
 ## The card
 
@@ -71,15 +75,26 @@ behind each choice is in [`docs/decisions.md`](./docs/decisions.md).
 
 ## Project layout
 
-_(pending — Phase 1)_
+```
+app/
+  app.vue              root component
+  pages/               file-based routes (index.vue; /pack/[slug] pending — Phase 6)
+  assets/css/main.css  Tailwind entry + @theme tokens
+  components/          card, carousel, swatches                  (pending — Phase 3)
+  composables/         URL-query-backed filter/sort state        (pending — Phase 6)
+  utils/               pure logic: contrast, format, color       (pending — Phase 3)
+  types/backpack.ts    the data contract                         (pending — Phase 2)
+  data/catalog.json    build artifact from `pnpm ingest`         (pending — Phase 4)
+scripts/
+  ingest.ts            pipeline entry — stub until Phase 4
+data/                  seed list + per-pack research capture     (pending — Phase 5)
+docs/                  decision log and working notes
+.claude/               subagent definitions
+nuxt.config.ts         SSG config, Tailwind Vite plugin, TS flags
+tsconfig.json          solution-style; real projects are generated under .nuxt/
+```
 
-```
-app/          Vue components, pages, composables, utils, types   (pending)
-scripts/      ingest pipeline                                    (pending)
-data/         seed list + per-pack research capture              (pending)
-docs/         decision log and working notes
-.claude/      subagent definitions
-```
+Nuxt 4 keeps source under `app/` — there are no root-level `pages/` or `components/` directories.
 
 ## Data
 

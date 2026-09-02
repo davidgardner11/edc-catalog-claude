@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+/* Tailwind v4 is CSS-first: there is no tailwind.config.js and creating one
+   does nothing. Design tokens go in an @theme block here — added as the card
+   components land in Phase 3, not invented in advance. */

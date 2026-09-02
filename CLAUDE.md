@@ -4,15 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Status
 
-**Pre-implementation.** No application code exists yet — no `package.json`, no `app/`, no scripts.
-The repository holds this file, the implementation plan, `docs/`, `.claude/agents/`, `README.md`,
-and `.gitignore`.
+**Phase 1 complete — scaffolded.** `package.json`, `nuxt.config.ts`, `tsconfig.json`,
+`app/{app.vue,pages/index.vue,assets/css/main.css}` and a `scripts/ingest.ts` stub exist.
+`pnpm dev` and `pnpm generate` both work; the index page is a placeholder. No types, fixtures,
+components, or real ingest code yet.
 
 `edc-catalog-app-implementation-plan.md` is the source of truth for architecture, data model, the
 ranked pack list, ingest design, and build order. Read it before starting work. When implementation
 diverges from it, update the plan in the same change rather than letting the two drift.
 
-Build order is defined there; step 1 is scaffolding Nuxt with the pinned versions below.
+Build order is defined there; next up is Phase 2 — `app/types/backpack.ts` plus fixtures.
 
 ## Where things are written down
 
@@ -36,16 +37,20 @@ reasoning in both places.
 
 ## Commands
 
-None exist yet. The plan specifies these once scaffolding lands (pnpm is the package manager;
-pnpm 9.15.9 and Node 24.19 are installed locally):
+pnpm is the package manager (pnpm 9.15.9, Node 24.19 local).
 
 | Command | Purpose |
 | --- | --- |
 | `pnpm dev` | Nuxt dev server |
-| `pnpm generate` | Static build to `.output/public` |
-| `pnpm ingest` | Regenerate `app/data/catalog.json` and `public/images/` from `data/` |
-| `pnpm test` | Vitest unit tests |
-| `npx playwright test` | E2E; single spec via `npx playwright test tests/e2e/<file>.spec.ts` |
+| `pnpm generate` | Static build to `.output/public` (also leaves a `dist` symlink to it) |
+| `pnpm ingest` | Regenerate `app/data/catalog.json` and `public/images/` from `data/` — **stub until Phase 4**; exits 1 with a pointer to the plan |
+| `pnpm test` | Vitest unit tests (`--passWithNoTests` until Phase 7) |
+| `pnpm typecheck` | `nuxt typecheck` via vue-tsc |
+| `npx playwright test` | E2E; single spec via `npx playwright test tests/e2e/<file>.spec.ts` — **not installed yet** (Phase 7) |
+
+`pnpm typecheck` prints `[Vue] Resolve plugin path failed: vue-router/volar/...` warnings. They are
+cosmetic: vue-tsc 3.3.11 looks for Volar plugin subpaths that vue-router 5 no longer exports. The
+exit code and TS error count are what matter.
 
 ## Version constraints — do not "upgrade" these
 
@@ -56,13 +61,19 @@ Every one of these looks stale and is not. Verify against the plan before changi
   `.vue` SFCs. Installing TS 7 breaks type-checking outright. Never run `typescript@latest`. The cap
   lifts at TS 7.1. `tsconfig.json` sets `"ignoreDeprecations": "6.0"` — resolve deprecation warnings
   rather than suppressing new ones; that work *is* the eventual 7.1 migration.
-- **Vite is not a direct dependency.** `@nuxt/vite-builder` owns it (currently `vite ^8.2.0`). Adding
-  `vite` to `package.json` only creates the opportunity for a version conflict.
+- **Vite is not a direct dependency.** `@nuxt/vite-builder` owns it (resolved: 8.2.2). Adding `vite`
+  to `package.json` only creates the opportunity for a version conflict. **`vue-router` is the same
+  case** — Nuxt 4.5.2 depends on `vue-router ^5.2.0`; declaring it yourself silently downgrades it.
 - **Nuxt 4, not Nuxt 3.** Source lives under `app/`. Do not create root-level `pages/` or
   `components/` directories.
 - **Vue 3.5.42 is the newest stable.** There is no Vue 4; 3.6 is release-candidate only.
 - **Tailwind v4 is CSS-first.** There is no `tailwind.config.js` and creating one does nothing. Theme
-  tokens belong in `@theme` blocks inside `app/assets/css/main.css`.
+  tokens belong in `@theme` blocks inside `app/assets/css/main.css`. It is wired as a Vite plugin in
+  `nuxt.config.ts` (`vite.plugins`), not as a Nuxt module.
+- **`ignoreDeprecations: "6.0"` is set in `nuxt.config.ts`, not just `tsconfig.json`.** The root
+  `tsconfig.json` is solution-style (`files: []` + references), so its `compilerOptions` do not reach
+  the real projects. `typescript.{tsConfig,nodeTsConfig,sharedTsConfig}` and
+  `nitro.typescript.tsConfig` write the flag into every generated `.nuxt/tsconfig.*.json`.
 
 ## Architecture
 

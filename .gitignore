@@ -5,7 +5,7 @@ node_modules/
 # nuxt build output
 .nuxt/
 .output/
-dist/
+dist
 .data/
 
 # ingest pipeline: downloaded originals, never committed

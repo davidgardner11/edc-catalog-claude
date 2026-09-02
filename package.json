@@ -1,0 +1,31 @@
+{
+  "name": "edc-catalog",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": "^22.19.0 || ^24.11.0 || >=26.0.0"
+  },
+  "scripts": {
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "ingest": "node --experimental-strip-types scripts/ingest.ts",
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "nuxt typecheck",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "nuxt": "4.5.2",
+    "vue": "3.5.42",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "4.3.3",
+    "sharp": "0.35.4",
+    "tailwindcss": "4.3.3",
+    "typescript": "6.0.3",
+    "vitest": "^4.1.11",
+    "vue-tsc": "^3.3.11"
+  }
+}

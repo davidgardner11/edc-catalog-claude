@@ -1,0 +1,21 @@
+{
+  // Solution-style root config: Nuxt generates the real projects under .nuxt/
+  // (app, server, shared, node) and this file only references them.
+  //
+  // "ignoreDeprecations": "6.0" is set in nuxt.config.ts under `typescript`,
+  // which writes it into every generated project. It is repeated here for tools
+  // that read the root config directly (editors resolving a file outside any
+  // referenced project, and a bare `tsc`). TypeScript is capped at 6.0.3 — see
+  // CLAUDE.md and ADR-002; resolve deprecation warnings rather than suppressing
+  // new ones, since that work is the eventual 7.1 migration.
+  "compilerOptions": {
+    "ignoreDeprecations": "6.0"
+  },
+  "files": [],
+  "references": [
+    { "path": "./.nuxt/tsconfig.app.json" },
+    { "path": "./.nuxt/tsconfig.server.json" },
+    { "path": "./.nuxt/tsconfig.shared.json" },
+    { "path": "./.nuxt/tsconfig.node.json" }
+  ]
+}

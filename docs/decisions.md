@@ -265,3 +265,37 @@ coverage suggests it belongs elsewhere.
 researching it — a discontinued model has no live price, current colorways, or first-party images.
 Incase ICON Slim and Arktype Dashpack II are the next most likely to have the same problem, being
 older models from smaller brands. This check is the `research-curator`'s first instruction.
+
+## ADR-020 — Scaffold decisions Phase 1 committed to
+**2026-09-02 · Accepted**
+
+Four things the scaffold settled that later phases must not undo.
+
+**`vue-router` is not declared, for the same reason as `vite`.** Nuxt 4.5.2 depends on
+`vue-router ^5.2.0`. Declaring `"vue-router": "^4.5.1"` in `package.json` — which the first pass did —
+silently resolved 4.6.4 and downgraded the router out from under Nuxt. ADR-003's rule generalises:
+if Nuxt already depends on it, do not also declare it. The check is `npm view nuxt@<v> dependencies`,
+not intuition about what "feels like" a direct dependency.
+
+**`ignoreDeprecations` lives in `nuxt.config.ts`, not only `tsconfig.json`.** Nuxt 4 generates four
+project-reference tsconfigs (`app`, `server`, `shared`, `node`) under `.nuxt/`, so the root
+`tsconfig.json` is solution-style — `"files": []` plus `references` — and its `compilerOptions` reach
+none of them. The flag is therefore set via `typescript.{tsConfig,nodeTsConfig,sharedTsConfig}` and,
+separately, `nitro.typescript.tsConfig` (Nitro owns `tsconfig.server.json` and does not read the
+Nuxt-level key). It is *also* repeated in the root config for editors and a bare `tsc`.
+**Consequence:** verify a compiler flag by grepping the generated `.nuxt/tsconfig.*.json`, never by
+reading the root file.
+
+**Every command in the table exists on day one.** `pnpm ingest` runs `scripts/ingest.ts`, a stub that
+prints what is missing and exits 1; `pnpm test` carries `--passWithNoTests`. **Why:** a documented
+command that fails with "no such file" teaches a reader to distrust the table. A command that
+explains itself does not. Phases 4 and 7 replace the stub and drop the flag.
+
+**`pnpm typecheck` was added** though it is not in the plan's table — TS 6.0.3 is the riskiest pin
+here and there was no way to exercise it. It passes with zero errors. It does print
+`[Vue] Resolve plugin path failed: vue-router/volar/...`: vue-tsc 3.3.11 probes Volar plugin
+subpaths that vue-router 5 no longer exports. Cosmetic, upstream, no fix available at these versions —
+judge the run by its exit code.
+
+**Also:** `nuxt generate` leaves a `dist` **symlink** to `.output/public`. `.gitignore` said `dist/`,
+whose trailing slash does not match a symlink, so it was reported untracked; the entry is now `dist`.
