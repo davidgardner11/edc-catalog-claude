@@ -293,11 +293,6 @@ unless marked as a shell command.
 | --- | --- |
 | `frontend-specialist` | `app/` — Vue SFCs, Tailwind, card + carousel, a11y, responsive layout |
 | `data-pipeline-specialist` | `scripts/` and `data/` — ingest, sharp, contrast precompute, zod |
-
-All five now exist:
-
-| Agent | Owns |
-| --- | --- |
 | `research-curator` | Web research → `data/sources/{slug}.json`. Confirms a pack is still in production before researching it (ADR-019). |
 | `test-engineer` | `tests/` and `*.test.ts`. Reports defects; never edits app code to make a test pass. |
 | `build-tooling-specialist` | `package.json`, `nuxt.config.ts`, `tsconfig.json`, runner config. Enforces the version ceilings. |
@@ -305,8 +300,9 @@ All five now exist:
 `build-tooling-specialist` is optional for Phase 1 — see below for why you may prefer to scaffold in
 the main session where you can watch the pins land.
 
-Deliberately **not** added: a backend agent (there is no server) and a code-review agent (the
-built-in `/code-review` skill already covers it).
+Deliberately **NOT** added: 
+- `backend-specialist` agent because there is no backend server
+- `code-review` agent because the built-in `/code-review` skill already covers this role.
 
 ## Invoking an agent
 
