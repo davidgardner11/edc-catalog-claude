@@ -1,0 +1,51 @@
+{
+  "slug": "goruck-gr1-26l",
+  "productUrl": "https://www.goruck.com/products/gr1-usa",
+  "notes": "Captured 2026-09-03 from the GORUCK Shopify storefront's own public product JSON (https://www.goruck.com/products/gr1-usa.json) and the rendered product page. goruck.com/robots.txt is Allow: / for the wildcard group. Prices, specs and colorway names are the brand's, verbatim. Carousel images are the 26L in Black, Ranger Green and Wolf Grey - GORUCK sells one GR1 product with a size option, so there is no 26L-only image set. Colorway hexes were sampled from GORUCK's own photograph of each colorway (median-luminance pixel of the central 40% of the frame, background discarded); swatchSource records which photo each came from. Coyote and Navy + Gold have no 26L variant photo, so their swatches were sampled from the 21L photo of the same fabric - the colour is a fabric property, not a size one.",
+  "images": [
+    { "url": "https://cdn.shopify.com/s/files/1/0275/4985/9940/files/GR1_26L_Black_1000D_w__210D_w__Top_Stash_Pocket_1-2.jpg?v=1776357764" },
+    { "url": "https://cdn.shopify.com/s/files/1/0275/4985/9940/files/GR126.8.jpg?v=1776357764" },
+    { "url": "https://cdn.shopify.com/s/files/1/0275/4985/9940/files/GR126.10.jpg?v=1776357764" },
+    { "url": "https://cdn.shopify.com/s/files/1/0275/4985/9940/files/GR1-Classic-26LRangerGreen1copy.jpg?v=1776357764" },
+    { "url": "https://cdn.shopify.com/s/files/1/0275/4985/9940/files/CopyofGR126L_WolfGrey_1000Dw_210D_withtopstashpocket_1.jpg?v=1776357764" }
+  ],
+  "colorways": [
+    { "name": "Black", "hex": "#2f292d", "swatchSource": "https://cdn.shopify.com/s/files/1/0275/4985/9940/files/GR1_26L_Black_1000D_w__210D_w__Top_Stash_Pocket_1-2.jpg?v=1776357764" },
+    { "name": "Ranger Green", "hex": "#4d493b", "swatchSource": "https://cdn.shopify.com/s/files/1/0275/4985/9940/files/GR1-Classic-26LRangerGreen1copy.jpg?v=1776357764" },
+    { "name": "Wolf Grey", "hex": "#575654", "swatchSource": "https://cdn.shopify.com/s/files/1/0275/4985/9940/files/CopyofGR126L_WolfGrey_1000Dw_210D_withtopstashpocket_1.jpg?v=1776357764" },
+    { "name": "Coyote", "hex": "#936f3e", "swatchSource": "https://www.goruck.com/cdn/shop/files/output.auto_5.jpg?v=1782756230" },
+    { "name": "Khaki", "hex": "#816e59", "swatchSource": "https://cdn.shopify.com/s/files/1/0275/4985/9940/files/101-26020111GR1-Cordura-26L_Khaki_Black_1000D1copy.jpg?v=1776357764" },
+    { "name": "Navy + Gold", "hex": "#2d2d3a", "swatchSource": "https://www.goruck.com/cdn/shop/files/output.auto.jpg?v=1782755282" },
+    { "name": "Multicam", "hex": "#817444", "swatchSource": "https://cdn.shopify.com/s/files/1/0275/4985/9940/files/26L_Multicam_1_fa4d1466-e5e0-48c8-a766-cd1acc28bfd4.jpg?v=1782748736" },
+    { "name": "Multicam Arid", "hex": "#8a725b", "swatchSource": "https://cdn.shopify.com/s/files/1/0275/4985/9940/files/GR1-USA_Color-MulticamArid_Capacity-26L_500D1copy_8d73dfc0-535a-44ae-859d-ba5790807c0e.jpg?v=1776357764" },
+    { "name": "Alpine Multicam", "hex": "#c1c1c0", "swatchSource": "https://cdn.shopify.com/s/files/1/0275/4985/9940/files/26L_alpine_1.jpg?v=1782488113" },
+    { "name": "DCU Camo", "hex": "#6f624e", "swatchSource": "https://cdn.shopify.com/s/files/1/0275/4985/9940/files/GR1_26L_Front_DCU_ef43a132-b5e0-4560-8b00-351a2f3d3919.jpg?v=1776357764" },
+    { "name": "Black Multicam Slick", "hex": "#373233", "swatchSource": "https://www.goruck.com/cdn/shop/files/SK21SlickBlackMulticamGR11copy.jpg?v=1776357764" },
+    { "name": "Black Tiger Stripe", "hex": "#383138", "family": "multi", "swatchSource": "https://cdn.shopify.com/s/files/1/0275/4985/9940/files/GR1-Cordura-26L_BlackTigerStripe_1000DCordura1copy.jpg?v=1776357764" },
+    { "name": "Black Frogskin + Wolf Grey", "hex": "#4a434a", "family": "multi", "swatchSource": "https://www.goruck.com/cdn/shop/files/output.auto_10.jpg?v=1782756446" }
+  ],
+  "price": {
+    "amountUsd": 395,
+    "retailer": "GORUCK",
+    "url": "https://www.goruck.com/products/gr1-usa",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "priceComparison": [
+    { "retailer": "GORUCK", "url": "https://www.goruck.com/products/gr1-usa", "amountUsd": 395, "outcome": "captured - brand-direct, all 26L colorways $395.00" },
+    { "retailer": "Huckberry", "url": "https://huckberry.com/store/goruck/category/p/16222-gr1-26l", "outcome": "not captured - HTTP 403, Cloudflare interactive challenge on every path including /robots.txt" },
+    { "retailer": "Amazon", "outcome": "not captured - no first-party GORUCK storefront listing for the 26L GR1; third-party listings are not a comparable price (ADR-017)" }
+  ],
+  "review": {
+    "score": 8.6,
+    "scale": 10,
+    "source": "Pack Hacker",
+    "url": "https://www.packhacker.com/travel-gear/goruck/gr1/",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "specs": {
+    "capacityLiters": 26,
+    "weightGrams": 1406,
+    "dimensions": "12\" W x 20\" H x 6.75\" D",
+    "material": "1000D CORDURA"
+  }
+}

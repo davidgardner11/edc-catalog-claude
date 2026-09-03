@@ -1,0 +1,44 @@
+{
+  "slug": "alpaka-elements-backpack-pro",
+  "productUrl": "https://www.alpakagear.com/products/elements-backpack-pro",
+  "notes": "Captured 2026-09-03 from ALPAKA's Shopify storefront JSON (https://www.alpakagear.com/products/elements-backpack-pro.json) and the rendered product page. Price is the Axoflux 400D / 600D colorways; the two X-Pac colorways are $229, so $189 is the lowest available (ADR-017). Colorway names keep ALPAKA's fabric qualifier because the brand sells the same colour in three fabrics at two prices - dropping it would collapse seven distinct pickers into four ambiguous names. Colorway hexes sampled from ALPAKA's own hero photograph of each colorway. Source images are 1020x1200 originals, below the 1280w output width - see the ingest log's upscale warning.",
+  "images": [
+    { "url": "https://cdn.shopify.com/s/files/1/0058/6514/4418/files/ElementBackpackProAxoflux400DBlack_0001_756fdf0f-2441-4ff2-9123-399c3a6f173a.jpg?v=1783501069" },
+    { "url": "https://cdn.shopify.com/s/files/1/0058/6514/4418/files/ElementBackpackProAxoflux400DBlack_0026.jpg?v=1755589309" },
+    { "url": "https://cdn.shopify.com/s/files/1/0058/6514/4418/files/ElementBackpackProAxoflux400DBlack_0030.jpg?v=1755589309" },
+    { "url": "https://cdn.shopify.com/s/files/1/0058/6514/4418/files/ElementBackpackProAxoflux400DGreen_0001_6f68a092-49b6-4c79-a64e-da1da27f494b.jpg?v=1783501068" },
+    { "url": "https://cdn.shopify.com/s/files/1/0058/6514/4418/files/ElementBackpackProAxoflux400DBlue_0001_16addcde-6a0b-49aa-8a5d-e07590200f58.jpg?v=1783501069" }
+  ],
+  "colorways": [
+    { "name": "Black - Axoflux 400D Ripstop", "hex": "#1d1d1d", "swatchSource": "https://cdn.shopify.com/s/files/1/0058/6514/4418/files/ElementBackpackProAxoflux400DBlack_0001_756fdf0f-2441-4ff2-9123-399c3a6f173a.jpg?v=1783501069" },
+    { "name": "Green - Axoflux 400D Ripstop", "hex": "#393625", "swatchSource": "https://cdn.shopify.com/s/files/1/0058/6514/4418/files/ElementBackpackProAxoflux400DGreen_0001_6f68a092-49b6-4c79-a64e-da1da27f494b.jpg?v=1783501068" },
+    { "name": "Moonlight Blue - Axoflux 400D Ripstop", "hex": "#1c2330", "family": "navy", "swatchSource": "https://cdn.shopify.com/s/files/1/0058/6514/4418/files/ElementBackpackProAxoflux400DBlue_0001_16addcde-6a0b-49aa-8a5d-e07590200f58.jpg?v=1783501069" },
+    { "name": "Black - Axoflux 600D", "hex": "#474747", "swatchSource": "https://cdn.shopify.com/s/files/1/0058/6514/4418/files/ELEMENTSBACKPACKPROAXOFLUX600DBLACK_4b66baca-ab2a-4803-9cb1-283a96a89f8b.jpg?v=1783501363" },
+    { "name": "Army Green - Axoflux 600D", "hex": "#4f4c3d", "swatchSource": "https://cdn.shopify.com/s/files/1/0058/6514/4418/files/ELEMENTSBACKPACKPROAXOFLUX600DGREEN_9eb5b9ea-803b-4d90-b8bc-9f1ebe35d53a.jpg?v=1783501440" },
+    { "name": "Black - X-Pac VX42", "hex": "#4f4f51", "swatchSource": "https://cdn.shopify.com/s/files/1/0058/6514/4418/files/ELEMENTSBACKPACKPROVX42BLACK_8ebe82bc-2da3-45df-86bf-b0d0707cc9b1.jpg?v=1783501524" },
+    { "name": "Olive Green - X-Pac X42", "hex": "#49492d", "swatchSource": "https://cdn.shopify.com/s/files/1/0058/6514/4418/files/ELEMENTS_BACKPACK_PRO_VX42_GREEN_HERO_NEW_c4343d1b-f9c1-4323-bfc2-8cf116a9cd67.jpg?v=1783501279" }
+  ],
+  "price": {
+    "amountUsd": 189,
+    "retailer": "ALPAKA",
+    "url": "https://www.alpakagear.com/products/elements-backpack-pro",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "priceComparison": [
+    { "retailer": "ALPAKA", "url": "https://www.alpakagear.com/products/elements-backpack-pro", "amountUsd": 189, "outcome": "captured - brand-direct, Axoflux 400D/600D colorways; X-Pac colorways $229" },
+    { "retailer": "Amazon", "outcome": "not captured - no first-party ALPAKA storefront listing found for the Elements Backpack Pro" }
+  ],
+  "review": {
+    "score": 8.1,
+    "scale": 10,
+    "source": "Pack Hacker",
+    "url": "https://www.packhacker.com/travel-gear/alpaka/elements-backpack-pro/",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "specs": {
+    "capacityLiters": 26,
+    "weightGrams": 1300,
+    "dimensions": "18.9\" H x 12.2\" W x 7.09\" D",
+    "material": "840D ballistic nylon, YKK AquaGuard zippers"
+  }
+}
