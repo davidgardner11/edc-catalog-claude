@@ -406,44 +406,25 @@ No components yet.
 ### Phase 3 — Card components
 
 ```
-@agent-frontend-specialist Build the card against the fixtures: BackpackCard,
-CardCarousel, CardLabel, ColorwayGrid, PriceBlock, ScoreBlock. Read the Components
-section of implementation-plan.md first. Put pure logic in app/utils/
-(format, color) so it is unit-testable. Render all 3 fixtures on the index page.
-Do not build the toolbar or detail route yet. Finally, write docs/component-conventions.md
-recording the conventions you actually established — naming, props, slots, file layout —
-not conventions invented in advance.
+@agent-frontend-specialist Build the card against the fixtures: BackpackCard, CardCarousel, CardLabel, ColorwayGrid, PriceBlock, ScoreBlock. Read the Components section of implementation-plan.md first. Put pure logic in app/utils/ (format, color) so it is unit-testable. Render all 3 fixtures on the index page. Do not build the toolbar or detail route yet. Finally, write docs/component-conventions.md recording the conventions you actually established — naming, props, slots, file layout — not conventions invented in advance.
 ```
 
-**Gate — check these by hand, they are the spec:** card is 5:7; the bands measure **65% / 15% / 20%**
-of card height; clicking right advances and wraps last→first; clicking left wraps first→last; **the
-label does not shift by a pixel across images**; a long model name truncates rather than growing
-band 2; every card shows exactly 8 swatch cells, and the `>` pager wraps from the last page back to
-the first. `docs/component-conventions.md` exists and describes the components as built.
+**Gate — check these by hand, they are the spec:** card is 5:7; the bands measure **65% / 15% / 20%** of card height; clicking right advances and wraps last→first; clicking left wraps first→last; **the label does not shift by a pixel across images**; a long model name truncates rather than growing band 2; every card shows exactly 8 swatch cells, and the `>` pager wraps from the last page back to the first. `docs/component-conventions.md` exists and describes the components as built.
 
 ### Phase 4 — Ingest pipeline
 
 ```
-@agent-data-pipeline-specialist Build the ingest pipeline per the Ingest pipeline section
-of implementation-plan.md: fetch-images, process-images, build-catalog,
-plus the zod schema and a pnpm ingest script. Prove it end-to-end on 3 packs only.
+@agent-data-pipeline-specialist Build the ingest pipeline per the Ingest pipeline section of implementation-plan.md: fetch-images, process-images, build-catalog, plus the zod schema and a pnpm ingest script. Prove it end-to-end on 3 packs only.
 ```
 
-**Gate:** re-running `pnpm ingest` on unchanged inputs produces byte-identical output, and re-running
-after deleting `public/images/` does **not** re-download (it rebuilds from `.ingest-cache/`).
+**Gate:** re-running `pnpm ingest` on unchanged inputs produces byte-identical output, and re-running after deleting `public/images/` does **not** re-download (it rebuilds from `.ingest-cache/`).
 
 ### Phase 5 — Research the 20 (batched)
 
 Run in batches of 5 so you can course-correct. Ranks are in the plan's ranked-20 table.
 
 ```
-@agent-research-curator Research packs 1-5 from the ranked table in
-implementation-plan.md. Write data/sources/{slug}.json for each: image
-URLs (1-5, prefer brand-direct), the lowest price found across brand-direct plus 1-2 major
-retailers with the winning retailer and URL (ADR-017), review score with its real scale and
-source, colorways, and specs. Stamp capturedAt on price and score.
-If a host blocks you, fall back brand-direct → major retailer → report it as needing manual
-capture. Do not run the ingest scripts.
+@agent-research-curator Research packs 1-5 from the ranked table in implementation-plan.md. Write data/sources/{slug}.json for each: image URLs (1-5, prefer brand-direct), the lowest price found across brand-direct plus 1-2 major retailers with the winning retailer and URL (ADR-017), review score with its real scale and source, colorways, and specs. Stamp capturedAt on price and score. If a host blocks you, fall back brand-direct → major retailer → report it as needing manual capture. Do not run the ingest scripts.
 ```
 
 Then: `@agent-data-pipeline-specialist Run the ingest for the 5 packs just captured and report anything that failed.`
