@@ -16,6 +16,10 @@ dist
 # A fresh clone must run `pnpm ingest` to populate them.
 public/images/
 
+# The generated catalog. A build artifact of `pnpm ingest` (ADR-014), and
+# ADR-012 already states a fresh clone must run ingest before anything renders.
+app/data/catalog.json
+
 # env & local config
 .env
 .env.*

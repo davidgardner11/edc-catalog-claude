@@ -28,8 +28,11 @@ pnpm ingest      # downloads + processes product images, builds app/data/catalog
 pnpm dev         # http://localhost:3000
 ```
 
-**Until Phase 4, `pnpm ingest` is a stub** that exits 1 with a pointer to the plan. The scaffold
-renders without it.
+`pnpm ingest` currently ingests the three packs in `data/seed.ts`; Phase 5 fills in the other
+seventeen. Useful flags: `--only=slug[,slug]` to restrict a run, `--skip-fetch` to rebuild from the
+cache alone, `--reencode` to force every AVIF/WebP variant to be regenerated. Setting
+`INGEST_OFFLINE=1` makes any outbound request throw, which is how the "no re-download" guarantee is
+verified rather than assumed.
 
 `pnpm ingest` is network-bound on a cold run. It caches originals in `.ingest-cache/` (also
 gitignored), so re-running to retune image processing does not re-download anything. Deleting
@@ -85,10 +88,17 @@ app/
   composables/         URL-query-backed filter/sort state        (pending — Phase 6)
   utils/               pure logic: format, color                 (pending — Phase 3)
   types/backpack.ts    the data contract                         (pending — Phase 2)
-  data/catalog.json    build artifact from `pnpm ingest`         (pending — Phase 4)
+  data/catalog.json    build artifact from `pnpm ingest`         (gitignored)
 scripts/
-  ingest.ts            pipeline entry — stub until Phase 4
-data/                  seed list + per-pack research capture     (pending — Phase 5)
+  ingest.ts            pipeline entry — preflight, fetch, process, build
+  fetch-images.ts      download ≤5 originals → .ingest-cache/{slug}/
+  process-images.ts    sharp → public/images/{slug}/{n}-{w}.{avif,webp}
+  build-catalog.ts     merge + zod validate → app/data/catalog.json
+  lib/                 paths, robots-aware http, zod schemas, logging
+data/
+  seed.ts              the ranked list: rank, slug, name, brand, rationale
+  sources/{slug}.json  per-pack research capture   (3 of 20 — rest is Phase 5)
+.ingest-cache/         downloaded originals                      (gitignored)
 docs/                  decision log and working notes
 .claude/               subagent definitions
 nuxt.config.ts         SSG config, Tailwind Vite plugin, TS flags

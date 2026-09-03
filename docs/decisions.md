@@ -454,3 +454,93 @@ reading the card. And `app/pages/index.vue` imports `app/data/fixtures.ts` direc
 file's header comment previously forbade that outright and has been narrowed to the rule that
 actually matters (fixtures must never *ship as catalog data*, ADR-009). Phase 6 swaps the import for
 `catalog.json`.
+
+## ADR-025 — Ingest pipeline decisions Phase 4 committed to
+**2026-09-03 · Accepted**
+
+Seven things building the pipeline settled that later phases — Phase 5 above all, which runs this
+code seventeen more times — must not undo.
+
+**Determinism is bought explicitly, not assumed.** ADR-014 requires byte-identical output from
+unchanged inputs, and an image encoder is the usual place that guarantee dies. `process-images.ts`
+sets `sharp.concurrency(1)` (libaom's threading can vary bit output between runs), `sharp.cache(false)`,
+never calls `withMetadata()` (so no capture timestamp or ICC payload reaches the output), calls
+`.rotate()` before `.resize()` so stripping metadata cannot flip an image, and pins every encoder
+parameter including `kernel`, which is a sharp default today and might not stay one. `catalog.json`
+is assembled with an explicit key order and sorted by rank, so neither `Object.keys` order nor
+filesystem iteration order can reach the bytes. **Verified, not asserted:** `--reencode` (or
+`INGEST_REENCODE=1`) re-encodes all 60 variants from cache and the SHA-256 of the output set is
+unchanged, as does deleting `public/images/` entirely. Keep that switch — a plain re-run *skips*, so
+it is the only thing that distinguishes "deterministic" from "not re-run at all".
+
+**The cache is keyed on the URL, and the encode is stamped on the source hash.** A cached original is
+reused when `.ingest-cache/{slug}/manifest.json` records the *same URL* at the same index and the file
+is still on disk, so changing one URL in a capture re-fetches exactly one image and nothing else.
+`.ingest-cache/{slug}/processed.json` stamps each output with the source SHA, the encoder identity
+(sharp + libvips version + every parameter), and the SHA of the bytes written; an output that is
+missing or altered fails its stamp and is re-encoded. **Why the stamp lives in `.ingest-cache/` and
+not `public/images/`:** everything under `public/` is copied verbatim into the static build, and
+bookkeeping has no business shipping to browsers.
+
+**Two failure classes, handled differently on purpose.** Network and artefact failures are isolated
+per pack: a blocked host costs you one card, the catalog still builds without it, and the run exits
+non-zero with a summary. Authoring failures — a malformed capture, an unmappable colour name, a
+duplicate rank — are fatal: nothing is written and the previous catalog survives intact. A preflight
+pass validates every `data/sources/{slug}.json` before any stage runs, so an authoring error costs
+seconds rather than surfacing after minutes of AVIF encoding. **Consequence for Phase 5:** a batch of
+five where one pack is blocked still produces four usable cards; a batch where one JSON has a typo
+produces nothing until it is fixed. That asymmetry is intended.
+
+**Sources below 1280w are upscaled, and the run says so.** `widths` is pinned to `[640, 1280]` by the
+schema, so emitting a narrower file would make every `srcset` in the catalog a lie. `withoutEnlargement`
+is therefore `false` and the log warns per image. Seven of the first fifteen images hit this — ALPAKA's
+originals are 1020px. **The alternative considered and rejected:** per-image `widths`. It would be
+honest, but it moves a fixed invariant into data and every consumer of `CarouselImage` would have to
+handle a variable-length array to save a small amount of upscaling on some packs.
+
+**Colorway `hex` is sampled from the brand's own photograph, and records which one.** No brand in this
+category publishes a machine-readable swatch colour, and ADR-009 forbids inventing one. Each colorway
+in `data/sources/{slug}.json` carries `hex` plus a `swatchSource` URL: the hex is the median-luminance
+pixel of the central 40% of that photograph with the background discarded, so the value is auditable
+rather than eyeballed. **Consequence:** `swatchSource` is not optional in practice — a hex without one
+is an unsourced claim, and Phase 5 should treat it as incomplete. Where a colorway has no photo at its
+own capacity (GORUCK sells Coyote and Navy + Gold only as 21L imagery), the same fabric's photo at
+another size is used and the capture's `notes` says so; colour is a fabric property, not a size one.
+
+**`family` is derived, and an explicit override is data.** Ingest calls `colorFamilyFromName` from
+`app/utils/color.ts` — the same module the Phase 6 filter facets on (ADR-022) — and a `null` result
+**fails the build** rather than defaulting to `multi`, which would bucket every unrecognised name into
+one facet and hide the gap forever. An explicit `family` in the capture wins over the guess and is
+still validated against the union. Three of the first twenty-seven colorways needed one, and each is
+a case the keyword table cannot know: "Black Tiger Stripe" and "Black Frogskin + Wolf Grey" are prints
+(`multi`, not `black`), and "Desert Brown" is `brown` where the table's `desert` keyword says `tan`.
+**Rule for Phase 5:** if the *name* is the problem, add the keyword to `app/utils/color.ts` so the
+filter learns it too; only use an override when the name is genuinely ambiguous.
+
+**Pipeline options are arguments, never ambient environment state.** `scripts/ingest.ts` parses every
+flag in its own body and passes the result down; no stage reads an option out of `process.env` that
+`ingest.ts` wrote. This is a rule rather than a preference because violating it is *silent*:
+`--reencode` originally worked by setting `process.env.INGEST_REENCODE`, but `process-images.ts`
+captured that variable in a module-level `const`, and ESM evaluates a statically imported module
+before the importing module's body runs — so the assignment always landed too late, the flag
+re-encoded nothing, and the run still exited 0 looking like it had worked. The first Phase 4 gate
+evidence was collected with that broken flag and had to be re-derived. Consequences: options are
+parameters (`processImages(slugs, { reencode })`); the env vars that remain (`INGEST_OFFLINE`,
+`INGEST_REENCODE`) are read inside functions at call time, never captured at module scope; flag and
+env var are combined into one boolean at a single decision point, so neither can be quietly dead; and
+`ingest.ts` rejects unrecognised arguments rather than ignoring them, because a typo'd flag is the
+same silent-no-op failure wearing a different hat.
+
+**`app/data/catalog.json` is now gitignored.** ADR-012 and ADR-014 both already state it is a build
+artifact that a fresh clone must regenerate, but `.gitignore` never said so and Phase 4 was the first
+run that produced one. Implemented, not decided anew.
+
+**Known gap: `scripts/` and `data/` are not type-checked.** Neither directory is in any tsconfig
+project (`.nuxt/tsconfig.app.json` includes `app/**` only; `tsconfig.node.json` includes config files
+only), and `@types/node` is not an installed dependency, so `pnpm typecheck` reports zero errors while
+never opening the ingest pipeline. Checked manually with a throwaway config: zero authored type errors,
+49 diagnostics, all of them `Cannot find name 'Buffer' | 'process' | 'URL' | 'fetch'` from the missing
+`@types/node`. **Not fixed here:** `tsconfig.json` and `package.json` belong to `build-tooling-specialist`,
+and adding a dependency was out of scope. The fix is `@types/node` as a devDependency plus a
+`tsconfig.scripts.json` in the solution-style root's `references`. Until then the pipeline's only
+type feedback is running it.

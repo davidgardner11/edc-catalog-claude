@@ -1,0 +1,44 @@
+{
+  "slug": "able-carry-max-edc",
+  "productUrl": "https://ablecarry.com/products/max-edc",
+  "notes": "Captured 2026-09-03 from Able Carry's Shopify storefront JSON (https://ablecarry.com/products/max-edc.json) and the rendered product page. Price is the base Ripstop colorways; the X-Pac colorways (Tarmac Black, Earth Green, Desert Brown, Ocean Blue) are $298. ADR-017 asks for the lowest available price, so $278 is recorded. Review is the brand-direct aggregate (schema.org AggregateRating, ratingValue 4.8 over 330 ratings); bestRating is omitted in the markup, which schema.org defines as 5 - hence scale 5.0. Pack Hacker also scores this pack 8.3/10 (https://www.packhacker.com/travel-gear/able-carry/max-edc/); the 5.0-scale brand-direct rating was chosen here so the catalog exercises both scales (ADR-010). Colorway hexes sampled from Able Carry's own front-view photograph of each colorway.",
+  "images": [
+    { "url": "https://cdn.shopify.com/s/files/1/0028/1971/9281/files/MaxEDCRipstopBlack_Front_8ef51813-8c36-4194-a2ac-103e4d3aecb1.png?v=1788151730" },
+    { "url": "https://cdn.shopify.com/s/files/1/0028/1971/9281/files/MaxEDCRipstopOlive_Front.png?v=1788150113" },
+    { "url": "https://cdn.shopify.com/s/files/1/0028/1971/9281/files/MaxEDCRipstopTan_Front_5a09d0f1-ff15-4782-aad8-ab673cbe0b29.png?v=1788151624" },
+    { "url": "https://cdn.shopify.com/s/files/1/0028/1971/9281/files/MaxEDCDesertBrown_Front.png?v=1788150428" },
+    { "url": "https://cdn.shopify.com/s/files/1/0028/1971/9281/files/MaxEDC_DesertBrown_Lifestyle_DSC06973-Edit-2_1680x_125fdf04-2c8e-4810-97eb-a7aee2e5e676.webp?v=1754647544" }
+  ],
+  "colorways": [
+    { "name": "Ripstop Black", "hex": "#3c3c3f", "swatchSource": "https://cdn.shopify.com/s/files/1/0028/1971/9281/files/MaxEDCRipstopBlack_Front_8ef51813-8c36-4194-a2ac-103e4d3aecb1.png?v=1788151730" },
+    { "name": "Ripstop Olive", "hex": "#4a4232", "swatchSource": "https://cdn.shopify.com/s/files/1/0028/1971/9281/files/MaxEDCRipstopOlive_Front.png?v=1788150113" },
+    { "name": "Ripstop Tan", "hex": "#a37a57", "swatchSource": "https://cdn.shopify.com/s/files/1/0028/1971/9281/files/MaxEDCRipstopTan_Front_5a09d0f1-ff15-4782-aad8-ab673cbe0b29.png?v=1788151624" },
+    { "name": "Tarmac Black", "hex": "#272727", "swatchSource": "https://cdn.shopify.com/s/files/1/0028/1971/9281/files/MaxEDCTarmacBlack_Front.png?v=1788150554" },
+    { "name": "Earth Green", "hex": "#56533c", "swatchSource": "https://cdn.shopify.com/s/files/1/0028/1971/9281/files/MaxEDCEarthGreen_VX21_Front.png?v=1788150313" },
+    { "name": "Desert Brown", "hex": "#c0874b", "family": "brown", "swatchSource": "https://cdn.shopify.com/s/files/1/0028/1971/9281/files/MaxEDCDesertBrown_Front.png?v=1788150428" },
+    { "name": "Ocean Blue", "hex": "#2e4873", "swatchSource": "https://cdn.shopify.com/s/files/1/0028/1971/9281/files/MaxEDCOceanBlue_Front.png?v=1788150376" }
+  ],
+  "price": {
+    "amountUsd": 278,
+    "retailer": "Able Carry",
+    "url": "https://ablecarry.com/products/max-edc",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "priceComparison": [
+    { "retailer": "Able Carry", "url": "https://ablecarry.com/products/max-edc", "amountUsd": 278, "outcome": "captured - brand-direct, Ripstop colorways; X-Pac colorways $298" },
+    { "retailer": "Amazon", "outcome": "not captured - no first-party Able Carry storefront listing found for the Max EDC" }
+  ],
+  "review": {
+    "score": 4.8,
+    "scale": 5,
+    "source": "Able Carry (330 verified reviews)",
+    "url": "https://ablecarry.com/products/max-edc",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "specs": {
+    "capacityLiters": 26,
+    "weightGrams": 1451,
+    "dimensions": "19.6\" H x 11.8\" W x 7.5\" D",
+    "material": "CORDURA Ripstop Nylon; X-Pac VX21 / X42 + re/core 1000D on X-Pac colorways"
+  }
+}

@@ -36,6 +36,8 @@ When you make a decision that future work must respect, append an ADR to `docs/d
 is also a rule agents must always follow, add one line here pointing at it — never duplicate the
 reasoning in both places.
 
+**Never hard-wrap prose in a markdown file.** Write each paragraph as one continuous line and let the renderer wrap it. Manual mid-sentence line returns produce whitespace-only diffs when someone reflows them, and they break string-match edits against text that has been reflowed since it was read. Applies to every `.md` in this repo, including ADRs and anything a subagent writes.
+
 ## Commands
 
 pnpm is the package manager (pnpm 9.15.9, Node 24.19 local).
@@ -44,7 +46,7 @@ pnpm is the package manager (pnpm 9.15.9, Node 24.19 local).
 | --- | --- |
 | `pnpm dev` | Nuxt dev server |
 | `pnpm generate` | Static build to `.output/public` (also leaves a `dist` symlink to it) |
-| `pnpm ingest` | Regenerate `app/data/catalog.json` and `public/images/` from `data/` — **stub until Phase 4**; exits 1 with a pointer to the plan |
+| `pnpm ingest` | Regenerate `app/data/catalog.json` and `public/images/` from `data/`. Idempotent: re-running on unchanged inputs is byte-identical and makes zero network requests. Flags: `--only=slug[,slug]`, `--skip-fetch`, `--reencode`; `INGEST_OFFLINE=1` makes any outbound request throw |
 | `pnpm test` | Vitest unit tests (`--passWithNoTests` until Phase 7) |
 | `pnpm typecheck` | `nuxt typecheck` via vue-tsc |
 | `npx playwright test` | E2E; single spec via `npx playwright test tests/e2e/<file>.spec.ts` — **not installed yet** (Phase 7) |
@@ -52,6 +54,9 @@ pnpm is the package manager (pnpm 9.15.9, Node 24.19 local).
 `pnpm typecheck` prints `[Vue] Resolve plugin path failed: vue-router/volar/...` warnings. They are
 cosmetic: vue-tsc 3.3.11 looks for Volar plugin subpaths that vue-router 5 no longer exports. The
 exit code and TS error count are what matter.
+
+**`pnpm typecheck` does not cover `scripts/` or `data/`** — neither is in any tsconfig project, and
+`@types/node` is not installed, so the ingest pipeline is checked only by running it (ADR-025).
 
 ## Version constraints — do not "upgrade" these
 

@@ -2,27 +2,20 @@
 
 ## Context
 
-No application code exists yet — the repository holds planning and configuration only. We are
-building a local-only, statically-generated web catalog of acclaimed Everyday Carry backpacks,
-presented as playing-card-shaped cards (5:7 portrait) in a browsable, filterable grid.
+No application code exists yet — the repository holds planning and configuration only. We are building a local-only, statically-generated web catalog of acclaimed Everyday Carry backpacks presented as playing-card-shaped cards (5:7 portrait) in a browsable, filterable grid.
 
-Scope was deliberately cut from the original ask during clarification: **20 packs, not 100**, and
-**1–5 real product images per pack, not 3–9**. Data and images are real (researched from the web and
-downloaded locally), not generated or synthetic. Everything above 20 is a later batch — the code
-treats the count as data, so growing to 100 is a data job, not a code change.
+Scope was deliberately cut from the original ask during clarification: **20 packs, not 100**, and **1–5 real product images per pack, not 3–9**. Data and images are real (researched from the web and downloaded locally), not generated or synthetic. Everything above 20 is a later batch — the code treats the count as data, so growing to 100 is a data job, not a code change.
 
 The interesting engineering is not the grid. It is two things:
 
 1. an **ingest pipeline** that turns research into typed, optimized, build-time assets; and
-2. **rigid card geometry** — every card is 5:7 split 65/15/20, and nothing in the data can push those
-   bands around, whatever the image count, name length, or colorway count.
+2. **rigid card geometry** — every card is 5:7 split 65/15/20, and nothing in the data can push those bands around, whatever the image count, name length, or colorway count.
 
 ---
 
 ## Decisions
 
-Each row links to its ADR in `docs/decisions.md`, which carries the reasoning and any open questions.
-Change a decision there, not here.
+Each row links to its ADR in `docs/decisions.md`, which carries the reasoning and any open questions. Change a decision there, not here.
 
 | Area | Decision | ADR |
 | --- | --- | --- |
@@ -55,14 +48,9 @@ vitest                  unit tests for pure logic
 @playwright/test        E2E, via the playwright-tester skill
 ```
 
-**Version rationale.** The table's annotations are the short form; **ADR-001** (Nuxt 4), **ADR-002**
-(TypeScript ceiling), and **ADR-003** (Vite not declared) carry the reasoning. Two facts with no ADR:
-Vue 3.5.42 is already newest-stable (3.6 is `rc` only; Nuxt 4.5.2 declares `vue: ^3.5.40`), and
-Tailwind v4 is CSS-first — no `tailwind.config.js`, theme tokens in `@theme`.
+**Version rationale.** The table's annotations are the short form; **ADR-001** (Nuxt 4), **ADR-002** (TypeScript ceiling), and **ADR-003** (Vite not declared) carry the reasoning. Two facts with no ADR: Vue 3.5.42 is already newest-stable (3.6 is `rc` only; Nuxt 4.5.2 declares `vue: ^3.5.40`), and Tailwind v4 is CSS-first — no `tailwind.config.js`, theme tokens in `@theme`.
 
-`nuxt.config.ts` per the [official Tailwind/Nuxt guide](https://tailwindcss.com/docs/installation/framework-guides/nuxt):
-`@tailwindcss/vite` in `vite.plugins`, `@import "tailwindcss";` in `app/assets/css/main.css`,
-that file listed in `css:`. Prerender everything: `nitro.prerender.crawlLinks = true`.
+`nuxt.config.ts` per the [official Tailwind/Nuxt guide](https://tailwindcss.com/docs/installation/framework-guides/nuxt): `@tailwindcss/vite` in `vite.plugins`, `@import "tailwindcss";` in `app/assets/css/main.css`, that file listed in `css:`. Prerender everything: `nitro.prerender.crawlLinks = true`.
 
 ---
 
@@ -100,18 +88,13 @@ export type Backpack = {
 }
 ```
 
-`scale` is stored per pack because sources disagree (REI 5.0, Carryology 10.0). Display uses raw
-`score`/`scale`; **sorting and filtering use `score / scale`** normalized to 0–1. Conflating those
-is the easy bug here.
+`scale` is stored per pack because sources disagree (REI 5.0, Carryology 10.0). Display uses raw `score`/`scale`; **sorting and filtering use `score / scale`** normalized to 0–1. Conflating those is the easy bug here.
 
 ---
 
 ## The ranked 20
 
-Ranked on **cross-source critical acclaim** — Carryology Carry Awards, Pack Hacker, HiConsumption,
-Nomads Nation. There is no popularity term; ADR-018 records why it was investigated and abandoned.
-This ordering is editorial judgment, not arithmetic, so each entry's basis is committed to
-`data/seed.ts` as `rationale` and stays auditable.
+Ranked on **cross-source critical acclaim** — Carryology Carry Awards, Pack Hacker, HiConsumption, Nomads Nation. There is no popularity term; ADR-018 records why it was investigated and abandoned. This ordering is editorial judgment, not arithmetic, so each entry's basis is committed to `data/seed.ts` as `rationale` and stays auditable.
 
 | # | Brand | Model | Basis |
 | --- | --- | --- | --- |
@@ -136,18 +119,11 @@ This ordering is editorial judgment, not arithmetic, so each entry's basis is co
 | 19 | Arktype | Dashpack II | Minimalist favorite |
 | 20 | Filson | Dryden Ballistic Nylon | Heritage/professional entry |
 
-Spread: **$60–$435**, 19 distinct brands (Aer twice). Capacity spread is **not yet stated** — the
-figure previously here ("14–30L") was wrong at both ends and is withdrawn pending Phase 5 (ADR-023).
+Spread: **$60–$435**, 19 distinct brands (Aer twice). Capacity spread is **not yet stated** — the figure previously here ("14–30L") was wrong at both ends and is withdrawn pending Phase 5 (ADR-023).
 
-**Before researching any pack, confirm it is still in production** (ADR-019). Incase ICON Slim and
-Arktype Dashpack II are the most likely to have been superseded.
+**Before researching any pack, confirm it is still in production** (ADR-019). Incase ICON Slim and Arktype Dashpack II are the most likely to have been superseded.
 
-**Capacity is unverified for most of this table** (ADR-023). Four spot-checks in 2026-09 found two
-problems: the **Aer Travel Pack 3 is 35L**, above the 30L ceiling the old spread claimed and arguably
-outside "EDC" — Aer also sells a **28L Travel Pack 3 Small**, and Phase 5 must decide which one rank 4
-means; and the **Incase ICON Slim is now 19L**, not the 14.5L that produced the old 14L floor.
-Verified fine: Chrome Barrage Cargo 18→22L, Arktype Dashpack 15L. Capture `capacityLiters` for every
-pack in Phase 5, then restate the spread from the data.
+**Capacity is unverified for most of this table** (ADR-023). Four spot-checks in 2026-09 found two problems: the **Aer Travel Pack 3 is 35L**, above the 30L ceiling the old spread claimed and arguably outside "EDC" — Aer also sells a **28L Travel Pack 3 Small**, and Phase 5 must decide which one rank 4 means; and the **Incase ICON Slim is now 19L**, not the 14.5L that produced the old 14L floor. Verified fine: Chrome Barrage Cargo 18→22L, Arktype Dashpack 15L. Phase 4 added three more from brand-direct sources: GORUCK GR1 **26L**, Able Carry Max EDC **26L**, ALPAKA Elements Backpack Pro **26L** — 7 of 20 now verified, still not enough to restate the spread. Capture `capacityLiters` for every pack in Phase 5, then restate the spread from the data.
 
 ---
 
@@ -160,26 +136,35 @@ failure in one pack never forces a full re-fetch.
 data/seed.ts              ranked 20: slug, name, brand, brandUrl, rank, rationale
                           (rank is the acclaim rank; rationale keeps the ordering auditable)
 data/sources/{slug}.json  research output: image URLs, price+retailer+url, score+scale+source, specs
+scripts/ingest.ts         orchestrator: preflight → fetch → process → build
 scripts/fetch-images.ts   download ≤5 images → .ingest-cache/{slug}/  (gitignored, rate-limited)
 scripts/process-images.ts sharp → public/images/{slug}/{n}-{w}.{avif,webp}  (w ∈ 640, 1280)
 scripts/build-catalog.ts  merge + zod validate → app/data/catalog.json
+scripts/lib/paths.ts      every path, resolved from import.meta.url not cwd
+scripts/lib/http.ts       robots.txt, per-host rate limiting, blocked-host memo
+scripts/lib/schema.ts     both zod schemas + the compile-time contract assertion
+scripts/lib/stamps.ts     read encode stamps without re-encoding
+scripts/lib/log.ts        fixed log vocabulary; per-pack failure records
 ```
 
-Orchestrated by `pnpm ingest`. `.ingest-cache/` holds originals so image processing can be re-tuned
-without re-hitting any retailer.
+Orchestrated by `pnpm ingest`. `.ingest-cache/` holds originals so image processing can be re-tuned without re-hitting any retailer.
 
-**What the zod schema must enforce beyond the TypeScript types.** The types are structural; several
-invariants are not expressible in them and belong in the schema, so bad data fails the build rather
-than reaching a component:
+**Built in Phase 4 (ADR-025).** Four things the sketch above did not say, which later phases depend on:
 
-- `Colorway.hex` matches `/^#[0-9a-f]{6}$/i` — typed `string`, so components may assume a valid
-  6-digit hex only because the schema guarantees it.
-- `Colorway.family` is one of the `ColorFamily` members (ADR-022) — ingest maps onto it, so a
-  typo'd family must fail loudly rather than silently vanish from the Phase 6 colour filter.
-- `images` has length 1–5; `widths` is exactly `[640, 1280]`; `rank` is 1–20 and unique; `slug` is
-  unique and matches `/^[a-z0-9-]+$/`.
+- **Flags.** `--only=slug[,slug]` restricts the run; `--skip-fetch` rebuilds from cache alone; `--reencode` (or `INGEST_REENCODE=1`) ignores the encode stamps. `INGEST_OFFLINE=1` makes any outbound request throw, which is how the "no re-download" half of the gate is *proved* rather than inferred from a log line. Unrecognised arguments are rejected, and options reach each stage as arguments rather than through `process.env` — ADR-025 records why that is a rule.
+- **A preflight stage** validates every `data/sources/{slug}.json` before any other stage runs, so an authoring error costs seconds instead of surfacing after minutes of AVIF encoding.
+- **Two failure classes.** Network and artefact failures are isolated per pack (one blocked host costs one card; the run exits non-zero with a summary). Authoring failures — malformed capture, unmappable colour name, duplicate rank — are fatal and write nothing.
+- **`colorways[].swatchSource`** in the capture records the brand photograph each `hex` was sampled from. No brand publishes a machine-readable swatch colour and ADR-009 forbids inventing one, so the hex is derived and the derivation is recorded.
+
+**What the zod schema must enforce beyond the TypeScript types.** The types are structural; several invariants are not expressible in them and belong in the schema, so bad data fails the build rather than reaching a component:
+
+- `Colorway.hex` matches `/^#[0-9a-f]{6}$/i` — typed `string`, so components may assume a valid 6-digit hex only because the schema guarantees it.
+- `Colorway.family` is one of the `ColorFamily` members (ADR-022) — ingest maps onto it, so a typo'd family must fail loudly rather than silently vanish from the Phase 6 colour filter.
+- `images` has length 1–5; `widths` is exactly `[640, 1280]`; `rank` is 1–20 and unique; `slug` is unique and matches `/^[a-z0-9-]+$/`.
 - `review.scale` is 5 or 10; `review.score` is `> 0` and `<= scale`.
 - Both `capturedAt` values parse as ISO dates.
+
+All twelve of these were exercised in Phase 4 by deliberately corrupting a value and confirming the build fails with a pointed message and writes nothing.
 
 ---
 
@@ -202,10 +187,7 @@ app/utils/cycle.ts                     wrapping index arithmetic, colorway pagin
 app/utils/image.ts                     srcset/src from CarouselImage — pure
 ```
 
-`cycle.ts` and `image.ts` were added in Phase 3 (ADR-024): the Verification section below names
-carousel wraparound and swatch paging as unit tests, so that logic cannot live in an SFC.
-Components built in Phase 3: `BackpackCard`, `CardCarousel`, `CardLabel`, `ColorwayGrid`,
-`PriceBlock`, `ScoreBlock`. `CatalogToolbar` and the detail route are Phase 6.
+`cycle.ts` and `image.ts` were added in Phase 3 (ADR-024): the Verification section below names carousel wraparound and swatch paging as unit tests, so that logic cannot live in an SFC. Components built in Phase 3: `BackpackCard`, `CardCarousel`, `CardLabel`, `ColorwayGrid`, `PriceBlock`, `ScoreBlock`. `CatalogToolbar` and the detail route are Phase 6.
 
 **Card geometry.** Three bands, top to bottom (ADR-021):
 
@@ -230,52 +212,25 @@ Components built in Phase 3: `BackpackCard`, `CardCarousel`, `CardLabel`, `Color
 +-------------------------------------------------------------+
 ```
 
-Shell is `aspect-[5/7] min-w-[260px] max-w-[320px] rounded-xl border shadow-sm overflow-hidden`,
-inner `grid grid-rows-[65fr_15fr_20fr]`. **Use `fr`, not `h-[65%]`/`h-[15%]`/`h-[20%]`** — fractional
-grid rows are what make the split exact and immune to content pushing it around; percentage heights
-reintroduce exactly the shifting this rule exists to prevent. Band 3 is `grid grid-cols-3` (or
-`grid-cols-[auto_1fr_1fr]` if the swatch column needs to size to its 4 columns). At the 260–320px
-width range the card is 364–448px tall, so band 2 gets 55–67px for two text lines and band 3 gets
-73–90px for two rows of swatches — tight but sufficient; verify at 260px, the worst case.
+Shell is `aspect-[5/7] min-w-[260px] max-w-[320px] rounded-xl border shadow-sm overflow-hidden`, inner `grid grid-rows-[65fr_15fr_20fr]`. **Use `fr`, not `h-[65%]`/`h-[15%]`/`h-[20%]`** — fractional grid rows are what make the split exact and immune to content pushing it around; percentage heights reintroduce exactly the shifting this rule exists to prevent. Band 3 is `grid grid-cols-3` (or `grid-cols-[auto_1fr_1fr]` if the swatch column needs to size to its 4 columns). At the 260–320px width range the card is 364–448px tall, so band 2 gets 55–67px for two text lines and band 3 gets 73–90px for two rows of swatches — tight but sufficient; verify at 260px, the worst case.
 
-**Carousel.** Two full-height `<button>` zones (left/right halves) fill the band — a click anywhere
-in the image region cycles. Wrap is plain modulo: `(i + 1) % n` and `(i - 1 + n) % n`. Nothing
-overlays the photo, so the zones need no z-index games and no `pointer-events-none` sibling. Image
-`[0]` eager, rest lazy, neighbors preloaded on first interaction to avoid a swap flash. `aria-label`s
-on both zones, ArrowLeft/Right on the container, dot indicators, and an `aria-live` "Image 3 of 5".
+**Carousel.** Two full-height `<button>` zones (left/right halves) fill the band — a click anywhere in the image region cycles. Wrap is plain modulo: `(i + 1) % n` and `(i - 1 + n) % n`. Nothing overlays the photo, so the zones need no z-index games and no `pointer-events-none` sibling. Image `[0]` eager, rest lazy, neighbors preloaded on first interaction to avoid a swap flash. `aria-label`s on both zones, ArrowLeft/Right on the container, dot indicators, and an `aria-live` "Image 3 of 5".
 
-**Label.** Brand over name, in normal flow inside band 2 — a **different grid row** from the
-carousel, not a sibling stacked on the image. The old requirement (the label must not move or
-re-render as images cycle) is now satisfied by the layout itself: nothing that changes on image swap
-is inside band 2, so it cannot move. Keep the E2E assertion anyway as a cheap regression guard, but
-it is no longer the load-bearing risk it was. Name uses `truncate`, so a long model name shortens
-rather than wrapping the band taller.
+**Label.** Brand over name, in normal flow inside band 2 — a **different grid row** from the carousel, not a sibling stacked on the image. The old requirement (the label must not move or re-render as images cycle) is now satisfied by the layout itself: nothing that changes on image swap is inside band 2, so it cannot move. Keep the E2E assertion anyway as a cheap regression guard, but it is no longer the load-bearing risk it was. Name uses `truncate`, so a long model name shortens rather than wrapping the band taller.
 
-**Swatches.** `grid grid-cols-4 grid-rows-2 gap-1`, always 8 cells rendered (ADR-015). At `n <= 8`,
-show all and ghost-pad (dashed, muted) the remainder. At `n > 8`, cell 8 becomes a `>` pager and each
-page shows 7 colorways: `colorways.slice(page * 7, page * 7 + 7)`, with `pages = Math.ceil(n / 7)`
-and `page = (page + 1) % pages` on click — wrapping, like the carousel (ADR-016). The pager stays in
-cell 8 on every page including a partial last one, so the hit target never moves. Its handler calls
-`stopPropagation` so it does not navigate to the detail route. Geometry is therefore identical on all
-20 cards. (Band 3 is outside the carousel's click zones now, so the pager no longer risks advancing
-the image — but keep `stopPropagation` for the card-level navigation handler.)
+**Swatches.** `grid grid-cols-4 grid-rows-2 gap-1`, always 8 cells rendered (ADR-015). At `n <= 8`, show all and ghost-pad (dashed, muted) the remainder. At `n > 8`, cell 8 becomes a `>` pager and each page shows 7 colorways: `colorways.slice(page * 7, page * 7 + 7)`, with `pages = Math.ceil(n / 7)` and `page = (page + 1) % pages` on click — wrapping, like the carousel (ADR-016). The pager stays in cell 8 on every page including a partial last one, so the hit target never moves. Its handler calls `stopPropagation` so it does not navigate to the detail route. Geometry is therefore identical on all 20 cards. (Band 3 is outside the carousel's click zones now, so the pager no longer risks advancing the image — but keep `stopPropagation` for the card-level navigation handler.)
 
-**Formatting.** Score `${score.toFixed(1)}/${scale.toFixed(1)}` → `4.4/5.0`, `8.1/10.0`. Price via
-`Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })`, dropping `.00` when whole.
+**Formatting.** Score `${score.toFixed(1)}/${scale.toFixed(1)}` → `4.4/5.0`, `8.1/10.0`. Price via `Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })`, dropping `.00` when whole.
 
 ---
 
 ## Build order
 
 1. **Scaffold** — Nuxt 4 + Tailwind 4 + TS, `pnpm dev` renders a blank page.
-2. **Types + fixtures** — `app/types/backpack.ts` and 3 hand-written fixture packs with placeholder
-   images, so components can be built and tested before any research happens. ADR-009's ban on
-   synthetic imagery governs catalog content, not dev fixtures.
-3. **Card components** — build the whole card against fixtures. This is where the 65/15/20 split,
-   carousel wraparound, and swatch grid get nailed down.
-4. **Ingest pipeline** — scripts + zod schema, proven end-to-end on 3 real packs.
-5. **Research + ingest 20** — the slow part, run in batches of ~5. Now cheap to verify, because the
-   UI already exists.
+2. **Types + fixtures** — `app/types/backpack.ts` and 3 hand-written fixture packs with placeholder images, so components can be built and tested before any research happens. ADR-009's ban on synthetic imagery governs catalog content, not dev fixtures.
+3. **Card components** — build the whole card against fixtures. This is where the 65/15/20 split, carousel wraparound, and swatch grid get nailed down.
+4. **Ingest pipeline** — scripts + zod schema, proven end-to-end on 3 real packs. *Done: GORUCK GR1 26L (rank 3), Able Carry Max EDC (10), ALPAKA Elements Backpack Pro (12).*
+5. **Research + ingest 20** — the slow part, run in batches of ~5. Now cheap to verify, because the UI already exists.
 6. **Catalog shell** — toolbar, filters, sort, detail route.
 7. **Tests + verification.**
 
@@ -285,30 +240,21 @@ Steps 1–4 are the ones worth your review; step 5 is mechanical once the pipeli
 
 ## Verification
 
-**Unit (`vitest`)** — the pure logic, which is where the real bugs live: score formatter across both
-scales, price formatter, carousel modulo wraparound at both ends with n=1 and n=5, swatch paging at
-counts 0/4/8/9/15/22 (boundary at 8, partial final page, and `ceil(n/7)` page counts), pager
-wraparound last→first.
+**Unit (`vitest`)** — the pure logic, which is where the real bugs live: score formatter across both scales, price formatter, carousel modulo wraparound at both ends with n=1 and n=5, swatch paging at counts 0/4/8/9/15/22 (boundary at 8, partial final page, and `ceil(n/7)` page counts), pager wraparound last→first.
 
 **E2E (`playwright-tester` skill)** — the behaviors that are only observable in a browser:
-- card bounding box matches 5:7 within tolerance; the three bands measure 65% / 15% / 20% of card
-  height, and stay at those ratios for the longest name and the largest colorway count in the fixtures
+- card bounding box matches 5:7 within tolerance; the three bands measure 65% / 15% / 20% of card height, and stay at those ratios for the longest name and the largest colorway count in the fixtures
 - clicking the right half advances; from the last image it lands on the first
 - clicking the left half retreats; from the first image it lands on the last
-- **label text and bounding-box position are byte-identical across all N images** — now structurally
-  guaranteed by the band split (ADR-021), kept as a regression guard
+- **label text and bounding-box position are byte-identical across all N images** — now structurally guaranteed by the band split (ADR-021), kept as a regression guard
 - band 2 never wraps to a second line: a very long model name truncates instead
-- exactly 8 swatch cells on every card, whatever the colorway count; the `>` pager sits in cell 8
-  on every page, and clicking it from the last page returns to the first
+- exactly 8 swatch cells on every card, whatever the colorway count; the `>` pager sits in cell 8 on every page, and clicking it from the last page returns to the first
 - rendered score matches `/^\d+\.\d\/\d+\.\d$/`
 
 **Manual / build:**
-- `pnpm dev` → grid of 20 cards, exercise filters and sort, confirm URL query updates and a reload
-  restores the same view
-- `pnpm generate && npx serve .output/public` → confirm SSG output is fully static, `/pack/{slug}`
-  routes prerendered, label colors correct in raw HTML with JS disabled
-- Lighthouse on the grid; watch CLS specifically, since intrinsic `width`/`height` on every `<img>`
-  is what keeps it at zero
+- `pnpm dev` → grid of 20 cards, exercise filters and sort, confirm URL query updates and a reload restores the same view
+- `pnpm generate && npx serve .output/public` → confirm SSG output is fully static, `/pack/{slug}` routes prerendered, label colors correct in raw HTML with JS disabled
+- Lighthouse on the grid; watch CLS specifically, since intrinsic `width`/`height` on every `<img>` is what keeps it at zero
 
 ---
 
@@ -328,20 +274,13 @@ Recorded as ADR consequences rather than duplicated here:
 
 # Supervising this build with subagents
 
-Written for a human operator. Commands are given verbatim; type them at the Claude Code prompt
-unless marked as a shell command.
+Written for a human operator. Commands are given verbatim; type them at the Claude Code prompt unless marked as a shell command.
 
 ## Three facts that shape everything below
 
-1. **Subagents do not inherit your conversation.** A subagent starts fresh with its own system
-   prompt, your delegation message, `CLAUDE.md`, and a git status snapshot. It does *not* get
-   conversation history, prior tool results, or anything you discussed earlier. Every handoff must
-   therefore be **self-contained** — this is the single most common way delegated work goes wrong.
-2. **`CLAUDE.md` is the shared substrate.** It *is* passed to every subagent. That is why the version
-   pins and invariants live there rather than in chat. If a rule matters to more than one agent, it
-   belongs in `CLAUDE.md`, not in a handoff message.
-3. **`/agents` no longer opens a creation wizard** (changed in v2.1.198; this project is on 2.1.252).
-   It now just prints a reminder. Create agents by writing the file or asking Claude to.
+1. **Subagents do not inherit your conversation.** A subagent starts fresh with its own system prompt, your delegation message, `CLAUDE.md`, and a git status snapshot. It does *not* get conversation history, prior tool results, or anything you discussed earlier. Every handoff must therefore be **self-contained** — this is the single most common way delegated work goes wrong.
+2. **`CLAUDE.md` is the shared substrate.** It *is* passed to every subagent. That is why the version pins and invariants live there rather than in chat. If a rule matters to more than one agent, it belongs in `CLAUDE.md`, not in a handoff message.
+3. **`/agents` no longer opens a creation wizard** (changed in v2.1.198; this project is on 2.1.252). It now just prints a reminder. Create agents by writing the file or asking Claude to.
 
 ## Agent roster
 
@@ -353,8 +292,7 @@ unless marked as a shell command.
 | `test-engineer` | `tests/` and `*.test.ts`. Reports defects; never edits app code to make a test pass. |
 | `build-tooling-specialist` | `package.json`, `nuxt.config.ts`, `tsconfig.json`, runner config. Enforces the version ceilings. |
 
-`build-tooling-specialist` is optional for Phase 1 — see below for why you may prefer to scaffold in
-the main session where you can watch the pins land.
+`build-tooling-specialist` is optional for Phase 1 — see below for why you may prefer to scaffold in the main session where you can watch the pins land.
 
 Deliberately **NOT** added: 
 - `backend-specialist` agent because there is no backend server
@@ -377,17 +315,10 @@ Follow the plan's build order. Run one phase at a time and review at each gate.
 
 ### Phase 1 — Scaffold (main session, not delegated)
 
-One-time foundational work where the version pins are easiest to get wrong. Do it where you can
-watch it:
+One-time foundational work where the version pins are easiest to get wrong. Do it where you can watch it:
 
 ```
-Scaffold the Nuxt app per CLAUDE.md. Pin nuxt 4.5.2, vue 3.5.42, typescript 6.0.3,
-tailwindcss 4.3.3 and @tailwindcss/vite 4.3.3, sharp 0.35.4, zod, vitest. Do not add vite
-as a direct dependency. Use pnpm. Wire Tailwind via the @tailwindcss/vite plugin in
-nuxt.config.ts with app/assets/css/main.css. Set "ignoreDeprecations": "6.0" in tsconfig.
-Add every script from the CLAUDE.md command table to package.json now — dev, generate,
-ingest, test — even where the underlying code does not exist yet, so the table is never
-aspirational. Then run pnpm install and pnpm dev to confirm a blank page renders.
+Scaffold the Nuxt app per CLAUDE.md. Pin nuxt 4.5.2, vue 3.5.42, typescript 6.0.3, tailwindcss 4.3.3 and @tailwindcss/vite 4.3.3, sharp 0.35.4, zod, vitest. Do not add vite as a direct dependency. Use pnpm. Wire Tailwind via the @tailwindcss/vite plugin in nuxt.config.ts with app/assets/css/main.css. Set "ignoreDeprecations": "6.0" in tsconfig. Add every script from the CLAUDE.md command table to package.json now — dev, generate, ingest, test — even where the underlying code does not exist yet, so the table is never aspirational. Then run pnpm install and pnpm dev to confirm a blank page renders.
 ```
 
 **Gate:** `pnpm dev` serves; `grep -E '"(typescript|vite)"' package.json` shows `6.0.3` and no `vite`.
@@ -395,12 +326,7 @@ aspirational. Then run pnpm install and pnpm dev to confirm a blank page renders
 ### Phase 2 — Types and fixtures
 
 ```
-@agent-frontend-specialist Create app/types/backpack.ts exactly as specified in
-implementation-plan.md (Data model section), plus app/data/fixtures.ts
-with 3 hand-written packs using placeholder image paths. One fixture must have 3
-colorways, one exactly 8, one 15 — so the swatch grid's ghost-pad path, its exact-fill
-boundary, and its multi-page pager (including a partial final page) are all exercised.
-No components yet.
+@agent-frontend-specialist Create app/types/backpack.ts exactly as specified in implementation-plan.md (Data model section), plus app/data/fixtures.ts with 3 hand-written packs using placeholder image paths. One fixture must have 3 colorways, one exactly 8, one 15 — so the swatch grid's ghost-pad path, its exact-fill boundary, and its multi-page pager (including a partial final page) are all exercised. No components yet.
 ```
 
 ### Phase 3 — Card components
@@ -427,58 +353,43 @@ Run in batches of 5 so you can course-correct. Ranks are in the plan's ranked-20
 @agent-research-curator Research packs 1-5 from the ranked table in implementation-plan.md. Write data/sources/{slug}.json for each: image URLs (1-5, prefer brand-direct), the lowest price found across brand-direct plus 1-2 major retailers with the winning retailer and URL (ADR-017), review score with its real scale and source, colorways, and specs. Stamp capturedAt on price and score. If a host blocks you, fall back brand-direct → major retailer → report it as needing manual capture. Do not run the ingest scripts.
 ```
 
-Then: `@agent-data-pipeline-specialist Run the ingest for the 5 packs just captured and report anything that failed.`
+Then: 
+```
+@agent-data-pipeline-specialist Run the ingest for the 5 packs just captured and report anything that failed.
+```
 
-**Gate:** spot-check two packs' prices and scores against the live sites yourself. This is researched
-data and it can be wrong.
+**Gate:** spot-check two packs' prices and scores against the live sites yourself. This is researched data and it can be wrong.
 
 ### Phase 6 — Catalog shell
 
 ```
-@agent-frontend-specialist Add the catalog shell: CatalogToolbar with search over name and
-brand, filters for brand/color/price/score, and sort by rank, price, or score. State goes
-in app/composables/useCatalogFilters.ts backed by URL query params. Add the prerendered
-/pack/[slug] detail route. Sorting by score must use score/scale normalized to 0-1, never
-the raw score.
+@agent-frontend-specialist Add the catalog shell: CatalogToolbar with search over name and brand, filters for brand/color/price/score, and sort by rank, price, or score. State goes in app/composables/useCatalogFilters.ts backed by URL query params. Add the prerendered /pack/[slug] detail route. Sorting by score must use score/scale normalized to 0-1, never the raw score.
 ```
 
 ### Phase 7 — Tests
 
 ```
-@agent-test-engineer Write the test suite per the Verification section of
-implementation-plan.md. Vitest for app/utils (score and price
-formatters, carousel wraparound at both ends with n=1 and n=5, swatch paging at
-counts 0/4/8/9/15/22). Playwright for the browser-only
-behaviors, especially that the label's text and bounding box are identical across every
-image in a carousel. If a test fails because the app is wrong, report it — do not edit app
-code to make it pass.
+@agent-test-engineer Write the test suite per the Verification section of implementation-plan.md. Vitest for app/utils (score and price formatters, carousel wraparound at both ends with n=1 and n=5, swatch paging at counts 0/4/8/9/15/22). Playwright for the browser-only behaviors, especially that the label's text and bounding box are identical across every image in a carousel. If a test fails because the app is wrong, report it — do not edit app code to make it pass.
 ```
 
 ## Supervision gates
 
-- Between phases, review the actual diff — never take a summary at face value: `git diff` /
-  `git diff --stat`
+- Between phases, review the actual diff — never take a summary at face value: `git diff` / `git diff --stat`
 - Run `/code-review` after Phases 3, 4, and 6.
-- `/context` to watch context pressure; `/clear` between phases, since the plan file and `CLAUDE.md`
-  carry the state forward and your chat history does not reach subagents anyway.
+- `/context` to watch context pressure; `/clear` between phases, since the plan file and `CLAUDE.md` carry the state forward and your chat history does not reach subagents anyway.
 - Commit at every gate so a bad agent run is one `git reset --hard` away.
 
 ## Running agents in parallel
 
-`frontend-specialist` and `data-pipeline-specialist` own **disjoint paths** (`app/` vs
-`scripts/` + `data/`), so Phases 3 and 4 can run concurrently. Send both handoffs in one message.
+`frontend-specialist` and `data-pipeline-specialist` own **disjoint paths** (`app/` vs `scripts/` + `data/`), so Phases 3 and 4 can run concurrently. Send both handoffs in one message.
 
-For anything where paths might overlap, add `isolation: worktree` to the agent's frontmatter so it
-works in its own git worktree instead of your checkout.
+For anything where paths might overlap, add `isolation: worktree` to the agent's frontmatter so it works in its own git worktree instead of your checkout.
 
-Defaults worth knowing: subagents may nest up to 3 levels deep, and up to 20 run concurrently.
-Constrain via `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` (set `1` to disable nesting) and
-`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS` in `.claude/settings.json`.
+Defaults worth knowing: subagents may nest up to 3 levels deep, and up to 20 run concurrently. Constrain via `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` (set `1` to disable nesting) and `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS` in `.claude/settings.json`.
 
 ## Optional: turn the handoffs into slash commands
 
-If you will repeat a handoff (Phase 5 runs four times), save it as a command. A file at
-`.claude/commands/research-batch.md` creates `/research-batch`:
+If you will repeat a handoff (Phase 5 runs four times), save it as a command. A file at `.claude/commands/research-batch.md` creates `/research-batch`:
 
 ```markdown
 ---
@@ -487,11 +398,7 @@ argument-hint: [start-rank] [end-rank]
 disable-model-invocation: true
 ---
 
-@agent-research-curator Research packs $0 through $1 from the ranked table in
-${CLAUDE_PROJECT_DIR}/implementation-plan.md. Write
-data/sources/{slug}.json for each per the Phase 5 brief. Stamp capturedAt. Do not run
-the ingest scripts.
+@agent-research-curator Research packs $0 through $1 from the ranked table in ${CLAUDE_PROJECT_DIR}/implementation-plan.md. Write data/sources/{slug}.json for each per the Phase 5 brief. Stamp capturedAt. Do not run the ingest scripts.
 ```
 
-Then Phase 5 becomes `/research-batch 1 5`, `/research-batch 6 10`, and so on.
-`disable-model-invocation: true` keeps Claude from firing it on its own.
+Then Phase 5 becomes `/research-batch 1 5`, `/research-batch 6 10`, and so on. `disable-model-invocation: true` keeps Claude from firing it on its own.
