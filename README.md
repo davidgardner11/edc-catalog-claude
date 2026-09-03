@@ -4,7 +4,7 @@ A digital catalog of the most popular, beloved, and acclaimed Everyday Carry bac
 
 Local-only and statically generated — there is no server, no API, and no database.
 
-> **Status: Phase 1 (scaffold) complete.** `pnpm dev` serves a placeholder page. Sections below marked _(pending)_ are filled in as the build progresses. See [`implementation-plan.md`](./implementation-plan.md) for the architecture, ranked pack list, and build order.
+> **Status: Phase 4 complete.** The card renders and the ingest pipeline is proven end to end on 3 of the ranked 20 packs. `app/pages/index.vue` still renders the hand-written fixtures rather than the generated catalog — that swap comes with the toolbar in Phase 6. Sections below marked _(pending)_ are filled in as the build progresses. See [`implementation-plan.md`](./implementation-plan.md) for the architecture, ranked pack list, and build order.
 
 ---
 
@@ -39,8 +39,6 @@ pnpm dev         # http://localhost:3000
 
 ## The card
 
-_(pending — Phase 3)_
-
 Each card is a 5:7 portrait split into three bands — 65 / 15 / 20 ([ADR-021](./docs/decisions.md)):
 
 - **Top 65%** — an infinite image carousel, completely unobstructed. Clicking the right half advances, the left half retreats, and both wrap.
@@ -48,8 +46,6 @@ Each card is a 5:7 portrait split into three bands — 65 / 15 / 20 ([ADR-021](.
 - **Bottom 20%** — three columns: an 8-cell colorway grid (4×2, with a wrapping `>` pager above 8 colorways), the lowest available price with its retailer, and the review score shown against its own scale (`4.4/5.0`, `8.1/10.0`) over its source.
 
 ## Architecture
-
-_(pending — expanded as the build lands)_
 
 - **Nuxt 4 / Vue 3 / TypeScript**, statically generated via `nuxt generate`
 - **Tailwind v4**, CSS-first — no `tailwind.config.js`
@@ -65,11 +61,12 @@ app/
   app.vue              root component
   pages/               file-based routes (index.vue; /pack/[slug] pending — Phase 6)
   assets/css/main.css  Tailwind entry + @theme tokens
-  components/          card, carousel, swatches                  (pending — Phase 3)
+  components/          BackpackCard, CardCarousel, CardLabel, ColorwayGrid, PriceBlock, ScoreBlock
   composables/         URL-query-backed filter/sort state        (pending — Phase 6)
-  utils/               pure logic: format, color                 (pending — Phase 3)
-  types/backpack.ts    the data contract                         (pending — Phase 2)
+  utils/               pure logic: format, color, cycle, image
+  types/backpack.ts    the data contract
   data/catalog.json    build artifact from `pnpm ingest`         (gitignored)
+  data/fixtures.ts     3 hand-written packs; what index.vue renders today
 scripts/
   ingest.ts            pipeline entry — preflight, fetch, process, build
   fetch-images.ts      download ≤5 originals → .ingest-cache/{slug}/
@@ -90,19 +87,17 @@ Nuxt 4 keeps source under `app/` — there are no root-level `pages/` or `compon
 
 ## Data
 
-_(pending — Phase 5)_
+_(3 of 20 packs ingested — the rest is Phase 5)_
 
 Prices and review scores are **point-in-time snapshots**, each stamped with `capturedAt`. Nothing in this catalog is live pricing. Review scores keep their source's own scale rather than being normalized on write.
 
 ## Development
 
-_(pending — Phase 3)_
-
 See [`CLAUDE.md`](./CLAUDE.md) for the version ceilings and project invariants. The one most likely to catch you out: **TypeScript is capped at 6.0.3** — TS 7 dropped the compiler API that `vue-tsc` needs to type-check `.vue` files.
 
 ## Testing
 
-_(pending — Phase 7)_
+`pnpm test` runs 251 Vitest unit tests over the pure logic in `app/utils/` — price and score formatting, score normalization across both review scales, carousel wraparound, and the 8-cell colorway grid at every boundary. End-to-end tests are Phase 7: the behaviors only observable in a browser, chiefly that the three bands really measure 65 / 15 / 20 and that the carousel label does not shift by a pixel as images cycle.
 
 ## License and content
 

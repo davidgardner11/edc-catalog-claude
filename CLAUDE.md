@@ -4,11 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Status
 
-**Phase 3 complete — the card renders.** Scaffold, `app/types/backpack.ts`, `app/data/fixtures.ts` (3 packs), `app/utils/{format,color,cycle,image}.ts`, and the six card components (`BackpackCard`, `CardCarousel`, `CardLabel`, `ColorwayGrid`, `PriceBlock`, `ScoreBlock`) exist. `app/pages/index.vue` renders the fixtures; `pnpm typecheck` and `pnpm generate` both pass. No toolbar, no detail route, no tests, and `scripts/ingest.ts` is still the stub — so no images.
+**Phase 4 complete — the pipeline is proven.** The card renders (`app/types/backpack.ts`, `app/utils/{format,color,cycle,image}.ts`, and the six components `BackpackCard`, `CardCarousel`, `CardLabel`, `ColorwayGrid`, `PriceBlock`, `ScoreBlock`), and `pnpm ingest` works end to end: `scripts/{ingest,fetch-images,process-images,build-catalog}.ts` plus `scripts/lib/`, driven by `data/seed.ts` and `data/sources/{slug}.json`. `pnpm typecheck`, `pnpm test` (251 unit tests) and `pnpm generate` all pass.
+
+Two things that surprise people. **`app/pages/index.vue` still imports `app/data/fixtures.ts`, not `catalog.json`** — the one-line swap is Phase 6, so the page shows the three fixtures even though a real catalog exists on disk. And **only 3 of the ranked 20 are ingested**; the other 17 are Phase 5. Still missing entirely: the toolbar, filters and sort, the `/pack/[slug]` detail route, and any E2E test.
 
 `implementation-plan.md` is the source of truth for architecture, data model, the ranked pack list, ingest design, and build order. Read it before starting work. When implementation diverges from it, update the plan in the same change rather than letting the two drift.
 
-Build order is defined there; next up is Phase 4 — the ingest pipeline and its zod schema.
+Build order is defined there; next up is Phase 5 — research and ingest the remaining 17 packs, in batches of about five.
 
 ## Where things are written down
 
