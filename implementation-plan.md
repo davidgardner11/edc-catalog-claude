@@ -129,8 +129,7 @@ Spread: **$60–$435**, 19 distinct brands (Aer twice). Capacity spread is **not
 
 ## Ingest pipeline
 
-Research is mine (WebSearch/WebFetch); the scripts are deterministic and re-runnable. Split so a
-failure in one pack never forces a full re-fetch.
+Research is mine (WebSearch/WebFetch); the scripts are deterministic and re-runnable. Split so a failure in one pack never forces a full re-fetch.
 
 ```
 data/seed.ts              ranked 20: slug, name, brand, brandUrl, rank, rationale
@@ -294,7 +293,7 @@ Written for a human operator. Commands are given verbatim; type them at the Clau
 
 `build-tooling-specialist` is optional for Phase 1 — see below for why you may prefer to scaffold in the main session where you can watch the pins land.
 
-Deliberately **NOT** added: 
+Deliberately **NOT** added:
 - `backend-specialist` agent because there is no backend server
 - `code-review` agent because the built-in `/code-review` skill already covers this role.
 
@@ -353,7 +352,7 @@ Run in batches of 5 so you can course-correct. Ranks are in the plan's ranked-20
 @agent-research-curator Research packs 1-5 from the ranked table in implementation-plan.md. Write data/sources/{slug}.json for each: image URLs (1-5, prefer brand-direct), the lowest price found across brand-direct plus 1-2 major retailers with the winning retailer and URL (ADR-017), review score with its real scale and source, colorways, and specs. Stamp capturedAt on price and score. If a host blocks you, fall back brand-direct → major retailer → report it as needing manual capture. Do not run the ingest scripts.
 ```
 
-Then: 
+Then:
 ```
 @agent-data-pipeline-specialist Run the ingest for the 5 packs just captured and report anything that failed.
 ```

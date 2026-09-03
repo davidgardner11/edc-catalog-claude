@@ -1,14 +1,10 @@
 # EDC Catalog
 
-A digital catalog of the most popular, beloved, and acclaimed Everyday Carry backpacks, presented as
-playing-card-proportioned cards (5:7 portrait) in a browsable, filterable grid.
+A digital catalog of the most popular, beloved, and acclaimed Everyday Carry backpacks, presented as playing-card-proportioned cards (5:7 portrait) in a browsable, filterable grid.
 
 Local-only and statically generated — there is no server, no API, and no database.
 
-> **Status: Phase 1 (scaffold) complete.** `pnpm dev` serves a placeholder page. Sections below
-> marked _(pending)_ are filled in as the build progresses. See
-> [`implementation-plan.md`](./implementation-plan.md) for the
-> architecture, ranked pack list, and build order.
+> **Status: Phase 1 (scaffold) complete.** `pnpm dev` serves a placeholder page. Sections below marked _(pending)_ are filled in as the build progresses. See [`implementation-plan.md`](./implementation-plan.md) for the architecture, ranked pack list, and build order.
 
 ---
 
@@ -16,9 +12,7 @@ Local-only and statically generated — there is no server, no API, and no datab
 
 > ⚠️ **A fresh clone will not render anything until you run `pnpm ingest`.**
 >
-> Product photos are copyrighted, and this repository is public, so `public/images/` is gitignored
-> and never committed ([ADR-012](./docs/decisions.md)). `app/data/catalog.json` is likewise a build
-> artifact. Both are produced by the ingest pipeline from the source data in `data/`.
+> Product photos are copyrighted, and this repository is public, so `public/images/` is gitignored and never committed ([ADR-012](./docs/decisions.md)). `app/data/catalog.json` is likewise a build artifact. Both are produced by the ingest pipeline from the source data in `data/`.
 
 **Requirements:** Node `^22.19 || ^24.11 || >=26` and pnpm.
 
@@ -28,15 +22,9 @@ pnpm ingest      # downloads + processes product images, builds app/data/catalog
 pnpm dev         # http://localhost:3000
 ```
 
-`pnpm ingest` currently ingests the three packs in `data/seed.ts`; Phase 5 fills in the other
-seventeen. Useful flags: `--only=slug[,slug]` to restrict a run, `--skip-fetch` to rebuild from the
-cache alone, `--reencode` to force every AVIF/WebP variant to be regenerated. Setting
-`INGEST_OFFLINE=1` makes any outbound request throw, which is how the "no re-download" guarantee is
-verified rather than assumed.
+`pnpm ingest` currently ingests the three packs in `data/seed.ts`; Phase 5 fills in the other seventeen. Useful flags: `--only=slug[,slug]` to restrict a run, `--skip-fetch` to rebuild from the cache alone, `--reencode` to force every AVIF/WebP variant to be regenerated. Setting `INGEST_OFFLINE=1` makes any outbound request throw, which is how the "no re-download" guarantee is verified rather than assumed.
 
-`pnpm ingest` is network-bound on a cold run. It caches originals in `.ingest-cache/` (also
-gitignored), so re-running to retune image processing does not re-download anything. Deleting
-`public/images/` and re-running rebuilds from that cache without touching the network.
+`pnpm ingest` is network-bound on a cold run. It caches originals in `.ingest-cache/` (also gitignored), so re-running to retune image processing does not re-download anything. Deleting `public/images/` and re-running rebuilds from that cache without touching the network.
 
 ## Commands
 
@@ -55,13 +43,9 @@ _(pending — Phase 3)_
 
 Each card is a 5:7 portrait split into three bands — 65 / 15 / 20 ([ADR-021](./docs/decisions.md)):
 
-- **Top 65%** — an infinite image carousel, completely unobstructed. Clicking the right half
-  advances, the left half retreats, and both wrap.
-- **Middle 15%** — the brand in small uppercase over the model name in bold. Because it is its own
-  grid row rather than an overlay, it cannot move or re-render as the images cycle.
-- **Bottom 20%** — three columns: an 8-cell colorway grid (4×2, with a wrapping `>` pager above 8
-  colorways), the lowest available price with its retailer, and the review score shown against its
-  own scale (`4.4/5.0`, `8.1/10.0`) over its source.
+- **Top 65%** — an infinite image carousel, completely unobstructed. Clicking the right half advances, the left half retreats, and both wrap.
+- **Middle 15%** — the brand in small uppercase over the model name in bold. Because it is its own grid row rather than an overlay, it cannot move or re-render as the images cycle.
+- **Bottom 20%** — three columns: an 8-cell colorway grid (4×2, with a wrapping `>` pager above 8 colorways), the lowest available price with its retailer, and the review score shown against its own scale (`4.4/5.0`, `8.1/10.0`) over its source.
 
 ## Architecture
 
@@ -69,13 +53,10 @@ _(pending — expanded as the build lands)_
 
 - **Nuxt 4 / Vue 3 / TypeScript**, statically generated via `nuxt generate`
 - **Tailwind v4**, CSS-first — no `tailwind.config.js`
-- **No state library** — the catalog is a build-time JSON import; filter and sort state lives in URL
-  query params
-- **Ingest pipeline** (`scripts/`) — downloads images, processes them with sharp into AVIF + WebP at
-  two widths, and validates the catalog with zod
+- **No state library** — the catalog is a build-time JSON import; filter and sort state lives in URL query params
+- **Ingest pipeline** (`scripts/`) — downloads images, processes them with sharp into AVIF + WebP at two widths, and validates the catalog with zod
 
-Full detail in the [implementation plan](./implementation-plan.md); the reasoning
-behind each choice is in [`docs/decisions.md`](./docs/decisions.md).
+Full detail in the [implementation plan](./implementation-plan.md); the reasoning behind each choice is in [`docs/decisions.md`](./docs/decisions.md).
 
 ## Project layout
 
@@ -111,17 +92,13 @@ Nuxt 4 keeps source under `app/` — there are no root-level `pages/` or `compon
 
 _(pending — Phase 5)_
 
-Prices and review scores are **point-in-time snapshots**, each stamped with `capturedAt`. Nothing in
-this catalog is live pricing. Review scores keep their source's own scale rather than being
-normalized on write.
+Prices and review scores are **point-in-time snapshots**, each stamped with `capturedAt`. Nothing in this catalog is live pricing. Review scores keep their source's own scale rather than being normalized on write.
 
 ## Development
 
 _(pending — Phase 3)_
 
-See [`CLAUDE.md`](./CLAUDE.md) for the version ceilings and project invariants. The one most likely
-to catch you out: **TypeScript is capped at 6.0.3** — TS 7 dropped the compiler API that `vue-tsc`
-needs to type-check `.vue` files.
+See [`CLAUDE.md`](./CLAUDE.md) for the version ceilings and project invariants. The one most likely to catch you out: **TypeScript is capped at 6.0.3** — TS 7 dropped the compiler API that `vue-tsc` needs to type-check `.vue` files.
 
 ## Testing
 
@@ -129,6 +106,4 @@ _(pending — Phase 7)_
 
 ## License and content
 
-Code is this repository's own. **Product images and product data are not** — photos come from brand
-and retailer sites and remain their owners' property. That is why images are gitignored rather than
-committed, and why this catalog is intended for local use rather than public deployment.
+Code is this repository's own. **Product images and product data are not** — photos come from brand and retailer sites and remain their owners' property. That is why images are gitignored rather than committed, and why this catalog is intended for local use rather than public deployment.
