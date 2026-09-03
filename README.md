@@ -12,7 +12,7 @@ Local-only and statically generated — there is no server, no API, and no datab
 
 > ⚠️ **A fresh clone will not render anything until you run `pnpm ingest`.**
 >
-> Product photos are copyrighted, and this repository is public, so `public/images/` is gitignored and never committed ([ADR-012](./docs/decisions.md)). `app/data/catalog.json` is likewise a build artifact. Both are produced by the ingest pipeline from the source data in `data/`.
+> Product photos are copyrighted, and this repository is public, so `public/images/` is gitignored and never committed ([ADR-012](./docs/decisions.md)). `app/data/catalog.json` is also a build artifact, but it *is* committed ([ADR-030](./docs/decisions.md)) so the app builds on a fresh clone without fetching from a retailer CDN. Both come from the ingest pipeline and must never be hand-edited — **a fresh clone builds, but renders no images until `pnpm ingest` runs.**
 
 **Requirements:** Node `^22.19 || ^24.11 || >=26` and pnpm.
 
@@ -65,7 +65,7 @@ app/
   composables/         URL-query-backed filter/sort state        (pending — Phase 6)
   utils/               pure logic: format, color, cycle, image
   types/backpack.ts    the data contract
-  data/catalog.json    build artifact from `pnpm ingest`         (gitignored)
+  data/catalog.json    build artifact from `pnpm ingest`         (committed)
   data/fixtures.ts     3 hand-written packs; what index.vue renders today
 scripts/
   ingest.ts            pipeline entry — preflight, fetch, process, build

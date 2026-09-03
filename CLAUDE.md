@@ -95,6 +95,6 @@ There is deliberately no backend agent; this project has no server.
 
 ## Repository
 
-Public: `davidgardner11/edc-catalog-claude`. Product photos come from brand and retailer CDNs and are copyrighted, so **`public/images/` is gitignored and never committed** (ADR-012). A fresh clone renders nothing until `pnpm ingest` runs — the same is already true of `app/data/catalog.json`, so ingest was always a required setup step. Do not commit images "just to make the clone work."
+Public: `davidgardner11/edc-catalog-claude`. Product photos come from brand and retailer CDNs and are copyrighted, so **`public/images/` is gitignored and never committed** (ADR-012). A fresh clone renders nothing until `pnpm ingest` runs. Do not commit images "just to make the clone work." **`app/data/catalog.json` is committed** (ADR-030) so the app builds on a fresh clone without a network round-trip to a retailer CDN — it is still generated and must never be hand-edited (ADR-014). That buys a clone that *builds*, not one that *renders*: the catalog points at `/images/{slug}/N`, still absent until ingest runs. Ingest now produces a reviewable diff on it; read it, and resolve any merge conflict by re-running ingest rather than hand-merging JSON.
 
 The ingest fetcher must respect `robots.txt`, rate-limit, and fall back (brand-direct → major retailer → manual URL capture) rather than retrying a blocked host in a loop.
