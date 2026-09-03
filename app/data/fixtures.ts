@@ -102,7 +102,7 @@ export const fixtureBackpacks: Backpack[] = [
       { name: 'Ranger Green', hex: '#4a5240', family: 'green' },
       { name: 'Coyote Brown', hex: '#7d6144', family: 'brown' },
       { name: 'Navy', hex: '#1f2b40', family: 'navy' },
-      { name: 'Steel', hex: '#5a6673', family: 'blue' },
+      { name: 'Steel', hex: '#5a6673', family: 'grey' },
       { name: 'Multicam', hex: '#8a7c5c', family: 'multi' },
       { name: 'Oxblood', hex: '#5c2027', family: 'red' },
     ],
