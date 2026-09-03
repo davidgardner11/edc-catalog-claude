@@ -1,0 +1,43 @@
+{
+  "slug": "aer-travel-pack-3-small",
+  "productUrl": "https://aersf.com/products/travel-pack-3-small",
+  "notes": "DISCONTINUED - captured deliberately under ADR-026. Aer's own product page carries the banner, verbatim: \"This item has been discontinued and will not be restocked.\" The page names and links a replacement, \"Travel Pack 28L\" (Aer's Travel Pack 4 28L, https://aersf.com/products/travel-pack-4-28l, $239.00, part of the Travel Collection V4 released around March 2026). Rank 4 deliberately KEEPS the Travel Pack 3 Small rather than inheriting to the successor, which is the opposite of what ADR-019 did for the Black Ember Citadel R2/R3: the deciding factor is that the TP3 Small has a real enthusiast score (Pack Hacker 8.6/10, reviewed as the 28L Small specifically) while the Travel Pack 4 has none yet, and `review` is required by sourceSchema. ADR-026 records that deviation; re-visit this capture when Pack Hacker or an equivalent scores the Travel Pack 4 28L. SCORE PROVENANCE - the easiest error here is crossing the two sizes: the 8.6/10 recorded below is from https://www.packhacker.com/travel-gear/aer/travel-pack-3-small/, whose H1 is \"Aer Travel Pack 3 Small Review\" and which states 28L; the standard 35L Travel Pack 3 scores 9.2/10 at a different URL (/travel-gear/aer/travel-pack-3-2/) and that number must never appear in this file. PRICE VOLATILITY - $229.00 is an end-of-life price on a discontinued SKU and is materially less stable than the other captures in this batch. It is today's regular price, not a clearance price, but sell-through could push it to clearance or remove the product page entirely; re-check before quoting it as current. STOCK, per colorway, read 2026-09-03 brand-direct (the catalog has no stock field, so this is the only record): Black in stock, Olive in stock, Gray sold out, Navy sold out. That state is already moving - an earlier read the same day showed only Black in stock - so treat per-colorway availability as a snapshot, not a fact. All four colorways are still published and priced in Aer's product JSON, which is why all four are recorded here. Captured from the Shopify product JSON (https://aersf.com/products/travel-pack-3-small.json) for variants and image URLs, and the rendered page for the banner and spec block; aersf.com/robots.txt allows /products/ for the wildcard group. COLORWAY HEXES ARE SAMPLED, NOT NAME-DERIVED (re-sampled 2026-09-03). All four come from `pnpm sample-swatch` (scripts/sample-swatch.ts), which implements ADR-025's method verbatim: the median-luminance pixel of the central 40% of the brand's own photograph, background discarded. Each swatchSource is Aer's own hero shot of that exact colorway at this exact capacity - the same four URLs as `images` - so no cross-capacity substitution was needed, and the URLs survive independently of the discontinuation: they are CDN assets, not the product page that ADR-026 warns may disappear. Gray moved almost not at all (#6e6e6b -> #696969), which is the expected result for a name that describes a neutral; Black moved most (#1a1a1c -> #373737), because the guess described the idea of black rather than the photographed fabric. All four names resolve correctly through colorFamilyFromName (black / grey / navy / olive), so no explicit family override is set. Sibling SKUs not captured here: Travel Pack 3 Small X-Pac ($259.00) and Travel Pack 3 Small Ultra ($309.00), both still listed as available, and the standard 35L Travel Pack 3 ($249.00), which carries the same discontinuation banner.",
+  "images": [
+    { "url": "https://cdn.shopify.com/s/files/1/0252/4181/3088/products/aer_travelpack3small_black.jpg?v=1681935097" },
+    { "url": "https://cdn.shopify.com/s/files/1/0252/4181/3088/products/aer_travelpack3small_gray.jpg?v=1681935097" },
+    { "url": "https://cdn.shopify.com/s/files/1/0252/4181/3088/files/AER23033_travelpack3small_navy_34hero.jpg?v=1712521665" },
+    { "url": "https://cdn.shopify.com/s/files/1/0252/4181/3088/products/aer_travelpack3small_olive.jpg?v=1681935098" }
+  ],
+  "colorways": [
+    { "name": "Black", "hex": "#373737", "swatchSource": "https://cdn.shopify.com/s/files/1/0252/4181/3088/products/aer_travelpack3small_black.jpg?v=1681935097" },
+    { "name": "Gray", "hex": "#696969", "swatchSource": "https://cdn.shopify.com/s/files/1/0252/4181/3088/products/aer_travelpack3small_gray.jpg?v=1681935097" },
+    { "name": "Navy", "hex": "#24263b", "swatchSource": "https://cdn.shopify.com/s/files/1/0252/4181/3088/files/AER23033_travelpack3small_navy_34hero.jpg?v=1712521665" },
+    { "name": "Olive", "hex": "#5a5035", "swatchSource": "https://cdn.shopify.com/s/files/1/0252/4181/3088/products/aer_travelpack3small_olive.jpg?v=1681935098" }
+  ],
+  "price": {
+    "amountUsd": 229,
+    "retailer": "Aer",
+    "url": "https://aersf.com/products/travel-pack-3-small",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "priceComparison": [
+    { "retailer": "Aer", "url": "https://aersf.com/products/travel-pack-3-small", "amountUsd": 229, "outcome": "captured - brand-direct, all four colorways $229.00; regular end-of-life price, no clearance discount applied" },
+    { "retailer": "The Shop at Equinox", "url": "https://shop.equinox.com/products/travel-pack-3-small", "amountUsd": 229, "outcome": "captured - $229.00, identical to brand-direct; Black and Olive in stock, Gray and X-Pac out of stock. Does not beat Aer, so brand-direct keeps the retailer credit" },
+    { "retailer": "Huckberry", "url": "https://huckberry.com/store/aer", "outcome": "not captured - HTTP 403 (Cloudflare challenge) on the Aer storefront earlier the same session; not retried per the fallback rule" },
+    { "retailer": "Amazon", "outcome": "not captured - no reachable first-party Aer storefront listing for the Travel Pack 3 Small; third-party listings are not a comparable price (ADR-017)" },
+    { "retailer": "eBay", "outcome": "not captured - secondhand listings around $160 exist for a discontinued SKU; used inventory is not a comparable retail price (ADR-017)" }
+  ],
+  "review": {
+    "score": 8.6,
+    "scale": 10,
+    "source": "Pack Hacker",
+    "url": "https://www.packhacker.com/travel-gear/aer/travel-pack-3-small/",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "specs": {
+    "capacityLiters": 28,
+    "weightGrams": 1719,
+    "dimensions": "19\" H x 13\" W x 7.5\" D",
+    "material": "1680D CORDURA ballistic nylon (bluesign approved) exterior; soft woven bluesign-approved lining; YKK zippers; Duraflex hardware"
+  }
+}

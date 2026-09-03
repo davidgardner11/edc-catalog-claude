@@ -1,0 +1,42 @@
+{
+  "slug": "evergoods-civic-panel-loader-24l",
+  "productUrl": "https://evergoods.us/products/civic-panel-loader",
+  "notes": "Captured 2026-09-03 from the EVERGOODS Shopify storefront's public product JSON (https://evergoods.us/products/civic-panel-loader.json) and the rendered product page. evergoods.us/robots.txt allows /products/ for the wildcard group. ADR-019 check: in production - EVERGOODS sells one CIVIC Panel Loader product with a size option (16L / 24L); all three 24L variants are stocked at $285.00. This is the V3 generation: the shell is the solution-dyed 840D ballistic Nylon 6 with the padded-mesh back panel and contoured straps that define V3, and the 24L 'Solution Dyed Black' variant name is V3's. EVERGOODS does not print a version number on the page, so the V3 identification rests on the fabric and on Pack Hacker's V3 review of this same product. Sibling products deliberately NOT captured here: the CIVIC Panel Loader X-Pac ($315-$365) and Waxed Canvas versions are separate SKUs. Images are all CPL24 studio shots (the same product page also carries CPL16 photography, which was excluded so the carousel never shows the 16L). COLORWAY HEXES ARE SAMPLED, NOT NAME-DERIVED (re-sampled 2026-09-03). All three come from `pnpm sample-swatch` (scripts/sample-swatch.ts), which implements ADR-025's method verbatim: the median-luminance pixel of the central 40% of the brand's own photograph, background discarded. Every swatchSource is the CPL24 studio front shot of that exact colorway at this exact capacity - all three are already in `images` - so unlike GORUCK no cross-capacity substitution was needed. Fossil Brown moved furthest from the superseded name-derived guess (#8a7c69 -> #635440): the guess described the fabric as the eye reads a bright thumbnail, while the sampled median sits between the lit and shadowed halves of the front panel. The 'OD Green' olive override still holds against the sampled value. 'OD Green' carries an explicit family of olive: the name derives to 'green' via the keyword table, but the fabric is olive drab. Price: brand-direct $285.00 is the lowest of everything reachable; Huckberry refused an automated request and the only other listing found was a Singapore retailer at the same $285.00.",
+  "images": [
+    { "url": "https://cdn.shopify.com/s/files/1/1567/6353/files/CIVIC-PANEL-LOADER-CPL24-SOLUTION-DYED-BLACK-Front_1.png?v=1782157354" },
+    { "url": "https://cdn.shopify.com/s/files/1/1567/6353/files/CIVIC-PANEL-LOADER-CPL24-SOLUTION-DYED-BLACK-Open-Unpacked_1_b96ccfc1-899d-4b56-a76e-9a760d5a4f7d.jpg?v=1782157618" },
+    { "url": "https://cdn.shopify.com/s/files/1/1567/6353/files/CIVIC-PANEL-LOADER-CPL24-SOLUTION-DYED-BLACK-Back-Panel_1_95f0552b-e687-4f45-9d85-bd508dad19d3.jpg?v=1782157618" },
+    { "url": "https://cdn.shopify.com/s/files/1/1567/6353/files/CIVIC-PANEL-LOADER-CPL24-OD-GREEN-FRONT-min.png?v=1775424381" },
+    { "url": "https://cdn.shopify.com/s/files/1/1567/6353/files/CIVIC-PANEL-LOADER-CPL24-FOSSIL-BROWN-Front_1.png?v=1775424381" }
+  ],
+  "colorways": [
+    { "name": "Solution Dyed Black", "hex": "#212121", "swatchSource": "https://cdn.shopify.com/s/files/1/1567/6353/files/CIVIC-PANEL-LOADER-CPL24-SOLUTION-DYED-BLACK-Front_1.png?v=1782157354" },
+    { "name": "OD Green", "hex": "#4b4c37", "family": "olive", "swatchSource": "https://cdn.shopify.com/s/files/1/1567/6353/files/CIVIC-PANEL-LOADER-CPL24-OD-GREEN-FRONT-min.png?v=1775424381" },
+    { "name": "Fossil Brown", "hex": "#635440", "swatchSource": "https://cdn.shopify.com/s/files/1/1567/6353/files/CIVIC-PANEL-LOADER-CPL24-FOSSIL-BROWN-Front_1.png?v=1775424381" }
+  ],
+  "price": {
+    "amountUsd": 285,
+    "retailer": "EVERGOODS",
+    "url": "https://evergoods.us/products/civic-panel-loader",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "priceComparison": [
+    { "retailer": "EVERGOODS", "url": "https://evergoods.us/products/civic-panel-loader", "amountUsd": 285, "outcome": "captured - brand-direct, all three 24L colorways $285.00, regular price (no sale running)" },
+    { "retailer": "Huckberry", "url": "https://huckberry.com/store/evergoods/category/p/89952-civic-panel-loader-backpack-24l", "outcome": "not captured - HTTP 403 (Cloudflare challenge); not retried per the brand-direct -> retailer fallback rule" },
+    { "retailer": "Storming Gravity", "url": "https://storminggravity.com/en-us/products/evergoods-civic-panel-loader-24l-cpl24-v3", "amountUsd": 285, "outcome": "captured but not a US retailer - Singapore/Malaysia stockist quoting USD $285.00, same as brand-direct; recorded only to show it does not beat EVERGOODS" },
+    { "retailer": "Amazon", "outcome": "not captured - no first-party EVERGOODS storefront listing for the CPL24; third-party listings are not a comparable price (ADR-017)" }
+  ],
+  "review": {
+    "score": 8.6,
+    "scale": 10,
+    "source": "Pack Hacker",
+    "url": "https://www.packhacker.com/travel-gear/evergoods/civic-panel-loader-24l/",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "specs": {
+    "capacityLiters": 24,
+    "weightGrams": 1406,
+    "dimensions": "11.5\" W x 18\" H x 7\" D",
+    "material": "Custom 840D solution-dyed ballistic Nylon 6 with C0 DWR; 420D HT nylon PU-coated lining; YKK #10RC / #8RC zippers"
+  }
+}

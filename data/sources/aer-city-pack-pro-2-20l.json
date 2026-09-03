@@ -1,0 +1,40 @@
+{
+  "slug": "aer-city-pack-pro-2-20l",
+  "productUrl": "https://aersf.com/products/city-pack-pro-2-20l",
+  "notes": "Captured 2026-09-03 from Aer's Shopify storefront - the public product JSON (https://aersf.com/products/city-pack-pro-2-20l.json) for prices, SKUs and image URLs, and the rendered product page for the spec block. aersf.com/robots.txt allows /products/ for the wildcard group. ADR-019 check: in production - no discontinuation banner on the page (contrast the Travel Pack 3, whose page does carry one), all three colorways published and marked available in the product JSON. This is the BASE FABRIC version as rank 5 specifies: 1680D CORDURA ballistic nylon at $199.00. The same 20L pack is also sold as City Pack Pro 2 X-Pac 20L ($229.00) and City Pack Pro 2 Ultra 20L ($249.00), and there is a larger City Pack Pro 2 24L ($219.00 base) - none of those are this entry. Note also the separate legacy page /products/city-pack-pro-2 titled 'City Pack Pro 2 (2025)': the 20L/24L split is the current 2026 line and /products/city-pack-pro-2-20l is the live SKU. Conflict worth knowing: the rendered page displayed 'Sold Out' with an email-me control while the product JSON reported all three variants available - a transient stock/render disagreement, not a discontinuation; the $199.00 regular price is unaffected either way. Images: only three full-resolution images exist on Aer's Shopify CDN, one 3/4 hero per colorway, and those are what is recorded. The on-page gallery (14 detail shots) is served from Accentuate at cld.accentuate.io with an options=w_300 thumbnail parameter, so it offers no higher-resolution source and was not used. COLORWAY HEXES ARE SAMPLED, NOT NAME-DERIVED (re-sampled 2026-09-03). All three come from `pnpm sample-swatch` (scripts/sample-swatch.ts), which implements ADR-025's method verbatim: the median-luminance pixel of the central 40% of the brand's own photograph, background discarded. Each swatchSource is Aer's own 3/4 hero of that exact colorway at this exact capacity - the same three URLs as `images` - so no cross-capacity substitution was needed. The corrections are small and in the same direction for all three: the name-derived guesses were flatter and slightly lighter than Aer's photography. All three names resolve correctly through colorFamilyFromName (black / navy / olive), so no explicit family override is set. Price: Aer is effectively direct-to-consumer in the US; Huckberry returned HTTP 403 and no other US stockist listing the base-fabric 20L could be reached.",
+  "images": [
+    { "url": "https://cdn.shopify.com/s/files/1/0252/4181/3088/files/AER21063_1_citypackpro220l_black_34hero.jpg?v=1774548575" },
+    { "url": "https://cdn.shopify.com/s/files/1/0252/4181/3088/files/AER23063_1_citypackpro220l_navy_34hero.jpg?v=1774549486" },
+    { "url": "https://cdn.shopify.com/s/files/1/0252/4181/3088/files/AER25063_1_citypackpro220l_olive_34hero.jpg?v=1774549483" }
+  ],
+  "colorways": [
+    { "name": "Black", "hex": "#333333", "swatchSource": "https://cdn.shopify.com/s/files/1/0252/4181/3088/files/AER21063_1_citypackpro220l_black_34hero.jpg?v=1774548575" },
+    { "name": "Navy", "hex": "#2a2b40", "swatchSource": "https://cdn.shopify.com/s/files/1/0252/4181/3088/files/AER23063_1_citypackpro220l_navy_34hero.jpg?v=1774549486" },
+    { "name": "Olive", "hex": "#534a2d", "swatchSource": "https://cdn.shopify.com/s/files/1/0252/4181/3088/files/AER25063_1_citypackpro220l_olive_34hero.jpg?v=1774549483" }
+  ],
+  "price": {
+    "amountUsd": 199,
+    "retailer": "Aer",
+    "url": "https://aersf.com/products/city-pack-pro-2-20l",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "priceComparison": [
+    { "retailer": "Aer", "url": "https://aersf.com/products/city-pack-pro-2-20l", "amountUsd": 199, "outcome": "captured - brand-direct, all three colorways $199.00 regular price (no sale running)" },
+    { "retailer": "Huckberry", "url": "https://huckberry.com/store/aer", "outcome": "not captured - HTTP 403 (Cloudflare challenge) on the Aer storefront; not retried" },
+    { "retailer": "Amazon", "outcome": "not captured - Aer's Amazon storefront has no reachable first-party listing for the base-fabric City Pack Pro 2 20L; third-party listings are not a comparable price (ADR-017)" },
+    { "retailer": "US specialty stockists (Nordstrom, Bespoke Post, Moment)", "outcome": "not captured - no listing found for this model; Aer sells the City Pack Pro line essentially direct-to-consumer in the US" }
+  ],
+  "review": {
+    "score": 8.2,
+    "scale": 10,
+    "source": "Pack Hacker",
+    "url": "https://www.packhacker.com/travel-gear/aer/city-pack-pro-2-20l/",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "specs": {
+    "capacityLiters": 20,
+    "weightGrams": 1243,
+    "dimensions": "17.5\" H x 12\" W x 7\" D",
+    "material": "1680D CORDURA ballistic nylon (bluesign approved) exterior; ripstop nylon lining; YKK zippers; Duraflex hardware"
+  }
+}
