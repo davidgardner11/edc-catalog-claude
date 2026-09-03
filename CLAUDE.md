@@ -22,7 +22,7 @@ This file is loaded into **every** subagent automatically, so it stays short and
 | `docs/component-conventions.md` | Naming, props, logic placement, styling, a11y patterns, card rules | Writing or modifying any Vue component |
 | `app/types/backpack.ts` | The data contract, as code *(added at plan Phase 2)* | Touching catalog data in any layer |
 | `README.md` | Setup, commands, project overview | Onboarding, or when setup steps change |
-| `implementation-plan.md` | Architecture, ranked 20, ingest design, build order, supervision guide | Starting any phase of work |
+| `implementation-plan.md` | Architecture, ranked 19, ingest design, build order, supervision guide | Starting any phase of work |
 
 Do not create a second always-read context file. This one already fills that role; a parallel file would be opt-in, and an agent that forgets to read it drifts silently.
 
@@ -72,8 +72,9 @@ Images are emitted per width as `public/images/{slug}/{n}-{w}.{avif,webp}` for `
 
 ### Invariants that are easy to break
 
+- **`swatchSource` is provenance, not carousel content** (ADR-027). A colorway's `swatchSource` may point at any brand photograph and usually is *not* one of the pack's 1-5 carousel images; `images` and `colorways` are disjoint. The image cap puts no limit on how many colorways can be sampled, and a hex without a `swatchSource` is still incomplete (ADR-025). Colour accuracy is **best-effort, not hex-identical** (ADR-029): never retune the sampler or hand-edit a hex to make a swatch look better — a sampled value that looks dark is working as intended.
 - **`ColorFamily` is a closed union of 13 values** (ADR-022), defined in `app/types/backpack.ts`. Ingest maps free-form colorway names onto exactly those members and the toolbar's colour filter facets on exactly those members — if either side invents its own list they disagree silently. Widen the union in the type file; never work around it with a loose `string`.
-- **Capacities in the plan's ranked-20 table are unverified** (ADR-023). The stated capacity spread was wrong at both ends and has been withdrawn. Do not quote a capacity range until Phase 5 captures `capacityLiters` per pack.
+- **Capacities in the plan's ranked-19 table are unverified** (ADR-023). The stated capacity spread was wrong at both ends and has been withdrawn. Do not quote a capacity range until Phase 5 captures `capacityLiters` per pack.
 - **Review scales differ per pack.** `review.scale` is 5.0 (retailer) or 10.0 (enthusiast review sites). Display uses raw `score`/`scale`; **sorting and filtering must use `score / scale` normalized to 0–1.** Conflating these is the easiest bug to introduce here.
 - **Card geometry is uniform across every card.** `aspect-[5/7]`, inner `grid grid-rows-[65fr_15fr_20fr]` — three bands: carousel 65%, brand+name 15%, meta row 20% (ADR-021). Use `fr`, **never** `h-[65%]`/`h-[15%]`/`h-[20%]`; fractional rows are what keep the split exact and immune to content pushing it around — but `fr` alone is not enough: every band also needs `min-h-0`, or its automatic min-content floor lets a tall child stretch it (ADR-024). The model name must `truncate` — a wrapping name grows band 2 and breaks the ratio. Band 3 is three columns: colorway grid, price over retailer, score over `review.source`.
 - **The carousel label must not move or re-render** when the image changes. Since ADR-021 this is structural for free: the label lives in band 2, a different grid row from the carousel, so nothing that changes on image swap can reach it. Do not reintroduce an overlay label on the card.
@@ -94,6 +95,6 @@ There is deliberately no backend agent; this project has no server.
 
 ## Repository
 
-Public: `davidgardner11/edc-catalog-claude`. Product photos come from brand and retailer CDNs and are copyrighted, so **`public/images/` is gitignored and never committed** (ADR-012). A fresh clone renders nothing until `pnpm ingest` runs — the same is already true of `app/data/catalog.json`, so ingest was always a required setup step. Do not commit images "just to make the clone work."
+Public: `davidgardner11/edc-catalog-claude`. Product photos come from brand and retailer CDNs and are copyrighted, so **`public/images/` is gitignored and never committed** (ADR-012). A fresh clone renders nothing until `pnpm ingest` runs. Do not commit images "just to make the clone work." **`app/data/catalog.json` is committed** (ADR-030) so the app builds on a fresh clone without a network round-trip to a retailer CDN — it is still generated and must never be hand-edited (ADR-014). That buys a clone that *builds*, not one that *renders*: the catalog points at `/images/{slug}/N`, still absent until ingest runs. Ingest now produces a reviewable diff on it; read it, and resolve any merge conflict by re-running ingest rather than hand-merging JSON.
 
 The ingest fetcher must respect `robots.txt`, rate-limit, and fall back (brand-direct → major retailer → manual URL capture) rather than retrying a blocked host in a loop.

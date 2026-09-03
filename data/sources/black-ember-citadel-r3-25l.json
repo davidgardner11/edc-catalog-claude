@@ -1,0 +1,68 @@
+{
+  "slug": "black-ember-citadel-r3-25l",
+  "productUrl": "https://blackember.com/products/citadel-25",
+  "notes": "Captured 2026-09-03 from Black Ember's own Shopify storefront - the rendered product page and its public product JSON (https://blackember.com/products/citadel-25.json). This is the 25L, not the 20L: the page title is \"CITADEL_R3 25 EMBERTEX(TM) PFAS FREE - JET BLACK : 25L\" and the spec block reads 25 liters. (A stale search-engine title for this same URL says \"20L\" - the live page does not.) In production: /collections/urban-backpack lists four live Citadel R3 25 SKUs and the page renders an Add to Cart button.\n\nSKU CHOICE. Black Ember splits the R3 25 into four separate Shopify products rather than variants: base in Jet Black and Coyote at $285.00, and a \"MAX kit\" bundle in the same two colours at $325.00. This capture is the base pack, which is the product the rank refers to; the MAX kit is the same pack plus accessories.\n\nREVIEW - R3-SPECIFIC, AND NOT AN ENTHUSIAST SCORE. ADR-019 requires that any score come from the R3 and not from R2 reviews, so this is the brand-direct rating on the R3 25 page itself: \"Overall rating: 4.774194 / 5 from 31 reviews\", recorded rounded to 4.77 on a 5-point scale. No enthusiast review of the R3 with a numeric score appears to exist. Pack Hacker's Black Ember index lists SHADOW 26 (6.9), Kompak (7.2), TKS (7.1) and the older Citadel Modular (6.7), with the Citadel R2 marked NR and no R3 entry at all. Nomads Nation and Danny Packs have written R3 reviews but neither assigns a number - Danny Packs confirmed as prose-only, Nomads Nation returned HTTP 403 and could not be read. This is exactly the gap ADR-019 predicted: the rank is inherited from the R2's reception and the R3 has not been scored into it independently.\n\nSTOCK. The rendered page shows Add to Cart, but the product JSON reports negative inventory (-13 for Jet Black, -105 for Coyote), i.e. Shopify oversell/backorder rather than stock on hand. Worth a second look before the price is quoted as current.\n\nPRICE. $285.00 is the list price. A site-wide \"LABOR DAY 15% OFF\" promotion was running at capture time, showing $242.25 - a temporary discount, so the regular price is recorded and the sale is noted in priceComparison. No USD comparison price could be obtained: Huckberry carries the pack but returned HTTP 403, and the two specialist retailers that were readable price in non-USD currencies (Mukama EUR 319.00, The Bag Creature SGD 425.00), which is not comparable under ADR-017.\n\nSWATCHES SAMPLED (ADR-025). Both hexes were replaced on 2026-09-03 by a sampling pass: each was re-derived with `pnpm sample-swatch` from the brand photograph of that colorway identified during the original capture, and each colorway now records that photograph as its `swatchSource`. Neither is name-derived any more. Jet Black samples to #2e2e2e rather than a near-pure black - the matte EmberTex face lifts under studio light - which ADR-029 treats as working as intended.\n\nCOLORWAYS. Jet Black and Coyote are the two currently sold. An Ember Orange limited edition exists at /products/citadel-25-ember-orange but reads SOLD OUT at $279.00, so it is excluded.",
+  "images": [
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0970/4200/files/urban-backpack_8ee9dc78-f373-4679-8a86-f0f37b67f011.jpg"
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0970/4200/files/urban-backpack-01_cc6d6d0b-5252-4521-afba-696152c77026.jpg"
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0970/4200/files/urban-backpack-02.jpg"
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0970/4200/files/urban-backpack-03_5063f945-122a-447e-9b82-df52be7c5fc7.jpg"
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/0970/4200/files/urban-backpack-05.jpg"
+    }
+  ],
+  "colorways": [
+    { "name": "Jet Black", "hex": "#2e2e2e", "swatchSource": "https://cdn.shopify.com/s/files/1/0970/4200/files/urban-backpack_8ee9dc78-f373-4679-8a86-f0f37b67f011.jpg" },
+    { "name": "Coyote", "hex": "#846951", "swatchSource": "https://cdn.shopify.com/s/files/1/0970/4200/files/black-ember-backpack-coyote.png?v=1768936472" }
+  ],
+  "price": {
+    "amountUsd": 285,
+    "retailer": "Black Ember",
+    "url": "https://blackember.com/products/citadel-25",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "priceComparison": [
+    {
+      "retailer": "Black Ember",
+      "url": "https://blackember.com/products/citadel-25",
+      "amountUsd": 285,
+      "outcome": "captured - brand-direct list price; a temporary site-wide LABOR DAY 15% OFF promotion showed $242.25 at capture time and was deliberately not recorded"
+    },
+    {
+      "retailer": "Huckberry",
+      "url": "https://huckberry.com/store/black-ember/category/p/89552-citadel-edc-backpack-25l",
+      "outcome": "not captured - HTTP 403, Cloudflare challenge (same refusal Huckberry gave the GORUCK capture)"
+    },
+    {
+      "retailer": "Mukama",
+      "url": "https://www.mukama.com/products/black-ember-citadel-r3-25-l-ss24-backpack",
+      "outcome": "not captured - prices in EUR only (EUR 319.00); not comparable to a USD figure under ADR-017"
+    },
+    {
+      "retailer": "The Bag Creature",
+      "url": "https://www.thebagcreature.com/products/black-ember-citadel-r3-25-jet-black",
+      "outcome": "not captured - prices in SGD only (SGD 425.00, sale SGD 361.25); not comparable to a USD figure"
+    }
+  ],
+  "review": {
+    "score": 4.77,
+    "scale": 5,
+    "source": "Black Ember",
+    "url": "https://blackember.com/products/citadel-25",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "specs": {
+    "capacityLiters": 25,
+    "weightGrams": 1600,
+    "dimensions": "20\" H x 12\" W x 7\" D (50 x 31 x 18 cm)",
+    "material": "EmberTex 1220x600 denier nylon 6 (PFAS-free), 200d matte-silver ripstop nylon lining, YKK AquaGuard zippers, T6 anodized aluminum hardware"
+  }
+}

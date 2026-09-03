@@ -11,6 +11,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "ingest": "node --experimental-strip-types scripts/ingest.ts",
+    "sample-swatch": "node --experimental-strip-types scripts/sample-swatch.ts",
     "test": "vitest run --passWithNoTests",
     "typecheck": "nuxt typecheck",
     "postinstall": "nuxt prepare"

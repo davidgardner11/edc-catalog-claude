@@ -1,5 +1,208 @@
 [
   {
+    "rank": 1,
+    "slug": "evergoods-civic-panel-loader-24l",
+    "name": "Civic Panel Loader 24L",
+    "brand": "EVERGOODS",
+    "images": [
+      {
+        "base": "/images/evergoods-civic-panel-loader-24l/0",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "EVERGOODS Civic Panel Loader 24L — view 1 of 5"
+      },
+      {
+        "base": "/images/evergoods-civic-panel-loader-24l/1",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "EVERGOODS Civic Panel Loader 24L — view 2 of 5"
+      },
+      {
+        "base": "/images/evergoods-civic-panel-loader-24l/2",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "EVERGOODS Civic Panel Loader 24L — view 3 of 5"
+      },
+      {
+        "base": "/images/evergoods-civic-panel-loader-24l/3",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "EVERGOODS Civic Panel Loader 24L — view 4 of 5"
+      },
+      {
+        "base": "/images/evergoods-civic-panel-loader-24l/4",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "EVERGOODS Civic Panel Loader 24L — view 5 of 5"
+      }
+    ],
+    "colorways": [
+      {
+        "name": "Solution Dyed Black",
+        "hex": "#212121",
+        "family": "black"
+      },
+      {
+        "name": "OD Green",
+        "hex": "#4b4c37",
+        "family": "olive"
+      },
+      {
+        "name": "Fossil Brown",
+        "hex": "#635440",
+        "family": "brown"
+      }
+    ],
+    "price": {
+      "amountUsd": 285,
+      "retailer": "EVERGOODS",
+      "url": "https://evergoods.us/products/civic-panel-loader",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "review": {
+      "score": 8.6,
+      "scale": 10,
+      "source": "Pack Hacker",
+      "url": "https://www.packhacker.com/travel-gear/evergoods/civic-panel-loader-24l/",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "specs": {
+      "capacityLiters": 24,
+      "weightGrams": 1406,
+      "dimensions": "11.5\" W x 18\" H x 7\" D",
+      "material": "Custom 840D solution-dyed ballistic Nylon 6 with C0 DWR; 420D HT nylon PU-coated lining; YKK #10RC / #8RC zippers"
+    }
+  },
+  {
+    "rank": 2,
+    "slug": "peak-design-everyday-backpack-30l",
+    "name": "Everyday Backpack V2 30L",
+    "brand": "Peak Design",
+    "images": [
+      {
+        "base": "/images/peak-design-everyday-backpack-30l/0",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Peak Design Everyday Backpack V2 30L — view 1 of 4"
+      },
+      {
+        "base": "/images/peak-design-everyday-backpack-30l/1",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Peak Design Everyday Backpack V2 30L — view 2 of 4"
+      },
+      {
+        "base": "/images/peak-design-everyday-backpack-30l/2",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Peak Design Everyday Backpack V2 30L — view 3 of 4"
+      },
+      {
+        "base": "/images/peak-design-everyday-backpack-30l/3",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Peak Design Everyday Backpack V2 30L — view 4 of 4"
+      }
+    ],
+    "colorways": [
+      {
+        "name": "Black",
+        "hex": "#393939",
+        "family": "black"
+      },
+      {
+        "name": "Charcoal",
+        "hex": "#484848",
+        "family": "grey"
+      },
+      {
+        "name": "Ash",
+        "hex": "#727272",
+        "family": "grey"
+      },
+      {
+        "name": "Midnight",
+        "hex": "#3e4155",
+        "family": "navy"
+      },
+      {
+        "name": "Ocean",
+        "hex": "#344a5c",
+        "family": "blue"
+      },
+      {
+        "name": "Kelp",
+        "hex": "#5b4f2a",
+        "family": "green"
+      },
+      {
+        "name": "Eclipse",
+        "hex": "#3d262b",
+        "family": "purple"
+      },
+      {
+        "name": "Coyote X-Pac",
+        "hex": "#724d25",
+        "family": "brown"
+      }
+    ],
+    "price": {
+      "amountUsd": 299.95,
+      "retailer": "Peak Design",
+      "url": "https://www.peakdesign.com/products/everyday-backpack?Size=30L&Color=Black",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "review": {
+      "score": 8.4,
+      "scale": 10,
+      "source": "Pack Hacker",
+      "url": "https://www.packhacker.com/travel-gear/peak-design/everyday-backpack-30l-v2/",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "specs": {
+      "capacityLiters": 30,
+      "weightGrams": 1760,
+      "dimensions": "20.5\" H x 14.2\" W x 7.8\" D (bottom MagLatch position)",
+      "material": "100% recycled 400D weatherproof nylon shell with DWR; UltraZips; aluminium hardware; nubuck leather accents"
+    }
+  },
+  {
     "rank": 3,
     "slug": "goruck-gr1-26l",
     "name": "GR1 26L",
@@ -141,6 +344,169 @@
       "weightGrams": 1406,
       "dimensions": "12\" W x 20\" H x 6.75\" D",
       "material": "1000D CORDURA"
+    }
+  },
+  {
+    "rank": 4,
+    "slug": "aer-travel-pack-3-small",
+    "name": "Travel Pack 3 Small 28L",
+    "brand": "Aer",
+    "images": [
+      {
+        "base": "/images/aer-travel-pack-3-small/0",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Aer Travel Pack 3 Small 28L — view 1 of 4"
+      },
+      {
+        "base": "/images/aer-travel-pack-3-small/1",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Aer Travel Pack 3 Small 28L — view 2 of 4"
+      },
+      {
+        "base": "/images/aer-travel-pack-3-small/2",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Aer Travel Pack 3 Small 28L — view 3 of 4"
+      },
+      {
+        "base": "/images/aer-travel-pack-3-small/3",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Aer Travel Pack 3 Small 28L — view 4 of 4"
+      }
+    ],
+    "colorways": [
+      {
+        "name": "Black",
+        "hex": "#373737",
+        "family": "black"
+      },
+      {
+        "name": "Gray",
+        "hex": "#696969",
+        "family": "grey"
+      },
+      {
+        "name": "Navy",
+        "hex": "#24263b",
+        "family": "navy"
+      },
+      {
+        "name": "Olive",
+        "hex": "#5a5035",
+        "family": "olive"
+      }
+    ],
+    "price": {
+      "amountUsd": 229,
+      "retailer": "Aer",
+      "url": "https://aersf.com/products/travel-pack-3-small",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "review": {
+      "score": 8.6,
+      "scale": 10,
+      "source": "Pack Hacker",
+      "url": "https://www.packhacker.com/travel-gear/aer/travel-pack-3-small/",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "specs": {
+      "capacityLiters": 28,
+      "weightGrams": 1719,
+      "dimensions": "19\" H x 13\" W x 7.5\" D",
+      "material": "1680D CORDURA ballistic nylon (bluesign approved) exterior; soft woven bluesign-approved lining; YKK zippers; Duraflex hardware"
+    }
+  },
+  {
+    "rank": 5,
+    "slug": "aer-city-pack-pro-2-20l",
+    "name": "City Pack Pro 2 20L",
+    "brand": "Aer",
+    "images": [
+      {
+        "base": "/images/aer-city-pack-pro-2-20l/0",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Aer City Pack Pro 2 20L — view 1 of 3"
+      },
+      {
+        "base": "/images/aer-city-pack-pro-2-20l/1",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Aer City Pack Pro 2 20L — view 2 of 3"
+      },
+      {
+        "base": "/images/aer-city-pack-pro-2-20l/2",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Aer City Pack Pro 2 20L — view 3 of 3"
+      }
+    ],
+    "colorways": [
+      {
+        "name": "Black",
+        "hex": "#333333",
+        "family": "black"
+      },
+      {
+        "name": "Navy",
+        "hex": "#2a2b40",
+        "family": "navy"
+      },
+      {
+        "name": "Olive",
+        "hex": "#534a2d",
+        "family": "olive"
+      }
+    ],
+    "price": {
+      "amountUsd": 199,
+      "retailer": "Aer",
+      "url": "https://aersf.com/products/city-pack-pro-2-20l",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "review": {
+      "score": 8.2,
+      "scale": 10,
+      "source": "Pack Hacker",
+      "url": "https://www.packhacker.com/travel-gear/aer/city-pack-pro-2-20l/",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "specs": {
+      "capacityLiters": 20,
+      "weightGrams": 1243,
+      "dimensions": "17.5\" H x 12\" W x 7\" D",
+      "material": "1680D CORDURA ballistic nylon (bluesign approved) exterior; ripstop nylon lining; YKK zippers; Duraflex hardware"
     }
   },
   {

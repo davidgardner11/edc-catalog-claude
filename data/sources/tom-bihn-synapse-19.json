@@ -1,0 +1,77 @@
+{
+  "slug": "tom-bihn-synapse-19",
+  "productUrl": "https://www.tombihn.com/products/synapse-19",
+  "notes": "Captured 2026-09-03 from TOM BIHN's own Shopify storefront - the rendered product page and its public product JSON (https://www.tombihn.com/products/synapse-19.json). This is the Synapse 19, not the Synapse 25, which TOM BIHN sells as a separate product at /products/synapse-25. In production and in stock at $255.00; 43 live variants, all at the same price.\n\nCOLORWAY MODEL. TOM BIHN's 43 variants are exterior/interior fabric *pairs* (e.g. \"Wilderness Ballistic/Dusk 210 Cerylon\"). The interior liner is not visible on a closed pack, so the colorways here are the 12 distinct *exterior* fabrics across the page's Core and Limited Edition lists. \"Black\" appears twice as an exterior - once in 420 Spectron and once in 630 Ballistic - so those are recorded as \"Black Spectron\" and \"Black Ballistic\" to keep the names unique and to keep the fabric distinction the brand itself draws. \"Mars Red\" and \"Nebulous Grey\" use the brand's own longer names from its image alt text (the option list shortens them to \"Mars\" and \"Nebulous\"); the longer names are what make the colour readable. Saguaro and Sapphire Spectron have variant images in the product JSON but appear in neither the Core nor the Limited Edition list on the page, so they are treated as retired and excluded.\n\nSWATCHES SAMPLED (ADR-025). All twelve hexes were replaced on 2026-09-03 by a sampling pass: each was re-derived with `pnpm sample-swatch` from the brand photograph of that colorway identified during the original capture, and each colorway now records that photograph as its `swatchSource`. No colorway here is name-derived or unsourced any more. Values skew darker than the name suggests because studio lighting on 630d/525d ballistic is what the median pixel actually is; that is ADR-029's accepted best-effort accuracy, not an error to hand-correct. Agave was the one contradiction the pass surfaced: its photograph samples to #2c727e, a distinctly blue-green teal rather than the green its explicit `family` originally claimed. Resolved 2026-09-03 - the family is now `blue`, which is also where app/utils/color.ts files the `teal` keyword, so the swatch and the Phase 6 colour facet agree.\n\nEXPLICIT `family` VALUES. Raspberry, Ursa, Wilderness, Bordeaux and Agave match no keyword in app/utils/color.ts, so `colorFamilyFromName` would return null and fail the build; each carries an explicit family. The values come from the brand's own parenthetical colour descriptions in its image alt text where it gives one: Ursa \"(brown-grey)\" -> brown, Wilderness \"(forest green)\" -> green. Agave is the brand's blue-green agave shade; captured as green, corrected to blue once the sample came back teal (#2c727e, blue channel above green) - app/utils/color.ts already treats `teal` as a blue keyword. Raspberry and Bordeaux -> red. Aubergine \"(dark purple)\" and Nebulous Grey \"(medium grey)\" both derive correctly from their names, so those are left implicit.\n\nWEIGHT. TOM BIHN publishes three weights, one per exterior fabric: 630d Ballistic 755 g, X-Pac 695 g, 420d Spectron 670 g. 755 g is recorded because nine of the twelve colorways are Ballistic; the two Spectron colorways are 85 g lighter.\n\nPRICE. TOM BIHN sells direct only and does not discount; $255.00 is the list price on its own page and there is no sale running. No comparable retail listing was found - the one Amazon listing (ASIN B0GYXR57VF) could not be read (amazon.com returned HTTP 500 to every automated request in this session, three separate URLs), and eBay/PicClick hits are secondhand resale, which ADR-017 does not treat as a comparable price.",
+  "images": [
+    {
+      "url": "https://cdn.shopify.com/s/files/1/1089/8530/files/TB_Studio-8004v3.jpg?v=1773757847",
+      "alt": "TOM BIHN Synapse 19 in Black 630 Ballistic with a Northwest Sky 200 Halcyon interior"
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/1089/8530/files/TB0112-BTND-Synapse19-BlackSpectron-NWSkyHalcyon.jpg?v=1773757847",
+      "alt": "TOM BIHN Synapse 19 in Black 420 Spectron with a Northwest Sky 200 Halcyon interior"
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/1089/8530/files/S19-AUBERGINE.jpg?v=1773757847",
+      "alt": "TOM BIHN Synapse 19 in Aubergine 525 Ballistic"
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/1089/8530/files/TB0112-WKDL-Synapse19-WildernessBallistic-DuskCerylon.png?v=1777493015",
+      "alt": "TOM BIHN Synapse 19 in Wilderness 525 Ballistic with a Dusk 210 Cerylon interior"
+    },
+    {
+      "url": "https://cdn.shopify.com/s/files/1/1089/8530/files/TB0112-DKCD-Synapse19-DeepBallistic-CoyoteHalcyon.png?v=1777493015",
+      "alt": "TOM BIHN Synapse 19 in Deep Blue 525 Ballistic with a Coyote 200 Halcyon interior"
+    }
+  ],
+  "colorways": [
+    { "name": "Black Spectron", "hex": "#27262b", "swatchSource": "https://cdn.shopify.com/s/files/1/1089/8530/files/TB0112-BTND-Synapse19-BlackSpectron-NWSkyHalcyon.jpg?v=1773757847" },
+    { "name": "Black Ballistic", "hex": "#1f1f1f", "swatchSource": "https://cdn.shopify.com/s/files/1/1089/8530/files/TB_Studio-8004v3.jpg?v=1773757847" },
+    { "name": "Aubergine", "hex": "#27181f", "swatchSource": "https://cdn.shopify.com/s/files/1/1089/8530/files/S19-AUBERGINE.jpg?v=1773757847" },
+    { "name": "Burnt Orange", "hex": "#8f3e15", "swatchSource": "https://cdn.shopify.com/s/files/1/1089/8530/files/TB0112-TKDL-Synapse19-BurntOrangeBallistic-DuskCerylon.png?v=1785954193" },
+    { "name": "Deep Blue", "hex": "#163246", "swatchSource": "https://cdn.shopify.com/s/files/1/1089/8530/files/TB0112-DKCD-Synapse19-DeepBallistic-CoyoteHalcyon.png?v=1777493015" },
+    { "name": "Mars Red", "hex": "#621d1b", "swatchSource": "https://cdn.shopify.com/s/files/1/1089/8530/files/TB0112-MKGL-Synapse19-MarsBallistic-MountainCerylon.png?v=1777493015" },
+    { "name": "Raspberry", "hex": "#81263f", "family": "red", "swatchSource": "https://cdn.shopify.com/s/files/1/1089/8530/files/TB0112-PKDL-Synapse19-RaspberryBallistic-DuskCerylon.png?v=1777493015" },
+    { "name": "Ursa", "hex": "#3d352f", "family": "brown", "swatchSource": "https://cdn.shopify.com/s/files/1/1089/8530/files/TB0112-RKDL-Synapse19-UrsaBallistic-DuskCerylon.png?v=1784645138" },
+    { "name": "Wilderness", "hex": "#0f2719", "family": "green", "swatchSource": "https://cdn.shopify.com/s/files/1/1089/8530/files/TB0112-WKDL-Synapse19-WildernessBallistic-DuskCerylon.png?v=1777493015" },
+    { "name": "Bordeaux", "hex": "#7b2e37", "family": "red", "swatchSource": "https://cdn.shopify.com/s/files/1/1089/8530/files/TB0112-RT-Synapse19-BordeauxSpectron.png?v=1779901817" },
+    { "name": "Agave", "hex": "#2c727e", "family": "blue", "swatchSource": "https://cdn.shopify.com/s/files/1/1089/8530/files/TB0112-KK-Synapse19-AgaveBallistic.png?v=1785954193" },
+    { "name": "Nebulous Grey", "hex": "#43464b", "swatchSource": "https://cdn.shopify.com/s/files/1/1089/8530/files/TB_Studio-8006v1.jpg?v=1773757847" }
+  ],
+  "price": {
+    "amountUsd": 255,
+    "retailer": "TOM BIHN",
+    "url": "https://www.tombihn.com/products/synapse-19",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "priceComparison": [
+    {
+      "retailer": "TOM BIHN",
+      "url": "https://www.tombihn.com/products/synapse-19",
+      "amountUsd": 255,
+      "outcome": "captured - brand-direct, all 43 variants $255.00, in stock, no sale running"
+    },
+    {
+      "retailer": "Amazon",
+      "url": "https://www.amazon.com/TOM-BIHN-19L-Synapse-Backpack/dp/B0GYXR57VF",
+      "outcome": "not captured - amazon.com returned HTTP 500 to automated requests on every URL tried this session"
+    },
+    {
+      "retailer": "REI",
+      "outcome": "not captured - no Synapse 19 listing surfaced in search, and rei.com refuses automated requests (HTTP 403), so this is inferred from TOM BIHN being direct-only rather than read off an REI page"
+    }
+  ],
+  "review": {
+    "score": 4.9,
+    "scale": 5,
+    "source": "TOM BIHN",
+    "url": "https://www.tombihn.com/products/synapse-19",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "specs": {
+    "capacityLiters": 19,
+    "weightGrams": 755,
+    "dimensions": "11.4\" W x 16\" H x 7.9\" D (290 x 410 x 200 mm)",
+    "material": "630d High Tenacity Ballistic nylon or 420d Spectron UHMWPE/nylon ripstop, 210d Cerylon / 200d Halcyon lining, YKK #8 water-repellent zippers"
+  }
+}

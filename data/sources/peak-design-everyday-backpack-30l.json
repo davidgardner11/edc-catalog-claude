@@ -1,0 +1,48 @@
+{
+  "slug": "peak-design-everyday-backpack-30l",
+  "productUrl": "https://www.peakdesign.com/products/everyday-backpack",
+  "notes": "Captured 2026-09-03 from peakdesign.com's own product page (size 30L selected via ?Size=30L). peakdesign.com/robots.txt allows /products/ for the wildcard group; there is no Shopify products.json endpoint (the storefront is headless, so /products/everyday-backpack.json 404s) and every value here was read off the rendered page. ADR-019 check: IN PRODUCTION, and specifically still the V2 generation despite noisy 'V3' labelling in the wild. Evidence: (1) peakdesign.com prints no version number anywhere on the page, and its product photography is still filed under the V2 SKU stem (everyday-backpack-black-30-*, gallery assets named BEDB-20-BK-2); (2) the design described is V2's - MagLatch, dual UltraZip side access, 100% recycled 400D weatherproof shell, FlexFold dividers; (3) Pack Hacker's current review is titled 'Everyday Backpack 30L (V2)'; (4) the August 2025 Peak Design refresh that introduced Ocean, Kelp and Eclipse was explicitly colours-only - 'the new colors arrive on the same existing lineup ... same features and functions' (Digital Camera World, 2025-08-12) - and bumped the SKU suffix to -3 (BEDB-30-BK-3), which is what B&H, CVP and at least one gear blog have mis-read as a 'V3'. Best Buy, Adorama and Abt all still label that same -3 SKU 'V2'. Treat any 'Everyday Backpack V3' claim as SKU-suffix confusion until Peak Design says otherwise. Price: $299.95 brand-direct for the 30L, read on both the Black and the Kelp variant pages; this is the regular price, not a sale. Black 30L showed 'Out of Stock' at capture time while Kelp 30L was available - a stock state, not a discontinuation. Colour list is the 8 options the 30L picker offers; per-colour 30L stock was only individually verified for Black (out of stock) and Kelp (available). COLORWAY HEXES ARE SAMPLED, NOT NAME-DERIVED (re-sampled 2026-09-03). All eight come from `pnpm sample-swatch` (scripts/sample-swatch.ts), which implements ADR-025's method verbatim: the median-luminance pixel of the central 40% of the brand's own photograph, background discarded. SWATCH SOURCE CAVEAT, per colorway: Black, Charcoal, Midnight, Ocean and Kelp are sampled from 30L photography. Ash, Eclipse and Coyote X-Pac are sampled from the brand's 20L photograph of the same fabric, following the GORUCK precedent that colour is a fabric property and not a size one - peakdesign.com renders the per-colour gallery client-side, so the only server-rendered asset for those three colours is the 20L image the colour picker uses as its thumbnail, and no 30L URL for them could be observed rather than guessed. Recording a guessed URL would have been a fabricated swatchSource, which ADR-025 forbids outright. CALIBRATION NOTE: Peak Design's studio lighting is markedly more contrasty than GORUCK's or Aer's, so the median-luminance pixel lands well below the colour a viewer reads off the thumbnail - Coyote X-Pac sampled #724d25 against a name-derived guess of #9a7a55, and Ash sampled #727272 against #b6b1a7. That is the pinned method behaving correctly on darker source photography, not a sampling error; both were checked against the crop before being written. FAMILY OVERRIDES NEED REVIEW (ADR-022, flagged not changed): Ocean, Kelp and Eclipse carry explicit families because colorFamilyFromName returns null for all three and a null fails ingest. Ocean's `blue` is confirmed by the sample. Kelp's `green` and Eclipse's `purple` are NOT - the sampled photography shows Kelp as an olive-khaki (`olive` fits better) and Eclipse as a deep burgundy (`red` fits better). Both were left as captured because changing a family is a ColorFamily decision, not a hex correction. Images are the four 30L Black studio shots; Shopify's &width=1024&height=1024&crop=center resize parameters were stripped so ingest fetches the full-resolution originals. SPECS PROVENANCE: peakdesign.com renders its Specs section behind an accordion that did not appear in the fetched markup, so weight and dimensions come from Pack Hacker's measurements of the same pack (3.88 lb / 1.8 kg without dividers; 20.5 x 14.2 x 7.8 in at the bottom MagLatch position) rather than from Peak Design's own spec sheet - worth re-reading brand-direct if the numbers are ever quoted as the brand's.",
+  "images": [
+    { "url": "https://cdn.shopify.com/s/files/1/2986/1172/files/everyday-backpack-black-30-1.jpg?v=1762275582" },
+    { "url": "https://cdn.shopify.com/s/files/1/2986/1172/files/everyday-backpack-black-30-2_777199fc-5ee7-4e3f-9e99-bcbd437c617f.jpg?v=1725404921" },
+    { "url": "https://cdn.shopify.com/s/files/1/2986/1172/files/everyday-backpack-black-30-3.jpg?v=1747072879" },
+    { "url": "https://cdn.shopify.com/s/files/1/2986/1172/files/everyday-backpack-black-30-7_a0272555-c975-4580-bbcf-38ad41c7c354.jpg?v=1747072879" }
+  ],
+  "colorways": [
+    { "name": "Black", "hex": "#393939", "swatchSource": "https://cdn.shopify.com/s/files/1/2986/1172/files/everyday-backpack-black-30-1.jpg?v=1762275582" },
+    { "name": "Charcoal", "hex": "#484848", "swatchSource": "https://cdn.shopify.com/s/files/1/2986/1172/files/everyday-backpack-charcoal-30-1.jpg?v=1762275583" },
+    { "name": "Ash", "hex": "#727272", "swatchSource": "https://cdn.shopify.com/s/files/1/2986/1172/files/everyday-backpack-ash-20-1.jpg?v=1762275582" },
+    { "name": "Midnight", "hex": "#3e4155", "swatchSource": "https://cdn.shopify.com/s/files/1/2986/1172/files/everyday-backpack-midnight-30-1.jpg?v=1762275585" },
+    { "name": "Ocean", "hex": "#344a5c", "family": "blue", "swatchSource": "https://cdn.shopify.com/s/files/1/2986/1172/files/Everyday-Backpack-30L-Ocean-1229.jpg?v=1753394607" },
+    { "name": "Kelp", "hex": "#5b4f2a", "family": "green", "swatchSource": "https://cdn.shopify.com/s/files/1/2986/1172/files/Everyday-Backpack-30L-Kelp-1232.jpg?v=1753392321" },
+    { "name": "Eclipse", "hex": "#3d262b", "family": "purple", "swatchSource": "https://cdn.shopify.com/s/files/1/2986/1172/files/Everyday-Backpack-20L-Eclipse-1213.jpg?v=1753395675" },
+    { "name": "Coyote X-Pac", "hex": "#724d25", "swatchSource": "https://cdn.shopify.com/s/files/1/2986/1172/files/Everyday-Backpack-20L-Coyote-8114_824c8c85-cbfa-41fd-a07d-338052db3cc5.jpg?v=1762275585" }
+  ],
+  "price": {
+    "amountUsd": 299.95,
+    "retailer": "Peak Design",
+    "url": "https://www.peakdesign.com/products/everyday-backpack?Size=30L&Color=Black",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "priceComparison": [
+    { "retailer": "Peak Design", "url": "https://www.peakdesign.com/products/everyday-backpack?Size=30L&Color=Black", "amountUsd": 299.95, "outcome": "captured - brand-direct, $299.95 regular price, confirmed on the Black and Kelp 30L variant pages" },
+    { "retailer": "B&H Photo", "url": "https://www.bhphotovideo.com/c/product/1515240-REG/peak_design_bedb_30_bk_2_everyday_backpack_30l_v2.html", "outcome": "not captured - HTTP 403 on both the product page and site search; not retried" },
+    { "retailer": "Adorama", "url": "https://www.adorama.com/pdbb30bk2.html", "outcome": "not captured - HTTP 403" },
+    { "retailer": "Amazon", "url": "https://www.amazon.com/Peak-Design-Everyday-Backpack-Black/dp/B07ZTP5CBQ", "outcome": "not captured - page returned without the price/rating block (bot-mitigated render)" },
+    { "retailer": "Best Buy", "url": "https://www.bestbuy.com/product/peak-design-everyday-backpack-v2-30l-black/J3YCJYFHH2", "outcome": "not captured - connection timed out" },
+    { "retailer": "Abt", "url": "https://www.abt.com/Peak-Design-30L-Everyday-Backpack-V2-in-Black-BEDB30BK3/p/215870.html", "outcome": "not captured - HTTP 403" }
+  ],
+  "review": {
+    "score": 8.4,
+    "scale": 10,
+    "source": "Pack Hacker",
+    "url": "https://www.packhacker.com/travel-gear/peak-design/everyday-backpack-30l-v2/",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "specs": {
+    "capacityLiters": 30,
+    "weightGrams": 1760,
+    "dimensions": "20.5\" H x 14.2\" W x 7.8\" D (bottom MagLatch position)",
+    "material": "100% recycled 400D weatherproof nylon shell with DWR; UltraZips; aluminium hardware; nubuck leather accents"
+  }
+}

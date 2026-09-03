@@ -30,6 +30,17 @@ export const SEED_PATH: string = resolve(DATA_DIR, 'seed.ts')
 export const CACHE_DIR: string = resolve(REPO_ROOT, '.ingest-cache')
 export const ROBOTS_CACHE_DIR: string = resolve(CACHE_DIR, '.robots')
 
+/**
+ * `.ingest-cache/.swatch/` — originals downloaded by `scripts/sample-swatch.ts`.
+ *
+ * A dot-prefixed sibling of `.robots/` rather than a per-slug directory,
+ * because a swatch source is an arbitrary URL: it is usually a *variant*
+ * photograph that is not in any pack's `images` array, and one photo can be the
+ * swatch source for colorways of two different packs. Keyed on the URL like the
+ * per-pack cache, so re-running the sampler costs zero requests (ADR-014).
+ */
+export const SWATCH_CACHE_DIR: string = resolve(CACHE_DIR, '.swatch')
+
 /** Generated outputs. Never hand-edited; both are gitignored (ADR-012). */
 export const PUBLIC_IMAGES_DIR: string = resolve(REPO_ROOT, 'public', 'images')
 export const CATALOG_PATH: string = resolve(REPO_ROOT, 'app', 'data', 'catalog.json')

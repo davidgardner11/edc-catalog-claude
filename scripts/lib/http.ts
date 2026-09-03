@@ -282,7 +282,12 @@ export async function fetchAsset(rawUrl: string): Promise<{ bytes: Buffer; conte
   }
 
   for (let attempt = 1; attempt <= 2; attempt += 1) {
-    const response = await rawFetch(url, 'image/avif,image/webp,image/png,image/jpeg,image/*;q=0.8')
+    // Deliberately advertises no modern format. A CDN that negotiates on `accept`
+    // returns WebP/AVIF for a `.jpg` URL when we name those tokens — so the bytes
+    // behind a URL would depend on the client, and two machines populating a cold
+    // `.ingest-cache/` could emit different `width`/`height` into a committed
+    // `catalog.json` (ADR-030). Asking only for `image/*` gets the URL's own bytes.
+    const response = await rawFetch(url, 'image/*')
     if (response.ok) {
       return {
         bytes: Buffer.from(await response.arrayBuffer()),
