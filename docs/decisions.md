@@ -311,7 +311,7 @@ Phase 5's first research batch found that **both** Aer Travel Pack 3 sizes are d
 - Where a colorway truly has no photograph anywhere, the ADR-025 fallbacks stand: use the same fabric's photo at another size or variant and say so in `notes`, or keep the derived hex, omit `swatchSource`, and name that colorway in `notes`. A fabricated `swatchSource` is the one unacceptable outcome.
 
 ## ADR-028 — The swatch sampler is a script, and its parameters are pinned
-**2026-09-03 · Accepted**
+**2026-09-03 · Accepted · Amended by ADR-029**
 
 ADR-025 pinned the *method* — "the median-luminance pixel of the central 40% of that photograph with the background discarded" — but Phase 4 executed it by hand, and Phase 5's first research batch consequently shipped eighteen name-derived hexes with no `swatchSource` at all across four captures. `scripts/sample-swatch.ts` (`pnpm sample-swatch`) implements the method so the remaining packs cannot repeat that. It is deliberately **not** an ingest stage: ingest reads `hex` out of the capture, and sampling is an authoring aid whose output a human pastes into `data/sources/{slug}.json` together with the URL it came from. Making it a pipeline stage would let the catalog's colours change without any tracked file changing, which is the opposite of ADR-014.
 
@@ -324,3 +324,16 @@ ADR-025 pinned the *method* — "the median-luminance pixel of the central 40% o
 **Where the method needs a human before it is trusted.** Two failure shapes showed up immediately in Phase 5 batch 1 and will recur. First, **contrasty studio lighting drags the median well below the colour a viewer reads off the thumbnail** — Peak Design's Coyote X-Pac sampled `#724d25` against a name-derived guess of `#9a7a55`, and Ash `#727272` against `#b6b1a7`. That is the pinned method behaving correctly on darker source photography, not a bug, but every sample was checked against its own crop before being written and future batches should do the same. Second, **sampling can contradict an explicit `family`**: the photographs show Peak Design's Kelp as an olive-khaki (captured as `green`) and Eclipse as a deep burgundy (captured as `purple`). Both were left as captured and flagged in the file's `notes`, because a `family` correction is an ADR-022 decision about what the colour filter means, not a hex correction, and silently changing one under cover of a hex pass is how the union's meaning drifts.
 
 **Consequence for the remaining sixteen packs.** A capture is not finished until every colorway has a `swatchSource` or its `notes` names the colorway that could not be sourced and why. `pnpm sample-swatch --check=<slug>` is the check for that, and it is cheap to run because the answer comes from cache.
+
+## ADR-029 — Swatch colour accuracy is best-effort; the sampling method stands
+**2026-09-03 · Accepted · Amends ADR-028**
+
+ADR-028 left the dark skew open: sampling a photograph inherits its studio lighting, so the catalog's swatches sit low — median luminance 71 across 45 colorways, 36 of them below 100 — and four of Phase 5 batch 1's resampled hexes moved 30-68 per channel against their name-derived guesses, Peak Design's Ash (`#b6b1a7` → `#727272`) worst among them. That was written up as something a human should adjudicate before trusting.
+
+**Adjudicated: the objective is best-effort, not hex-identical, and the method is unchanged.** A colorway swatch exists so a viewer can tell one colorway from another and recognise roughly what colour it is. It is not a colour-matching tool, nobody is ordering fabric from it, and no brand publishes a machine-readable swatch colour to be accurate *against* — so there is no ground truth to be measured against in the first place. A sampled value that is auditable, reproducible and traceable to a specific published photograph is worth more here than a prettier value someone eyeballed, even when the prettier one would read better in the grid.
+
+**Consequences:**
+- **Do not retune the five pinned parameters to lighten the output**, and do not hand-edit a hex because it looks muddy next to the product photo. Both are the same mistake: trading a reproducible value for an unreproducible one to chase an accuracy target this project does not have.
+- A delta between a sampled hex and what a viewer reads off a thumbnail is **not a defect** and should not be filed as one. ADR-028's `--check` still exists to catch a hex that no longer matches its own recorded photograph, which is a real error; a hex that matches its photograph and still looks dark is working as intended.
+- This is not a licence to skip sampling. ADR-025 stands: a hex still comes from a photograph, and still records which one. "Best effort" describes the *accuracy target*, not the *evidence standard*.
+- If the swatch grid genuinely reads as unusable once Phase 6 renders twenty packs side by side, that is a **presentation** problem to solve in the component — border, contrast, a hover label naming the colorway — before it is a reason to reopen the sampling method.
