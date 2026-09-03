@@ -92,7 +92,7 @@ export type Backpack = {
 
 ---
 
-## The ranked 20
+## The ranked 19
 
 Ranked on **cross-source critical acclaim** — Carryology Carry Awards, Pack Hacker, HiConsumption, Nomads Nation. There is no popularity term; ADR-018 records why it was investigated and abandoned. This ordering is editorial judgment, not arithmetic, so each entry's basis is committed to `data/seed.ts` as `rationale` and stays auditable.
 
@@ -105,21 +105,20 @@ Ranked on **cross-source critical acclaim** — Carryology Carry Awards, Pack Ha
 | 5 | Aer | City Pack Pro 2 20L (base fabric) | S-tier; the zero-regret daily driver |
 | 6 | Tom Bihn | Synapse 19 | Long-running cult classic, US-made |
 | 7 | Bellroy | Classic Backpack Plus | Best-selling gateway EDC pack |
-| 8 | Mystery Ranch | Urban Assault 24 | The 3-Zip design icon |
-| 9 | Black Ember | Citadel R3 25L | Best weatherproof; modular hardshell. *Replaces discontinued R2; rank inherited — ADR-019* |
-| 10 | Able Carry | Max EDC 26L | Enthusiast darling, Carry Awards regular |
-| 11 | Mission Workshop | The Rhake VX | Best commuter/cycling; weatherproof VX |
-| 12 | Alpaka | Elements Backpack Pro | Best modern value |
-| 13 | Topo Designs | Rover Pack Tech | Heritage design, accessible price |
-| 14 | Osprey | Daylite Plus 20L | Highest-volume seller on the list |
-| 15 | WANDRD | PRVKE 21 | Photo/EDC crossover standard |
-| 16 | The Brown Buffalo | ConcealPack 21L | Best small-batch |
-| 17 | Incase | ICON Slim | Long-standing tech-EDC staple |
-| 18 | Chrome Industries | Barrage Cargo | Messenger heritage, weatherproof roll-top |
-| 19 | Arktype | Dashpack II | Minimalist favorite |
-| 20 | Filson | Dryden Ballistic Nylon | Heritage/professional entry |
+| 8 | Black Ember | Citadel R3 25L | Best weatherproof; modular hardshell. *Replaces discontinued R2; rank inherited — ADR-019* |
+| 9 | Able Carry | Max EDC 26L | Enthusiast darling, Carry Awards regular |
+| 10 | Mission Workshop | Rhake LS | Best commuter/cycling; weatherproof VX-21. *Replaces discontinued Rhake VX; rank inherited — ADR-031* |
+| 11 | Alpaka | Elements Backpack Pro | Best modern value |
+| 12 | Topo Designs | Rover Pack Tech | Heritage design, accessible price |
+| 13 | Osprey | Daylite Plus 20L | Highest-volume seller on the list |
+| 14 | WANDRD | PRVKE 21 | Photo/EDC crossover standard |
+| 15 | The Brown Buffalo | ConcealPack 21L | Best small-batch |
+| 16 | Incase | ICON Slim | Long-standing tech-EDC staple |
+| 17 | Chrome Industries | Barrage Cargo | Messenger heritage, weatherproof roll-top |
+| 18 | Arktype | Dashpack II | Minimalist favorite |
+| 19 | Filson | Dryden Ballistic Nylon | Heritage/professional entry |
 
-Spread: **$60–$435**, 19 distinct brands (Aer twice). Capacity spread is **not yet stated** — the figure previously here ("14–30L") was wrong at both ends and is withdrawn pending Phase 5 (ADR-023).
+18 distinct brands (Aer twice) — Mystery Ranch was retired at rank 8 (ADR-032). **Neither spread is stated any more.** The price range previously here ("$60–$435") is withdrawn: the Rhake LS researched at $525, above its ceiling (ADR-031). The capacity range ("14–30L") was withdrawn earlier for being wrong at both ends (ADR-023). Restate both from captured data once Phase 5 completes, rather than patching an endpoint.
 
 **Before researching any pack, confirm it is still in production** (ADR-019). Incase ICON Slim and Arktype Dashpack II are the most likely to have been superseded.
 
@@ -132,7 +131,7 @@ Spread: **$60–$435**, 19 distinct brands (Aer twice). Capacity spread is **not
 Research is mine (WebSearch/WebFetch); the scripts are deterministic and re-runnable. Split so a failure in one pack never forces a full re-fetch.
 
 ```
-data/seed.ts              ranked 20: slug, name, brand, brandUrl, rank, rationale
+data/seed.ts              ranked 19: slug, name, brand, brandUrl, rank, rationale
                           (rank is the acclaim rank; rationale keeps the ordering auditable)
 data/sources/{slug}.json  research output: image URLs, price+retailer+url, score+scale+source, specs
 scripts/ingest.ts         orchestrator: preflight → fetch → process → build
@@ -344,9 +343,9 @@ Scaffold the Nuxt app per CLAUDE.md. Pin nuxt 4.5.2, vue 3.5.42, typescript 6.0.
 
 **Gate:** re-running `pnpm ingest` on unchanged inputs produces byte-identical output, and re-running after deleting `public/images/` does **not** re-download (it rebuilds from `.ingest-cache/`).
 
-### Phase 5 — Research the 20 (batched)
+### Phase 5 — Research the 19 (batched)
 
-Run in batches of 5 so you can course-correct. Ranks are in the plan's ranked-20 table.
+Run in batches of 5 so you can course-correct. Ranks are in the plan's ranked-19 table.
 
 ```
 @agent-research-curator Research packs 1-5 from the ranked table in implementation-plan.md. Write data/sources/{slug}.json for each: image URLs (1-5, prefer brand-direct), the lowest price found across brand-direct plus 1-2 major retailers with the winning retailer and URL (ADR-017), review score with its real scale and source, colorways, and specs. Stamp capturedAt on price and score. If a host blocks you, fall back brand-direct → major retailer → report it as needing manual capture. Do not run the ingest scripts.

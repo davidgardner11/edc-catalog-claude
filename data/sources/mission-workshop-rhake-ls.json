@@ -1,0 +1,42 @@
+{
+  "slug": "mission-workshop-rhake-ls",
+  "productUrl": "https://missionworkshop.com/products/rhake-ls-everyday-carry-backpack",
+  "notes": "Captured 2026-09-03 from Mission Workshop's own Shopify storefront: the product page HTML plus its public product JSON (https://missionworkshop.com/products/rhake-ls-everyday-carry-backpack.js). missionworkshop.com/robots.txt disallows only PowerMapper from /blogs/*, so this fetch is permitted. IN PRODUCTION AND IN STOCK - all four colorways report available:true, and the pack also appears in the live /collections/featured product feed. Specs are the brand's verbatim from the page's Specifications block: 'Textile: Dimension Polyant VX-21 / External dimensions: 19.5\" x 13\" x 5\" / Internal volume: 1,350 cu. in. (22 L) / Weight : 3.3 lbs'. 3.3 lbs converted to 1497 g; note some secondary coverage says 3.4 lbs, and the brand's 3.3 lbs was preferred. PRICE: $525 brand-direct, and this is the regular price, not a promo - compare_at_price is null on every variant and both /collections/sale and /collections/outlet are empty (0 products), so there is no discount in force. Confirms the $525/VX-21/22L figures carried in ADR-031. RANK 11 IS AN INHERITED RANK (ADR-019 convention, applied by ADR-031): the acclaim belongs to the discontinued Rhake VX, and no Rhake VX review was used here - ADR-009 forbids borrowing a predecessor's score. REVIEW - READ THIS BEFORE TRUSTING THE NUMBER: the only numeric review of the Rhake LS *itself* that could be found is Nomads Nation (Stevie Tsui, published 2026-07-16, modified 2026-08-21). Its visible article text states, verbatim, 'Functionality scored 3.5, bringing the overall score to 3.75 out of 5', alongside component scores of 4.5 materials, 4 comfort, 4 harness, 3 value. That 3.75/5 is what is recorded here. THE PAGE'S OWN JSON-LD DISAGREES WITH ITS PROSE: the embedded schema.org Review carries ratingValue 4.2 with no bestRating declared. The prose was preferred because it is what a reader actually sees, it states its scale explicitly, and it is arithmetically consistent with the component scores printed beside it; the unexplained 4.2 looks like stale template markup. A human should confirm which the site intends. The same review quotes the price as $515 while the brand charges $525 - another sign its metadata lags. Pack Hacker has never reviewed any Rhake: its Mission Workshop index lists the older 'Rhake Waterproof Laptop Backpack' as Not Rated and has no Rhake LS entry at all. Mission Workshop publishes no star rating of its own on the product page. COLORWAYS: all four hexes were sampled with `pnpm sample-swatch` from Mission Workshop's own per-variant photograph, and swatchSource records which one; none are name-derived. No family overrides were needed - colorFamilyFromName resolves Black VX -> black, Olive VX -> olive, Gray VX -> grey, Coyote VX -> brown, all correct against the sampled colours. NOT THE SAME PACK AS: the Rhake LS Ultra ($585, Black Ultra, preorder only) and the legacy Rhake (/products/rhake-laptop-backpack, HTTP 404). PRICE COMPARISON was thin by necessity - Mission Workshop is essentially direct-to-consumer, and the two majors that might carry it both refused automated requests.",
+  "images": [
+    { "url": "https://cdn.shopify.com/s/files/1/1016/8373/files/Rhke-Black--7I7A8359_JPG.jpg?v=1775406478" },
+    { "url": "https://cdn.shopify.com/s/files/1/1016/8373/files/EvanBDudley-7I7A8415_JPG_01624609-8177-4177-b35d-39ca1e7daa59.jpg?v=1775404215" },
+    { "url": "https://cdn.shopify.com/s/files/1/1016/8373/files/EvanBDudley-7I7A8424_JPG.jpg?v=1775404215" },
+    { "url": "https://cdn.shopify.com/s/files/1/1016/8373/files/GRAY-RHAKE-7I7A4658.jpg?v=1775406483" },
+    { "url": "https://cdn.shopify.com/s/files/1/1016/8373/files/COYOTE-RHAKE.jpg?v=1775406481" }
+  ],
+  "colorways": [
+    { "name": "Black VX", "hex": "#222328", "swatchSource": "https://cdn.shopify.com/s/files/1/1016/8373/files/Rhke-Black--7I7A8359_JPG.jpg?v=1775406478" },
+    { "name": "Olive VX", "hex": "#403e32", "swatchSource": "https://cdn.shopify.com/s/files/1/1016/8373/files/olive-Rhake_12x16-7I7A4652.jpg?v=1775404228" },
+    { "name": "Gray VX", "hex": "#575560", "swatchSource": "https://cdn.shopify.com/s/files/1/1016/8373/files/Rhake-Gray_12x16-7I7A4655_1dd2b2ff-8ca0-49d2-8456-cedf47db41c4.jpg?v=1775404228" },
+    { "name": "Coyote VX", "hex": "#925e24", "swatchSource": "https://cdn.shopify.com/s/files/1/1016/8373/files/coyote-Rhake_12x16-7I7A4647.jpg?v=1775404228" }
+  ],
+  "price": {
+    "amountUsd": 525,
+    "retailer": "Mission Workshop",
+    "url": "https://missionworkshop.com/products/rhake-ls-everyday-carry-backpack",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "priceComparison": [
+    { "retailer": "Mission Workshop", "url": "https://missionworkshop.com/products/rhake-ls-everyday-carry-backpack", "amountUsd": 525, "outcome": "captured - brand-direct, all four VX colorways $525.00, compare_at_price null so this is the regular price and not a promo; /collections/sale and /collections/outlet both return 0 products" },
+    { "retailer": "Huckberry", "url": "https://huckberry.com/search?q=rhake", "outcome": "not captured - HTTP 403, Cloudflare interactive challenge on search and every product path" },
+    { "retailer": "Amazon", "url": "https://www.amazon.com/s?i=merchant-items&me=A1PT3IQU3A72BB", "outcome": "not captured - HTTP 503 on every search and storefront request; Mission Workshop does operate a first-party Amazon storefront, so this is a refusal rather than an absent listing, and the comparison is weaker for it" }
+  ],
+  "review": {
+    "score": 3.75,
+    "scale": 5,
+    "source": "Nomads Nation",
+    "url": "https://nomadsnation.com/mission-workshop-rhake-ls-review/",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "specs": {
+    "capacityLiters": 22,
+    "weightGrams": 1497,
+    "dimensions": "19.5\" H x 13\" W x 5\" D",
+    "material": "Dimension Polyant VX-21"
+  }
+}

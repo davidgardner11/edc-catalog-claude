@@ -354,3 +354,41 @@ Phase 4 added `app/data/catalog.json` to `.gitignore` on the reasoning that ADR-
 - Running `pnpm ingest` now produces a reviewable diff. **Read it** — an unexpected change to a pack you did not touch is a signal, and it is the main thing this decision buys.
 - **Merge conflicts on this file are noise, not content.** Resolve them by re-running `pnpm ingest` on the merged inputs, never by hand-merging JSON — hand-merging is exactly the ADR-014 violation this decision must not invite.
 - One real risk to watch: `width`/`height` derive from the fetched originals, and Shopify's CDN honours the `Accept` header, so two machines populating a cold `.ingest-cache/` can receive different bytes for the same URL and emit different dimensions. That would produce a diff representing no actual change. Pinning `Accept` in `scripts/fetch-images.ts` is the fix if it ever bites.
+
+## ADR-031 — Ranks 8 and 11 inherit to the Catalyst 26 and the Rhake LS
+**2026-09-03 · Rank 11 accepted; rank 8 half superseded by ADR-032**
+
+> **Correction, 2026-09-03.** The rank 8 half of this entry rests on a premise that is false. The Catalyst 26 is itself discontinued: `mysteryranch.com/catalyst-26-pack` 301s to a category page, the storefront commerce API holds 163 items and zero Catalyst at any size, and the Everyday Carry category is down to 12 items with no 3-Zip pack of any kind. The cause is that YETI is retiring the Mystery Ranch **consumer** line and keeping only the military, wildfire and hunting business. So nothing "took over the Urban Assault URLs" — the brand left the category, and rank 8 has no inheritance path inside Mystery Ranch. No capture was made and no seed entry written. Rank 8 was therefore retired rather than inherited again — see ADR-032. The rank 11 half below stands and is captured.
+
+Phase 5 batch 2 found two more of the ranked twenty discontinued. Both ranks inherit to the direct successor, as ADR-019 did for the Black Ember Citadel R2 → R3.
+
+**Rank 8 — Mystery Ranch Urban Assault 24 → Catalyst 26.** The UA24 is gone, confirmed three independent ways: absent from `mysteryranch.com`'s 601-URL product sitemap; its own path serves generic homepage content while a sitemap-listed control product renders full detail through the same fetcher, so it is a soft 404 rather than a fetcher limitation; and its URLs are now titled "Catalyst 22" and "Catalyst 26" in the search index, with the Catalyst 26 holding its own canonical URL. The Catalyst line has taken over the Urban Assault URLs, which makes the succession the brand's own rather than our inference.
+
+**Rank 11 — Mission Workshop Rhake VX → Rhake LS.** The Rhake VX returns HTTP 404 on apex and www, is absent from the 263-URL product sitemap and from both the backpacks and VX-21 collections, and the site's own search returns only Rhake LS, Rhake LS Ultra and a legacy accessory. The surviving accessory name ("Cobra Buckle Set: HT500 & Black Camo Rhake") incidentally confirms the VX/HT500 fabric split the plan warned about — and it disappears on inheritance, because the Rhake LS is VX-21 only at a single price.
+
+**What does not transfer: the score.** ADR-009 forbids borrowing a predecessor's number, so the Urban Assault's Pack Hacker **8.9/10** does not move to the Catalyst 26 and no Rhake VX review moves to the Rhake LS. Each successor must be captured with a review of itself or not at all — `sourceSchema` requires `review`, so a successor with no independent score cannot be captured, and that is a human decision rather than something research works around. This is the same bind rank 4 hit (ADR-026) and rank 7 is currently sitting in.
+
+**Consequences:**
+- The ranked-20 table names Catalyst 26 at rank 8 and Rhake LS at rank 11, each marked as an inherited rank, matching how rank 9 is marked.
+- `data/seed.ts` `rationale` for both must say the rank was inherited rather than earned by this model, and say what the predecessor earned it for. ADR-019 established that convention; three of twenty entries now use it.
+- **Losing the UA24 costs the list its highest score.** At 8.9/10 it outscored everything in the current top five, so the ranking's acclaim basis is now carried by weaker evidence at rank 8 than it was. Revisit rank 8's *position* once the Catalyst 26 has been reviewed into one, rather than assuming the inherited slot is still right.
+- **The plan's "$60–$435" price spread is now in doubt.** The Rhake LS researched at **$525**, above the stated ceiling. Treat the spread as unverified until Phase 5 completes and restate it from captured data, exactly as ADR-023 did for the capacity range rather than patching one endpoint.
+- Four of twenty packs have now been discontinued mid-project (Citadel R2, Travel Pack 3, Urban Assault 24, Rhake VX). ADR-019's production check is not a formality — it has fired on 20% of the list.
+
+## ADR-032 — Rank 8 is retired; the list is 19 packs
+**2026-09-03 · Accepted · Supersedes the rank 8 half of ADR-031**
+
+ADR-031 inherited rank 8 from the discontinued Mystery Ranch Urban Assault 24 to the Catalyst 26. That was wrong on the facts: **the Catalyst 26 is discontinued too.** `mysteryranch.com/catalyst-26-pack` 301s to a category page while control products return 200, the storefront's commerce API holds 163 items and zero Catalyst at any size, and the Everyday Carry category is down to 12 items with no 3-Zip pack of any kind. The cause is not a URL move: **YETI is retooling the Mystery Ranch consumer line into YETI**, keeping only the military, wildfire and hunting business. The 163 survivors are exactly those categories.
+
+**Rank 8 is retired and every rank below it moves up one.** The list is now **19 packs across 18 brands**. Mystery Ranch leaves the catalog entirely.
+
+**Why not inherit again.** The only live 3-Zip candidate is the Rip Ruck 24 at $169, from the side of the business YETI is keeping — but no review score for it could be verified, and `sourceSchema` requires `review`, so it is very likely uncapturable in the same way the Aer Travel Pack 4 was (ADR-026). Inheriting a rank to a pack that cannot be captured moves the problem rather than solving it. It also fails ADR-017 independently: every readable Catalyst 26 listing is sold out, so no true "lowest available price" claim exists for the successor either.
+
+**Why not backfill a new rank 19.** Keeping the count at 20 would mean inventing a new entry, and ADR-018 makes the ordering editorial judgment that must stay auditable. A pack added to preserve a round number is exactly the kind of entry that has no defensible `rationale`. Nineteen well-founded ranks beat twenty with one make-weight.
+
+**Consequences:**
+- The ranked table, `data/seed.ts`, `CLAUDE.md` and the curator's agent definition all say **19**, not 20. Captured ranks renumbered 9→8, 10→9, 11→10, 12→11; the six above rank 8 are untouched.
+- **The brand spread drops to 18** (Aer still appears twice). ADR-008's "20 packs" scope figure is now 19 — it was a scope cut, not a target, so it does not need reopening.
+- `backpackSchema` still allows `rank` up to 20. Deliberately left alone: a permissive ceiling costs nothing and tightening it is a pipeline change with no defect behind it. Uniqueness is what actually matters and is still enforced.
+- **Rank 7 (Bellroy) is still an open gap** and is unrelated to this. It is unresearched, not retired.
+- **Five of the original twenty have now been discontinued mid-project** — Citadel R2, Travel Pack 3, Urban Assault 24, Rhake VX, and the Catalyst 26 that was meant to replace one of them. A successor dying before it can be captured is a new failure shape: ADR-019's production check must be run against the *successor* too, not just the incumbent, before an inheritance is written into an ADR.

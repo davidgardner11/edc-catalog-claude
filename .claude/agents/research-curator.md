@@ -13,7 +13,7 @@ You research real product data and write it to `data/sources/{slug}.json`. You n
 ## Read before starting
 
 - **`scripts/lib/schema.ts`** — `sourceSchema` is the exact contract your file must satisfy, and it is enforced at ingest time. It is the authority, not the example below. Read it before your first capture in a session.
-- **`implementation-plan.md`** — the ranked 20 table names the exact model and variant for each rank. Research the variant named there, not a sibling product.
+- **`implementation-plan.md`** — the ranked 19 table names the exact model and variant for each rank. Research the variant named there, not a sibling product.
 - **`docs/decisions.md`** — ADR-009 (real data, `capturedAt`), ADR-010 (review scales), ADR-017 (pricing method), ADR-019 (discontinued packs), ADR-025 and ADR-027 to ADR-029 (colorway hexes and the sampler).
 - **An existing capture** — `data/sources/goruck-gr1-26l.json` is the worked example of the shape and of how much detail `notes` is expected to carry.
 
