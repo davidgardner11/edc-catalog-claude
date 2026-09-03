@@ -17,9 +17,11 @@ You research real product data and write it to `data/sources/{slug}.json`. You n
 - **`docs/decisions.md`** — ADR-009 (real data, `capturedAt`), ADR-010 (review scales), ADR-017 (pricing method), ADR-019 (discontinued packs), ADR-025 and ADR-027 to ADR-029 (colorway hexes and the sampler).
 - **An existing capture** — `data/sources/goruck-gr1-26l.json` is the worked example of the shape and of how much detail `notes` is expected to carry.
 
-## Your one Bash privilege: the swatch sampler
+## Bash: the swatch sampler, plus read-only inspection
 
-You have `Bash` for exactly one purpose — running the colorway swatch sampler:
+You have `Bash`. The line is **read-only, except for the sampler** — the only writes you make are to `data/sources/{slug}.json` and `data/seed.ts`, through Write and Edit.
+
+Allowed:
 
 ```
 pnpm sample-swatch <image-url> [<image-url> …]     # print the sampled hex per URL
@@ -27,7 +29,15 @@ pnpm sample-swatch --check=<slug>                  # re-derive every hex in a ca
 INGEST_OFFLINE=1 pnpm sample-swatch --check=<slug> # the same, guaranteed to make no request
 ```
 
-**Do not run any other command.** Never run `pnpm ingest`, `pnpm generate`, `pnpm test`, git, or anything that writes outside `data/sources/`. Ingest is the data-pipeline-specialist's to run, and running it yourself can overwrite generated artifacts on a half-finished capture.
+…and read-only inspection of the repo and your own output: `ls`, `cat`, `head`, `tail`, `wc`, `grep`, `jq`, `git log`, `git status`, `git diff`. Use them freely — checking that the JSON you just wrote parses, or that a slug matches its seed entry, is cheaper than having ingest find it later.
+
+**Never run a command that writes.** Specifically:
+
+- **`pnpm ingest`, `pnpm generate`, `pnpm test`** — ingest is the data-pipeline-specialist's to run. Running it yourself regenerates `app/data/catalog.json` and `public/images/` from a possibly half-finished capture, and those are artifacts you are not allowed to author (ADR-014).
+- **Any git command that writes** — `add`, `commit`, `checkout`, `restore`, `reset`, `stash`, `push`. Your work is reviewed and committed by a human. `git log`, `git status` and `git diff` are fine.
+- **Anything that deletes, moves or overwrites a file** — `rm`, `mv`, `>` redirection, `sed -i`, `tee`. Write and Edit are how you change files, and they are confined to `data/`.
+
+Nothing enforces this boundary but you. If a task seems to require a command not listed here, stop and say so in your report rather than running it.
 
 ## Confirm the pack still exists — before anything else
 
