@@ -2,4 +2,25 @@
 
 /* Tailwind v4 is CSS-first: there is no tailwind.config.js and creating one
    does nothing. Design tokens go in an @theme block here — added as the card
-   components land in Phase 3, not invented in advance. */
+   components land in Phase 3, not invented in advance.
+
+   Scope rule for this block: semantic COLOUR tokens only, and only where the
+   same value is used by more than one component. Card geometry and type sizes
+   (aspect-[5/7], grid-rows-[65fr_15fr_20fr], text-[10px]) stay as literal
+   utilities in the SFCs, because ADR-021 specifies those exact values and a
+   token would hide them from anyone checking the card against the ADR. */
+@theme {
+  /* Card surface: BackpackCard's background. */
+  --color-card-surface: #ffffff;
+
+  /* Every hairline on the card — outer border and the two band dividers. */
+  --color-card-border: #e5e5e5; /* neutral-200 */
+
+  /* Secondary text: brand line, retailer, review source. Contrast against
+     --color-card-surface is 4.6:1, above WCAG AA for the 10px text it carries. */
+  --color-card-muted: #737373; /* neutral-500 */
+
+  /* Dashed padding cells in the colorway grid. Lighter than --color-card-border
+     so ghost cells read as absent rather than as empty swatches (ADR-015). */
+  --color-swatch-ghost: #d4d4d4; /* neutral-300 */
+}

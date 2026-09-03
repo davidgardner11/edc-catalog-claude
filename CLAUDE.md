@@ -4,16 +4,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Status
 
-**Phase 1 complete — scaffolded.** `package.json`, `nuxt.config.ts`, `tsconfig.json`,
-`app/{app.vue,pages/index.vue,assets/css/main.css}` and a `scripts/ingest.ts` stub exist.
-`pnpm dev` and `pnpm generate` both work; the index page is a placeholder. No types, fixtures,
-components, or real ingest code yet.
+**Phase 3 complete — the card renders.** Scaffold, `app/types/backpack.ts`,
+`app/data/fixtures.ts` (3 packs), `app/utils/{format,color,cycle,image}.ts`, and the six card
+components (`BackpackCard`, `CardCarousel`, `CardLabel`, `ColorwayGrid`, `PriceBlock`, `ScoreBlock`)
+exist. `app/pages/index.vue` renders the fixtures; `pnpm typecheck` and `pnpm generate` both pass.
+No toolbar, no detail route, no tests, and `scripts/ingest.ts` is still the stub — so no images.
 
-`edc-catalog-app-implementation-plan.md` is the source of truth for architecture, data model, the
+`implementation-plan.md` is the source of truth for architecture, data model, the
 ranked pack list, ingest design, and build order. Read it before starting work. When implementation
 diverges from it, update the plan in the same change rather than letting the two drift.
 
-Build order is defined there; next up is Phase 2 — `app/types/backpack.ts` plus fixtures.
+Build order is defined there; next up is Phase 4 — the ingest pipeline and its zod schema.
 
 ## Where things are written down
 
@@ -23,10 +24,10 @@ that must always hold. Longer reference material lives in files you read on dema
 | File | Contents | Read it when |
 | --- | --- | --- |
 | `docs/decisions.md` | Append-only decision log — the **why** behind the rules below | Considering changing a pinned version, an architectural constraint, or anything this file states as a rule |
-| `docs/component-conventions.md` | Naming, props, slots, file layout *(added at plan Phase 3)* | Writing or modifying any Vue component |
+| `docs/component-conventions.md` | Naming, props, logic placement, styling, a11y patterns, card rules | Writing or modifying any Vue component |
 | `app/types/backpack.ts` | The data contract, as code *(added at plan Phase 2)* | Touching catalog data in any layer |
 | `README.md` | Setup, commands, project overview | Onboarding, or when setup steps change |
-| `edc-catalog-app-implementation-plan.md` | Architecture, ranked 20, ingest design, build order, supervision guide | Starting any phase of work |
+| `implementation-plan.md` | Architecture, ranked 20, ingest design, build order, supervision guide | Starting any phase of work |
 
 Do not create a second always-read context file. This one already fills that role; a parallel file
 would be opt-in, and an agent that forgets to read it drifts silently.
@@ -91,10 +92,6 @@ must never be hand-edited. To change catalog content, edit `data/seed.ts` or
 `data/sources/{slug}.json` and re-run. Originals are cached in gitignored `.ingest-cache/` so image
 processing can be retuned without re-fetching from any retailer.
 
-Two derived fields are computed once at ingest and must never be recomputed at runtime: each image's
-`labelColor` (white or black, by WCAG relative luminance sampled over the label's bounding box) and
-`needsScrim`. Do not sample a canvas in a component.
-
 Images are emitted per width as `public/images/{slug}/{n}-{w}.{avif,webp}` for `w ∈ {640, 1280}`.
 `CarouselImage.base` omits the width and extension; the component builds
 `` `${base}-${w}.avif ${w}w` `` from `widths`. `width`/`height` are the intrinsic size of the
@@ -102,27 +99,39 @@ Images are emitted per width as `public/images/{slug}/{n}-{w}.{avif,webp}` for `
 
 ### Invariants that are easy to break
 
+- **`ColorFamily` is a closed union of 13 values** (ADR-022), defined in `app/types/backpack.ts`.
+  Ingest maps free-form colorway names onto exactly those members and the toolbar's colour filter
+  facets on exactly those members — if either side invents its own list they disagree silently. Widen
+  the union in the type file; never work around it with a loose `string`.
+- **Capacities in the plan's ranked-20 table are unverified** (ADR-023). The stated capacity spread
+  was wrong at both ends and has been withdrawn. Do not quote a capacity range until Phase 5 captures
+  `capacityLiters` per pack.
 - **Review scales differ per pack.** `review.scale` is 5.0 (retailer) or 10.0 (enthusiast review
   sites). Display uses raw `score`/`scale`; **sorting and filtering must use `score / scale`
   normalized to 0–1.** Conflating these is the easiest bug to introduce here.
-- **The carousel label must not move or re-render** when the image changes. It is a sibling of the
-  `<img>` and is never keyed to the image index — enforce structurally, not by convention.
-- **Card geometry is uniform across every card.** `aspect-[5/7]`, and the 65/35 split uses
-  `grid-rows-[65fr_35fr]` rather than percentage heights so content cannot shift it. The colorway
-  grid always renders exactly **8 cells (4 cols × 2 rows)**: ghost-padded at 8 or fewer; above 8,
-  cell 8 becomes a `>` pager showing 7 colorways per page. The pager stays in cell 8 on every page,
-  including a partial last page.
+- **Card geometry is uniform across every card.** `aspect-[5/7]`, inner
+  `grid grid-rows-[65fr_15fr_20fr]` — three bands: carousel 65%, brand+name 15%, meta row 20%
+  (ADR-021). Use `fr`, **never** `h-[65%]`/`h-[15%]`/`h-[20%]`; fractional rows are what keep the
+  split exact and immune to content pushing it around — but `fr` alone is not enough: every band
+  also needs `min-h-0`, or its automatic min-content floor lets a tall child stretch it (ADR-024).
+  The model name must `truncate` — a wrapping name grows band 2 and breaks the ratio. Band 3 is three columns: colorway grid, price over
+  retailer, score over `review.source`.
+- **The carousel label must not move or re-render** when the image changes. Since ADR-021 this is
+  structural for free: the label lives in band 2, a different grid row from the carousel, so nothing
+  that changes on image swap can reach it. Do not reintroduce an overlay label on the card.
+- **The colorway grid always renders exactly 8 cells (4 cols × 2 rows)**: ghost-padded at 8 or fewer;
+  above 8, cell 8 becomes a `>` pager showing 7 colorways per page. The pager stays in cell 8 on
+  every page, including a partial last page.
 - **Everything cyclable on a card wraps.** The carousel (last→first, first→last) and the colorway
   pager (last page→first page). Use modulo, never bounds-clamping, and never render a disabled
-  control. The pager's handler must `stopPropagation` so it does not also advance the carousel or
-  navigate to the detail route.
+  control. The pager's handler must `stopPropagation` so it does not navigate to the detail route.
 
 ## Subagents
 
 `.claude/agents/` defines five scoped specialists; prefer them over general edits in their areas.
 
 - **`frontend-specialist`** — `app/`: Vue SFCs, Tailwind, accessibility, responsive layout.
-- **`data-pipeline-specialist`** — `scripts/` and `data/`: ingest, sharp, contrast precompute, zod.
+- **`data-pipeline-specialist`** — `scripts/` and `data/`: ingest, sharp, zod.
 - **`research-curator`** — web research into `data/sources/{slug}.json`; never runs ingest.
 - **`test-engineer`** — `tests/` and `*.test.ts`; reports defects rather than editing app code to
   make a test pass.

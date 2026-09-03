@@ -14,7 +14,7 @@ frontend-specialist and data-pipeline-specialist respectively.
 
 ## Read before starting
 
-- **`edc-catalog-app-implementation-plan.md`** — the ranked 20 table names the exact model and variant
+- **`implementation-plan.md`** — the ranked 20 table names the exact model and variant
   for each rank. Research the variant named there, not a sibling product.
 - **`docs/decisions.md`** — ADR-009 (real data, `capturedAt`), ADR-010 (review scales), ADR-017
   (pricing method), ADR-019 (discontinued packs).
