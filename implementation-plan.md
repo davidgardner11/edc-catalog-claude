@@ -196,8 +196,16 @@ app/components/PriceBlock.vue    band 3 col 2 — $249 bold / retailer beneath
 app/components/ScoreBlock.vue    band 3 col 3 — 4.4/5.0 / source beneath
 app/components/CatalogToolbar.vue
 app/composables/useCatalogFilters.ts   URL-query-backed filter/sort state
-app/utils/{format,color}.ts            pure, unit-tested
+app/utils/format.ts                    price, score display, normalized score  — pure, unit-tested
+app/utils/color.ts                     ColorFamily list/labels, name -> family — pure, unit-tested
+app/utils/cycle.ts                     wrapping index arithmetic, colorway paging — pure
+app/utils/image.ts                     srcset/src from CarouselImage — pure
 ```
+
+`cycle.ts` and `image.ts` were added in Phase 3 (ADR-024): the Verification section below names
+carousel wraparound and swatch paging as unit tests, so that logic cannot live in an SFC.
+Components built in Phase 3: `BackpackCard`, `CardCarousel`, `CardLabel`, `ColorwayGrid`,
+`PriceBlock`, `ScoreBlock`. `CatalogToolbar` and the detail route are Phase 6.
 
 **Card geometry.** Three bands, top to bottom (ADR-021):
 

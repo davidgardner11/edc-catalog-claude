@@ -4,16 +4,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Status
 
-**Phase 1 complete — scaffolded.** `package.json`, `nuxt.config.ts`, `tsconfig.json`,
-`app/{app.vue,pages/index.vue,assets/css/main.css}` and a `scripts/ingest.ts` stub exist.
-`pnpm dev` and `pnpm generate` both work; the index page is a placeholder. No types, fixtures,
-components, or real ingest code yet.
+**Phase 3 complete — the card renders.** Scaffold, `app/types/backpack.ts`,
+`app/data/fixtures.ts` (3 packs), `app/utils/{format,color,cycle,image}.ts`, and the six card
+components (`BackpackCard`, `CardCarousel`, `CardLabel`, `ColorwayGrid`, `PriceBlock`, `ScoreBlock`)
+exist. `app/pages/index.vue` renders the fixtures; `pnpm typecheck` and `pnpm generate` both pass.
+No toolbar, no detail route, no tests, and `scripts/ingest.ts` is still the stub — so no images.
 
 `implementation-plan.md` is the source of truth for architecture, data model, the
 ranked pack list, ingest design, and build order. Read it before starting work. When implementation
 diverges from it, update the plan in the same change rather than letting the two drift.
 
-Build order is defined there; next up is Phase 2 — `app/types/backpack.ts` plus fixtures.
+Build order is defined there; next up is Phase 4 — the ingest pipeline and its zod schema.
 
 ## Where things are written down
 
@@ -23,7 +24,7 @@ that must always hold. Longer reference material lives in files you read on dema
 | File | Contents | Read it when |
 | --- | --- | --- |
 | `docs/decisions.md` | Append-only decision log — the **why** behind the rules below | Considering changing a pinned version, an architectural constraint, or anything this file states as a rule |
-| `docs/component-conventions.md` | Naming, props, slots, file layout *(added at plan Phase 3)* | Writing or modifying any Vue component |
+| `docs/component-conventions.md` | Naming, props, logic placement, styling, a11y patterns, card rules | Writing or modifying any Vue component |
 | `app/types/backpack.ts` | The data contract, as code *(added at plan Phase 2)* | Touching catalog data in any layer |
 | `README.md` | Setup, commands, project overview | Onboarding, or when setup steps change |
 | `implementation-plan.md` | Architecture, ranked 20, ingest design, build order, supervision guide | Starting any phase of work |
@@ -111,8 +112,9 @@ Images are emitted per width as `public/images/{slug}/{n}-{w}.{avif,webp}` for `
 - **Card geometry is uniform across every card.** `aspect-[5/7]`, inner
   `grid grid-rows-[65fr_15fr_20fr]` — three bands: carousel 65%, brand+name 15%, meta row 20%
   (ADR-021). Use `fr`, **never** `h-[65%]`/`h-[15%]`/`h-[20%]`; fractional rows are what keep the
-  split exact and immune to content pushing it around. The model name must `truncate` — a wrapping
-  name grows band 2 and breaks the ratio. Band 3 is three columns: colorway grid, price over
+  split exact and immune to content pushing it around — but `fr` alone is not enough: every band
+  also needs `min-h-0`, or its automatic min-content floor lets a tall child stretch it (ADR-024).
+  The model name must `truncate` — a wrapping name grows band 2 and breaks the ratio. Band 3 is three columns: colorway grid, price over
   retailer, score over `review.source`.
 - **The carousel label must not move or re-render** when the image changes. Since ADR-021 this is
   structural for free: the label lives in band 2, a different grid row from the carousel, so nothing

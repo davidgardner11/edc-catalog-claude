@@ -396,3 +396,61 @@ editorial ranking call on researched data, and no research has happened yet.
 **Consequence:** treat *every* capacity in the ranked-20 table as unverified until Phase 5. The two
 errors found were in the two packs already flagged as likely superseded (ADR-019) plus one nobody
 suspected, which is the actual lesson — the table's specs were never sourced.
+
+## ADR-024 — Card component decisions Phase 3 committed to
+**2026-09-02 · Accepted**
+
+Five things building the card set settled that later phases must not undo. Conventions that follow
+from them are in `docs/component-conventions.md`; this entry is the *why*.
+
+**Two more util modules than the plan listed.** The plan's file listing said
+`app/utils/{format,color}.ts`. It is now four: `cycle.ts` (wrapping index arithmetic and the whole
+colorway-page render model) and `image.ts` (`srcset`/`src` construction from `CarouselImage`) were
+added, and the plan's listing updated to match. **Why:** the plan's own Verification section names
+carousel wraparound at n=1, and swatch paging at 0/4/8/9/15/22, as unit tests. Logic that must be
+unit-tested cannot live in an SFC, and neither belongs in a formatter or a colour module.
+`colorwayPage()` deliberately returns one render model rather than three helpers, because that is
+what makes the ADR-015 invariant assertable in one line:
+`items.length + ghostCells + (hasPager ? 1 : 0) === 8`.
+
+**The detail-route link is deferred behind an optional `to` prop, not hard-coded.** `BackpackCard`
+and `CardLabel` take `to?: string`; when it is absent the model name renders as plain text, when
+present it renders a `<NuxtLink>`. Phase 3 passes nothing. **Why:** `/pack/[slug]` does not exist
+yet and `nitro.prerender.crawlLinks` is on, so emitting the link now would have every card ask the
+prerenderer for a 404. **Consequences:** Phase 6 turns navigation on by passing
+`` :to="`/pack/${pack.slug}`" `` and changes nothing else. Navigation is the **name link** — not a
+whole-card click handler and not a stretched-link overlay, which would have to cover band 1 and
+would swallow the carousel's click zones. The pager keeps its `stopPropagation` (ADR-015) as a
+guard for the card-body handler Phase 6 may add; it is not dead code to be tidied away.
+
+**Carousel images are all mounted and toggled with `v-show`, not swapped through one `<img src>`.**
+**Why:** mutating `srcset` on a live `<picture>`/`<source>` is not reliably re-evaluated across
+browsers, and forcing a keyed remount instead re-decodes on every click — a visible flash on a
+control the user is expected to press repeatedly. At most 5 images per pack (ADR-008) this costs
+nothing. **Consequence:** hidden images are `display: none`, so `loading="lazy"` never resolves for
+them (no box, so they never intersect). The component therefore flips neighbours to
+`loading="eager"` on the *first* interaction rather than at mount — preloading at mount would cost
+20 cards × up to 5 images on a page nobody may touch. The first swap can still flash; every one
+after it does not.
+
+**The carousel's dot strip is a row below the image, and it renders even at one image.** The plan
+had dots inside band 1 without saying whether they overlay the photo. They do not: band 1 is
+`grid-rows-[1fr_auto]`, image region then a fixed 16px dot row. **Why:** ADR-021 moved the label off
+the photo because an overlay competes with the product; the same reasoning applies to dots. The
+empty row is kept for single-image packs so the image region is the same height on all 20 cards —
+otherwise geometry stays legal per ADR-021 (bands are unchanged) while cards visibly disagree.
+**Consequence:** usable image height is band 1 minus 16px, uniformly.
+
+**`min-h-0` on every band is part of the geometry rule, not a detail.** `grid-rows-[65fr_15fr_20fr]`
+alone does *not* pin the split: an `fr` track keeps an automatic min-content floor, so a tall child
+can still stretch its band. Each of the three bands is `min-h-0 overflow-hidden`. **Consequence:**
+"use `fr`, never `%`" (ADR-021) is necessary but not sufficient — a future band that forgets
+`min-h-0` will pass code review and fail the E2E ratio assertion.
+
+**Also settled, smaller:** `@theme` in `main.css` carries semantic *colour* tokens only
+(`card-surface`, `card-border`, `card-muted`, `swatch-ghost`); the geometry and type sizes ADR-021
+specifies stay as literal utilities in the SFC, so the card can be checked against the ADR by
+reading the card. And `app/pages/index.vue` imports `app/data/fixtures.ts` directly — the fixture
+file's header comment previously forbade that outright and has been narrowed to the rule that
+actually matters (fixtures must never *ship as catalog data*, ADR-009). Phase 6 swaps the import for
+`catalog.json`.
