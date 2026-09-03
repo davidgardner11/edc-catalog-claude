@@ -1,0 +1,374 @@
+[
+  {
+    "rank": 3,
+    "slug": "goruck-gr1-26l",
+    "name": "GR1 26L",
+    "brand": "GORUCK",
+    "images": [
+      {
+        "base": "/images/goruck-gr1-26l/0",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "GORUCK GR1 26L — view 1 of 5"
+      },
+      {
+        "base": "/images/goruck-gr1-26l/1",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "GORUCK GR1 26L — view 2 of 5"
+      },
+      {
+        "base": "/images/goruck-gr1-26l/2",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "GORUCK GR1 26L — view 3 of 5"
+      },
+      {
+        "base": "/images/goruck-gr1-26l/3",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "GORUCK GR1 26L — view 4 of 5"
+      },
+      {
+        "base": "/images/goruck-gr1-26l/4",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "GORUCK GR1 26L — view 5 of 5"
+      }
+    ],
+    "colorways": [
+      {
+        "name": "Black",
+        "hex": "#2f292d",
+        "family": "black"
+      },
+      {
+        "name": "Ranger Green",
+        "hex": "#4d493b",
+        "family": "green"
+      },
+      {
+        "name": "Wolf Grey",
+        "hex": "#575654",
+        "family": "grey"
+      },
+      {
+        "name": "Coyote",
+        "hex": "#936f3e",
+        "family": "brown"
+      },
+      {
+        "name": "Khaki",
+        "hex": "#816e59",
+        "family": "tan"
+      },
+      {
+        "name": "Navy + Gold",
+        "hex": "#2d2d3a",
+        "family": "navy"
+      },
+      {
+        "name": "Multicam",
+        "hex": "#817444",
+        "family": "multi"
+      },
+      {
+        "name": "Multicam Arid",
+        "hex": "#8a725b",
+        "family": "multi"
+      },
+      {
+        "name": "Alpine Multicam",
+        "hex": "#c1c1c0",
+        "family": "multi"
+      },
+      {
+        "name": "DCU Camo",
+        "hex": "#6f624e",
+        "family": "multi"
+      },
+      {
+        "name": "Black Multicam Slick",
+        "hex": "#373233",
+        "family": "multi"
+      },
+      {
+        "name": "Black Tiger Stripe",
+        "hex": "#383138",
+        "family": "multi"
+      },
+      {
+        "name": "Black Frogskin + Wolf Grey",
+        "hex": "#4a434a",
+        "family": "multi"
+      }
+    ],
+    "price": {
+      "amountUsd": 395,
+      "retailer": "GORUCK",
+      "url": "https://www.goruck.com/products/gr1-usa",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "review": {
+      "score": 8.6,
+      "scale": 10,
+      "source": "Pack Hacker",
+      "url": "https://www.packhacker.com/travel-gear/goruck/gr1/",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "specs": {
+      "capacityLiters": 26,
+      "weightGrams": 1406,
+      "dimensions": "12\" W x 20\" H x 6.75\" D",
+      "material": "1000D CORDURA"
+    }
+  },
+  {
+    "rank": 10,
+    "slug": "able-carry-max-edc",
+    "name": "Max EDC 26L",
+    "brand": "Able Carry",
+    "images": [
+      {
+        "base": "/images/able-carry-max-edc/0",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1600,
+        "alt": "Able Carry Max EDC 26L — view 1 of 5"
+      },
+      {
+        "base": "/images/able-carry-max-edc/1",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1600,
+        "alt": "Able Carry Max EDC 26L — view 2 of 5"
+      },
+      {
+        "base": "/images/able-carry-max-edc/2",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1600,
+        "alt": "Able Carry Max EDC 26L — view 3 of 5"
+      },
+      {
+        "base": "/images/able-carry-max-edc/3",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1600,
+        "alt": "Able Carry Max EDC 26L — view 4 of 5"
+      },
+      {
+        "base": "/images/able-carry-max-edc/4",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Able Carry Max EDC 26L — view 5 of 5"
+      }
+    ],
+    "colorways": [
+      {
+        "name": "Ripstop Black",
+        "hex": "#3c3c3f",
+        "family": "black"
+      },
+      {
+        "name": "Ripstop Olive",
+        "hex": "#4a4232",
+        "family": "olive"
+      },
+      {
+        "name": "Ripstop Tan",
+        "hex": "#a37a57",
+        "family": "tan"
+      },
+      {
+        "name": "Tarmac Black",
+        "hex": "#272727",
+        "family": "black"
+      },
+      {
+        "name": "Earth Green",
+        "hex": "#56533c",
+        "family": "green"
+      },
+      {
+        "name": "Desert Brown",
+        "hex": "#c0874b",
+        "family": "brown"
+      },
+      {
+        "name": "Ocean Blue",
+        "hex": "#2e4873",
+        "family": "blue"
+      }
+    ],
+    "price": {
+      "amountUsd": 278,
+      "retailer": "Able Carry",
+      "url": "https://ablecarry.com/products/max-edc",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "review": {
+      "score": 4.8,
+      "scale": 5,
+      "source": "Able Carry (330 verified reviews)",
+      "url": "https://ablecarry.com/products/max-edc",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "specs": {
+      "capacityLiters": 26,
+      "weightGrams": 1451,
+      "dimensions": "19.6\" H x 11.8\" W x 7.5\" D",
+      "material": "CORDURA Ripstop Nylon; X-Pac VX21 / X42 + re/core 1000D on X-Pac colorways"
+    }
+  },
+  {
+    "rank": 12,
+    "slug": "alpaka-elements-backpack-pro",
+    "name": "Elements Backpack Pro",
+    "brand": "ALPAKA",
+    "images": [
+      {
+        "base": "/images/alpaka-elements-backpack-pro/0",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1506,
+        "alt": "ALPAKA Elements Backpack Pro — view 1 of 5"
+      },
+      {
+        "base": "/images/alpaka-elements-backpack-pro/1",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1506,
+        "alt": "ALPAKA Elements Backpack Pro — view 2 of 5"
+      },
+      {
+        "base": "/images/alpaka-elements-backpack-pro/2",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1506,
+        "alt": "ALPAKA Elements Backpack Pro — view 3 of 5"
+      },
+      {
+        "base": "/images/alpaka-elements-backpack-pro/3",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1506,
+        "alt": "ALPAKA Elements Backpack Pro — view 4 of 5"
+      },
+      {
+        "base": "/images/alpaka-elements-backpack-pro/4",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1506,
+        "alt": "ALPAKA Elements Backpack Pro — view 5 of 5"
+      }
+    ],
+    "colorways": [
+      {
+        "name": "Black - Axoflux 400D Ripstop",
+        "hex": "#1d1d1d",
+        "family": "black"
+      },
+      {
+        "name": "Green - Axoflux 400D Ripstop",
+        "hex": "#393625",
+        "family": "green"
+      },
+      {
+        "name": "Moonlight Blue - Axoflux 400D Ripstop",
+        "hex": "#1c2330",
+        "family": "navy"
+      },
+      {
+        "name": "Black - Axoflux 600D",
+        "hex": "#474747",
+        "family": "black"
+      },
+      {
+        "name": "Army Green - Axoflux 600D",
+        "hex": "#4f4c3d",
+        "family": "green"
+      },
+      {
+        "name": "Black - X-Pac VX42",
+        "hex": "#4f4f51",
+        "family": "black"
+      },
+      {
+        "name": "Olive Green - X-Pac X42",
+        "hex": "#49492d",
+        "family": "olive"
+      }
+    ],
+    "price": {
+      "amountUsd": 189,
+      "retailer": "ALPAKA",
+      "url": "https://www.alpakagear.com/products/elements-backpack-pro",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "review": {
+      "score": 8.1,
+      "scale": 10,
+      "source": "Pack Hacker",
+      "url": "https://www.packhacker.com/travel-gear/alpaka/elements-backpack-pro/",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "specs": {
+      "capacityLiters": 26,
+      "weightGrams": 1300,
+      "dimensions": "18.9\" H x 12.2\" W x 7.09\" D",
+      "material": "840D ballistic nylon, YKK AquaGuard zippers"
+    }
+  }
+]
