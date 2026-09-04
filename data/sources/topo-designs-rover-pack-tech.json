@@ -1,0 +1,41 @@
+{
+  "slug": "topo-designs-rover-pack-tech",
+  "productUrl": "https://topodesigns.com/products/rover-pack-tech",
+  "notes": "Captured 2026-09-03 from Topo Designs' own Shopify storefront: the rendered product page plus the Black-specific variant page (https://topodesigns.com/products/rover-pack-tech-black), since Black and Navy are sold as two separate product handles rather than one product with a colour option. topodesigns.com/robots.txt is a standard Shopify agent-facing robots.txt (Allow on product/collection pages, Disallow on /admin, /cart, /checkout, /account and AJAX endpoints) so this fetch is permitted. IN PRODUCTION: both listings are live at $149.00 with no compare-at price; Navy is in stock, Black currently reads 'Sold out' on its own page but remains a listed, orderable-when-restocked colourway rather than a removed one, so it is still captured. (An unrelated stale search hit, 'rover-pack-tech-final-sale-1', 404s and is not this product.) PRICE COMPARISON was brand-direct only: REI's 'Topo Designs Rover Pack' listing ($109) is the Classic, not the Tech, and is a different product, so it was not used; Huckberry lists a Rover Pack Tech but its storefront returned HTTP 403 (Cloudflare challenge) on every path; Amazon's Rover Pack Tech listing (B0DTV2VZV9) rendered no price in the fetched HTML (JS-loaded pricing), so it is recorded as not captured rather than guessed. Both colorway hexes were sampled with `pnpm sample-swatch` from Topo's own full-resolution (1946px) product photographs; swatchSource records which. Neither name needed a family override - colorFamilyFromName resolves 'Black' -> black and 'Navy' -> navy cleanly against the sampled hexes.",
+  "images": [
+    { "url": "https://topodesigns.com/cdn/shop/products/Rover-Pack-Tech-Navy-1.jpg?v=1709757940&width=1946" },
+    { "url": "https://topodesigns.com/cdn/shop/products/Rover-Pack-Tech-Navy-2.jpg?v=1709757940&width=1946" },
+    { "url": "https://topodesigns.com/cdn/shop/products/Rover-Pack-Tech-Black-1.jpg?v=1709757940&width=1946" },
+    { "url": "https://topodesigns.com/cdn/shop/files/topo_bag_4_white_bg.jpg?v=1783622366&width=1946" },
+    { "url": "https://topodesigns.com/cdn/shop/files/topo_bag_1_white_bg.jpg?v=1783622366&width=1946" }
+  ],
+  "colorways": [
+    { "name": "Navy", "hex": "#314256", "swatchSource": "https://topodesigns.com/cdn/shop/products/Rover-Pack-Tech-Navy-1.jpg?v=1709757940&width=1946" },
+    { "name": "Black", "hex": "#353439", "swatchSource": "https://topodesigns.com/cdn/shop/products/Rover-Pack-Tech-Black-1.jpg?v=1709757940&width=1946" }
+  ],
+  "price": {
+    "amountUsd": 149,
+    "retailer": "Topo Designs",
+    "url": "https://topodesigns.com/products/rover-pack-tech",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "priceComparison": [
+    { "retailer": "Topo Designs", "url": "https://topodesigns.com/products/rover-pack-tech", "amountUsd": 149, "outcome": "captured - brand-direct, both colorways $149.00, no compare-at price" },
+    { "retailer": "Huckberry", "url": "https://huckberry.com/store/topo-designs/category/p/62550-rover-pack-tech", "outcome": "not captured - HTTP 403, Cloudflare interactive challenge" },
+    { "retailer": "Amazon", "url": "https://www.amazon.com/Topo-Designs-Rover-Pack-Tech/dp/B0DTV2VZV9", "outcome": "not captured - price is loaded client-side; the fetched HTML contained no price" },
+    { "retailer": "REI", "outcome": "not captured - REI carries the Classic Rover Pack ($109) but no Rover Pack Tech listing was found; the Classic is a different product and not a comparable price" }
+  ],
+  "review": {
+    "score": 8.0,
+    "scale": 10,
+    "source": "Pack Hacker",
+    "url": "https://www.packhacker.com/travel-gear/topo-designs/rover-pack-tech/",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "specs": {
+    "capacityLiters": 24.3,
+    "weightGrams": 816,
+    "dimensions": "17 in x 11 in x 5 in",
+    "material": "1000D recycled nylon (400D and 210D recycled nylon on liner and accents)"
+  }
+}

@@ -52,9 +52,74 @@
  *     content to any fetch, and every US retailer refused: Amazon HTTP 500,
  *     REI HTTP 403, Huckberry HTTP 403, Nordstrom's listing sold out.
  *
- * Rank 7 remains absent. Substituting a different pack for it is a
- * ranking decision (ADR-019, ADR-026, ADR-031) and needs a human and an ADR,
- * not a substitution by the agent that found the gap.
+ * Phase 5 batches 3 and 4 covered every remaining rank - 7 and 12-19 - and
+ * added seven: 12, 13, 14, 15, 17, 18 and 19. That brings the file to 17 of the
+ * ranked 19. Three of the seven needed a note here:
+ *
+ *   - Rank 13, Osprey Daylite Plus, is the deepest retailer fallback in the
+ *     catalog. osprey.com returned HTTP 403 on every path tried, including its
+ *     own robots.txt, as did REI, Dick's and Scuba.com; the price, the 14
+ *     colorways and every swatch photograph come from Outdoor Gear Exchange and
+ *     Active Endeavors instead. ADR-009's fallback chain is doing real work
+ *     here, and no brand-direct figure was ever read.
+ *   - Rank 17 is now named 'Barrage 22L Pack', not the plan's 'Barrage Cargo
+ *     Backpack'. Chrome restructured the line into fixed-name products and the
+ *     old URL 404s; the pack is the same one - same Pack Hacker review URL,
+ *     same cargo-net rolltop - and its current spec block reads 19-22L, one
+ *     liter off the plan's '18->22L'. This is a rename, not an inheritance:
+ *     ADR-019 does not apply and the rank is not marked inherited.
+ *   - Rank 19's product copy no longer says 'ballistic nylon' anywhere. Filson
+ *     now calls it 1000D nylon; Huckberry still lists the identical pack under
+ *     the old name, which is what confirmed the match against the plan's
+ *     'Dryden Ballistic Nylon'.
+ *
+ * Two ranks are still absent, both for the same reason - a required field could
+ * not be read live - and both need a human, because filling either one means
+ * either substituting a product or accepting an unverified number:
+ *
+ *   - Rank 7, Bellroy Classic Backpack Plus. Retried in batch 3 and got
+ *     further than batch 2 without getting there. Confirmed in production, and
+ *     a real Pack Hacker score now exists (8.0/10, updated 2023-06-19), along
+ *     with usable photographs and a colorway list. THE BLOCKER IS PRICE ALONE,
+ *     which is a required field. bellroy.com is a client-rendered SPA with no
+ *     JSON-LD and no Shopify product endpoints (confirmed 404, so it is not
+ *     Shopify); Amazon 500, REI 403, Huckberry 403, Nordstrom and Nordstrom
+ *     Rack sold out, Zappos and Backcountry unusable. Two USD figures exist but
+ *     neither was read off a live retailer page: Pack Hacker's article text
+ *     cites $189 direct in a review over three years old, and Carryology cites
+ *     $179. A Philippine retailer has it live and in stock at PHP 13,005
+ *     (roughly $208), deliberately not converted - local market pricing is not
+ *     a US retail price point, and laundering it into amountUsd would make
+ *     'lowest available price' false (ADR-017).
+ *   - Rank 16, Incase ICON Slim. Neither discontinued nor purchasable. The
+ *     product page is live and still merchandised in the current Backpacks
+ *     collection at $129.99, but reads 'Coming Soon' with 0 in stock and no Add
+ *     to Cart; no retailer carries this SKU (the Best Buy, B&H and Amazon
+ *     listings found are an older generation with different SKUs and
+ *     colorways); and Pack Hacker has never reviewed the Slim - it has scored
+ *     the ICON Backpack 7.7/10 and the ICON Lite 7.3/10, which are different
+ *     packs and not borrowable (ADR-009). So both price and review are
+ *     unverifiable. This is not the Mystery Ranch case that ADR-032 retired:
+ *     the page is current and not redirected, so there is no evidence the brand
+ *     has exited. Note the brand's own page contradicts itself on capacity -
+ *     the title says 'ICON Slim Backpack - 19L' and the spec string on the same
+ *     page says '19 x 12 x 8 in x 14.5L'.
+ *
+ * DECIDED 2026-09-03: both ranks stay absent and get revisited, rather than
+ * being retired, substituted or filled with an unverified number. Rank 7 is a
+ * fetch failure and not a product failure - Bellroy has not left the category,
+ * so ADR-032's retirement is the wrong instrument, and the $189 and $179
+ * figures that exist are article text rather than a live retailer page. Rank 16
+ * is on a current, non-redirected page whose 'Coming Soon' most likely resolves
+ * on its own. The catalog therefore ships 17 of 19 with every price and score
+ * live-verified, which was preferred to 19 of 19 with two soft numbers in it.
+ *
+ * Ranks are NOT renumbered around the two gaps: 7 and 16 stay reserved for
+ * these packs. Recapture is the intended path, so re-check both - Bellroy for a
+ * readable price, Incase for stock plus a Slim-specific review - before
+ * concluding anything further about either. Substituting a different pack for
+ * either rank remains a ranking decision (ADR-019, ADR-026, ADR-031) needing a
+ * human and an ADR, not a substitution by the agent that found the gap.
  */
 
 export type SeedPack = {
@@ -211,5 +276,93 @@ export const seedPacks: SeedPack[] = [
     rationale:
       'Best modern value: 26L, weatherproof AquaGuard zips and a 16" laptop sleeve at $189, a '
       + 'price point where the rest of this list is $275+. Pack Hacker 8.1/10.',
+  },
+  {
+    rank: 12,
+    slug: 'topo-designs-rover-pack-tech',
+    name: 'Rover Pack Tech',
+    brand: 'Topo Designs',
+    brandUrl: 'https://topodesigns.com',
+    rationale:
+      'Heritage American design at the most accessible price in the top half of this list: 24.3L of '
+      + '1000D recycled nylon at $149, where everything ranked above it starts at $175. Pack Hacker '
+      + 'scores the Tech version 8.0/10 — a higher score than the five packs beneath it and than some '
+      + 'above — so the rank reflects a thinner award record rather than a weaker review. In '
+      + 'production; Navy in stock, Black a live listing currently sold out.',
+  },
+  {
+    rank: 13,
+    slug: 'osprey-daylite-plus-20l',
+    name: 'Daylite Plus 20L',
+    brand: 'Osprey',
+    brandUrl: 'https://www.osprey.com',
+    rationale:
+      'The highest-volume seller on the list by a wide margin, and the cheapest pack on it at $79.95 '
+      + '— 14 colorways carried through dozens of outdoor retailers. It earns the slot on ubiquity '
+      + 'rather than acclaim, and Pack Hacker\'s 7.0/10 is the lowest score in the catalog, so this '
+      + 'is the one rank where the list is closest to the popularity term ADR-018 rejected. Revisit '
+      + 'it first if the ordering is ever re-argued. osprey.com refused every automated request; the '
+      + 'price and colorways come from Outdoor Gear Exchange — see the capture notes.',
+  },
+  {
+    rank: 14,
+    slug: 'wandrd-prvke-21',
+    name: 'PRVKE 21L',
+    brand: 'WANDRD',
+    brandUrl: 'https://www.wandrd.com',
+    rationale:
+      'The photo/EDC crossover standard: a roll-top pack built around a removable padded camera cube, '
+      + 'which is why it appears on camera-bag lists and EDC lists alike. $234 bag-only, Pack Hacker '
+      + '7.5/10 — though that review never names the V4 generation this capture prices, so confirm it '
+      + 'is scoring the current pack before leaning on the number.',
+  },
+  {
+    rank: 15,
+    slug: 'the-brown-buffalo-concealpack-21l',
+    name: 'ConcealPack 21L',
+    brand: 'The Brown Buffalo',
+    brandUrl: 'https://www.thebrownbuffalo.com',
+    rationale:
+      'The best small-batch entry: a weather-resistant 1050D CORDURA pack from a genuinely small US '
+      + 'operation, at $229 both brand-direct and at Nordstrom. Pack Hacker 7.5/10.',
+  },
+  {
+    rank: 17,
+    slug: 'chrome-industries-barrage-22l-pack',
+    name: 'Barrage 22L Pack',
+    brand: 'Chrome Industries',
+    brandUrl: 'https://chromeindustries.com',
+    rationale:
+      'Messenger heritage carried into a backpack: a welded waterproof tarp liner, external cargo '
+      + 'net and the seatbelt-buckle sternum strap Chrome is known for, at $175. Pack Hacker 7.3/10. '
+      + 'The plan names this the "Barrage Cargo Backpack"; Chrome has since restructured the line '
+      + 'into fixed-name products and the same pack — same review URL, same cargo-net rolltop — now '
+      + 'ships as the Barrage 22L Pack, spec\'d 19–22L rather than the plan\'s 18→22L.',
+  },
+  {
+    rank: 18,
+    slug: 'arktype-dashpack-ii',
+    name: 'Dashpack II',
+    brand: 'ARKTYPE',
+    brandUrl: 'https://www.arktypedesign.com',
+    rationale:
+      'The minimalist favorite: a slim 15L commuter pack in 1680D ballistic nylon with AquaGuard '
+      + 'zips, handmade in the USA, at $198. The smallest brand on this list and confirmed still in '
+      + 'production. Pack Hacker scores the Dashpack 7.6/10, but that review carries no Mark II '
+      + 'marker and may predate this pack\'s interior-only refresh — the fabric and capacity are '
+      + 'unchanged, so the score is likely still representative. Revisit if a Mark II score appears.',
+  },
+  {
+    rank: 19,
+    slug: 'filson-dryden-backpack',
+    name: 'Dryden Backpack',
+    brand: 'Filson',
+    brandUrl: 'https://www.filson.com',
+    rationale:
+      'The heritage/professional entry: 1000D nylon in a ballistic weave with bridle-leather trim '
+      + 'and Filson\'s buy-it-for-life positioning, at $279. Pack Hacker 7.6/10. The plan calls this '
+      + 'the "Dryden Ballistic Nylon" to separate it from the Tin Cloth and Rugged Twill Drydens; '
+      + 'Filson\'s own copy has since dropped the phrase "ballistic nylon", and it was Huckberry\'s '
+      + 'listing — still using the old name for the identical pack — that confirmed the match.',
   },
 ]

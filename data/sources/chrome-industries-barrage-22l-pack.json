@@ -1,0 +1,44 @@
+{
+  "slug": "chrome-industries-barrage-22l-pack",
+  "productUrl": "https://chromeindustries.com/products/barrage-22l-pack",
+  "notes": "Captured 2026-09-03 from chromeindustries.com. The plan's 'Barrage Cargo Backpack' has been renamed and restructured: the old URLs (chromeindustries.com/products/barrage-cargo-backpack and the legacy /product/barrage-cargo-backpack/BG-163.html) now 404, and the collection page (chromeindustries.com/collections/barrage-collection) lists the same rolltop-plus-cargo-net pack as 'Barrage 22L Pack' alongside sibling 'Barrage 18L Pack' and 'Barrage 34L Pack' fixed-volume packs. Pack Hacker's review, still titled 'Chrome Industries Barrage Cargo Backpack Review', confirms this is the same product and lists the same '18l (22L expanded)' capacity the current product page states as 'Volume: 19-22 Liters' - the two figures disagree by 1L on the base size but describe the same expandable rolltop; I recorded the site's own current '19-22 Liters' text. capacityLiters is recorded as 22, the expanded/maximum volume, per the task's instruction to pick a single sensible value for an expandable pack - the pack is not usably 22L until the rolltop is unrolled, so a shopper comparing capacities should read this as 'up to 22L', not a fixed 22L shell. Weight converted from the brand's '2.47 lbs' spec. Colorway 'Castlerock Twill' does not contain any keyword app/utils/color.ts recognizes (no 'grey'/'charcoal'/etc token), so family is set explicitly to grey here - the swatchSource photo is a dark warm grey twill weave. 'Amber X' sampled dark and olive-toned (#373936) rather than a visible amber/orange, which is expected studio-lighting skew (ADR-029) but is worth flagging because it sits oddly next to its name-derived 'orange' family; left as sampled per ADR-029, not hand-corrected. All six colorways are sampled from the current 22L Pack product page's own photography, so images and swatchSource overlap for four of them (Black, Coyote X, Moss X, Castlerock Twill); Black XRF and Amber X have swatchSource photos not used in the 5-image carousel cap (ADR-027).",
+  "images": [
+    { "url": "https://chromeindustries.com/cdn/shop/files/1_BG-367-BK_1_1.jpg?v=1780615940&width=2000" },
+    { "url": "https://chromeindustries.com/cdn/shop/files/2_BG-370-BLCK_1.jpg?v=1768066264&width=2000" },
+    { "url": "https://chromeindustries.com/cdn/shop/files/BG-367-CYTX_2_1.jpg?v=1785269542&width=2000" },
+    { "url": "https://chromeindustries.com/cdn/shop/files/1-BG-367-MOSX_1.jpg?v=1768066264&width=2000" },
+    { "url": "https://chromeindustries.com/cdn/shop/files/BARRAGE_22L_CASTLEROCK_3Q.jpg?v=1768066264&width=2000" }
+  ],
+  "colorways": [
+    { "name": "Black", "hex": "#1c1a1b", "swatchSource": "https://chromeindustries.com/cdn/shop/files/1_BG-367-BK_1_1.jpg?v=1780615940&width=2000" },
+    { "name": "Coyote X", "hex": "#393836", "swatchSource": "https://chromeindustries.com/cdn/shop/files/BG-367-CYTX_2_1.jpg?v=1785269542&width=2000" },
+    { "name": "Black XRF", "hex": "#20201e", "swatchSource": "https://chromeindustries.com/cdn/shop/files/BG-367-BXRF-1_1.jpg?v=1768066264&width=2000" },
+    { "name": "Moss X", "hex": "#56542e", "swatchSource": "https://chromeindustries.com/cdn/shop/files/1-BG-367-MOSX_1.jpg?v=1768066264&width=2000" },
+    { "name": "Amber X", "hex": "#373936", "swatchSource": "https://chromeindustries.com/cdn/shop/files/BG-367-AMBERX-1.jpg?v=1768066264&width=2000" },
+    { "name": "Castlerock Twill", "hex": "#21221d", "family": "grey", "swatchSource": "https://chromeindustries.com/cdn/shop/files/BARRAGE_22L_CASTLEROCK_3Q.jpg?v=1768066264&width=2000" }
+  ],
+  "price": {
+    "amountUsd": 175,
+    "retailer": "Chrome Industries",
+    "url": "https://chromeindustries.com/products/barrage-22l-pack",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "priceComparison": [
+    { "retailer": "Chrome Industries", "url": "https://chromeindustries.com/products/barrage-22l-pack", "amountUsd": 175, "outcome": "captured - brand-direct, in stock" },
+    { "retailer": "REI", "url": "https://www.rei.com/product/245142/chrome-barrage-22-l-pack", "outcome": "not captured - HTTP 403" },
+    { "retailer": "Amazon", "url": "https://www.amazon.com/Chrome-Industries-Barrage-Pack-Black/dp/B0C7WF9B5B", "outcome": "not captured - dynamic page, no price present in static fetch" }
+  ],
+  "review": {
+    "score": 7.3,
+    "scale": 10,
+    "source": "Pack Hacker",
+    "url": "https://www.packhacker.com/travel-gear/chrome/barrage-cargo-backpack/",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "specs": {
+    "capacityLiters": 22,
+    "weightGrams": 1120,
+    "dimensions": "20\" H x 11\" W x 5.5\" D",
+    "material": "1050D recycled nylon (PFAS-free DWR) with 210D recycled nylon and welded TPE tarp liner"
+  }
+}

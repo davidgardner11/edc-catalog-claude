@@ -1,0 +1,43 @@
+{
+  "slug": "the-brown-buffalo-concealpack-21l",
+  "productUrl": "https://www.thebrownbuffalo.com/products/conceal-pack-21l",
+  "notes": "Captured 2026-09-03 from The Brown Buffalo's own Shopify storefront: the rendered product page plus its public product JSON (https://www.thebrownbuffalo.com/products/conceal-pack-21l.json), which maps each variant to its own featured_image. thebrownbuffalo.com/robots.txt is a standard Shopify agent-facing robots.txt (Allow on product/collection pages) so this fetch is permitted. IN PRODUCTION AND IN STOCK for 3 of 4 colorways: Black Grid (50 units) and Ranger Green Ballistic (50 units) and Black Multicam (8 units) all show inventory; Ballistic Black shows 0 units (out of stock, not delisted - still a live variant on the page) so it is captured but flagged. PRICE COMPARISON: brand-direct is $229.00 for Black Grid/Ballistic Black/Ranger Green Ballistic and $239.00 for Black Multicam (a $10 premium for the Multicam fabric) - the $229.00 base price is recorded, matching ADR-017's 'lowest of what was compared'. Nordstrom carries the same pack at the same $229.00 (https://www.nordstrom.com/s/conceal-pack-21l-backpack/8839788, confirmed in stock) - a tie, so brand-direct was kept. Huckberry sells a materially different, more expensive 'Huckberry Exclusive' ConcealPack in X-Pac/Cordura at $350 and a separate standard listing that returned HTTP 403 on fetch; the $350 exclusive is a different fabric/product and was not used as a comparison. COLORWAYS: all four hexes were sampled with `pnpm sample-swatch` from the brand's own per-variant featured_image (3000x3000 studio photos); swatchSource records which. Black Multicam, Black Grid and Ballistic Black all resolve correctly against colorFamilyFromName ('multicam' keyword hits the 'multi' family before 'black' can match, 'black' resolves black x2) with no override. Ranger Green Ballistic is flagged for a human to look at: the sampled hex (#634f42) reads as a muted brown rather than green, which is a wider swing than the studio-lighting skew ADR-029 already expects - it may be that the 40%-centre crop caught a brown zipper pull, buckle or trim rather than the green body fabric. The name is not in question (Ranger Green is a real, well-known colour), so family was left at the name-derived 'green' rather than overridden to match the anomalous sample; a re-sample from a different angle would be worth doing before trusting this specific hex.",
+  "images": [
+    { "url": "https://cdn.shopify.com/s/files/1/1456/9506/files/Conceal-Pack-21L-Black-Grid_001.png?v=1774408924" },
+    { "url": "https://cdn.shopify.com/s/files/1/1456/9506/files/the-brown-buffalo-Conceal-Pack-21L-cordura-Ranger-Green-stormproof_001.png?v=1774408924" },
+    { "url": "https://cdn.shopify.com/s/files/1/1456/9506/files/Conceal-Pack-21L-Black-Multicam_001.png?v=1774408924" },
+    { "url": "https://cdn.shopify.com/s/files/1/1456/9506/files/the-brown-buffalo-Conceal-Pack-21L-cordura-Balistic-Black-stormproof_001.png?v=1755267555" },
+    { "url": "https://www.thebrownbuffalo.com/cdn/shop/files/TheBrownBuffalo_2_of_28.jpg?v=1774408924&width=3200" }
+  ],
+  "colorways": [
+    { "name": "Black Grid", "hex": "#333236", "swatchSource": "https://cdn.shopify.com/s/files/1/1456/9506/files/Conceal-Pack-21L-Black-Grid_001.png?v=1774408924" },
+    { "name": "Ballistic Black", "hex": "#21201f", "swatchSource": "https://cdn.shopify.com/s/files/1/1456/9506/files/the-brown-buffalo-Conceal-Pack-21L-cordura-Balistic-Black-stormproof_001.png?v=1755267555" },
+    { "name": "Ranger Green Ballistic", "hex": "#634f42", "swatchSource": "https://cdn.shopify.com/s/files/1/1456/9506/files/the-brown-buffalo-Conceal-Pack-21L-cordura-Ranger-Green-stormproof_001.png?v=1774408924" },
+    { "name": "Black Multicam", "hex": "#302b2a", "swatchSource": "https://cdn.shopify.com/s/files/1/1456/9506/files/Conceal-Pack-21L-Black-Multicam_001.png?v=1774408924" }
+  ],
+  "price": {
+    "amountUsd": 229,
+    "retailer": "The Brown Buffalo",
+    "url": "https://www.thebrownbuffalo.com/products/conceal-pack-21l",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "priceComparison": [
+    { "retailer": "The Brown Buffalo", "url": "https://www.thebrownbuffalo.com/products/conceal-pack-21l", "amountUsd": 229, "outcome": "captured - brand-direct, Black Grid/Ballistic Black/Ranger Green Ballistic $229.00, Black Multicam $239.00" },
+    { "retailer": "Nordstrom", "url": "https://www.nordstrom.com/s/conceal-pack-21l-backpack/8839788", "amountUsd": 229, "outcome": "captured - ties brand-direct, in stock" },
+    { "retailer": "Huckberry", "url": "https://huckberry.com/store/the-brown-buffalo/category/p/94968-concealpack-21l", "outcome": "not captured - HTTP 403, Cloudflare interactive challenge" },
+    { "retailer": "Huckberry (Exclusive)", "url": "https://huckberry.com/store/the-brown-buffalo/category/p/79308-concealpack-21l-exclusive", "amountUsd": 350, "outcome": "not comparable - different fabric (X-Pac/Cordura Huckberry-exclusive colorway), not the standard pack this capture covers" }
+  ],
+  "review": {
+    "score": 7.5,
+    "scale": 10,
+    "source": "Pack Hacker",
+    "url": "https://www.packhacker.com/travel-gear/the-brown-buffalo/conceal-pack-21l/",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "specs": {
+    "capacityLiters": 21,
+    "weightGrams": 1315,
+    "dimensions": "19.5 in x 12 in x 6 in",
+    "material": "1050D CORDURA ballistic nylon (Multicam variant), Challenge Sailcloth EPX400, YKK zippers, ITW hardware"
+  }
+}
