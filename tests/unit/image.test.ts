@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import type { CarouselImage } from '../../app/types/backpack'
-import { CARD_IMAGE_SIZES, buildSrcSet, fallbackSrc } from '../../app/utils/image'
+import {
+  CARD_IMAGE_SIZES,
+  PACK_PRIMARY_IMAGE_SIZES,
+  PACK_THUMB_IMAGE_SIZES,
+  buildSrcSet,
+  fallbackSrc,
+} from '../../app/utils/image'
 import { fixtureBackpacks } from '../../app/data/fixtures'
 
 /**
@@ -81,6 +87,31 @@ describe('CARD_IMAGE_SIZES', () => {
   // screen picks the 640w variant.
   it('is the card’s real maximum width, not a viewport guess', () => {
     expect(CARD_IMAGE_SIZES).toBe('320px')
+  })
+})
+
+describe('the detail route’s `sizes` never ask for an upscale', () => {
+  /** The largest variant ingest emits (ADR-005); nothing above this exists. */
+  const LARGEST_EMITTED_WIDTH = 1280
+
+  /** Every fixed CSS-pixel slot width declared in a `sizes` attribute. */
+  const pixelSlots = (sizes: string) =>
+    [...sizes.matchAll(/(\d+(?:\.\d+)?)px(?!\))/g)].map((match) => Number(match[1]))
+
+  it.each([
+    ['card', CARD_IMAGE_SIZES],
+    ['pack primary', PACK_PRIMARY_IMAGE_SIZES],
+    ['pack thumbnail', PACK_THUMB_IMAGE_SIZES],
+  ])('%s slots stay within the 1280w ceiling on a 2x display', (_name, sizes) => {
+    const slots = pixelSlots(sizes).filter((value) => value !== 1024) // the media query breakpoint
+    expect(slots.length).toBeGreaterThan(0)
+    for (const slot of slots) expect(slot * 2).toBeLessThanOrEqual(LARGEST_EMITTED_WIDTH)
+  })
+
+  it('asks for less on a thumbnail than on the primary image beside it', () => {
+    const primary = Math.max(...pixelSlots(PACK_PRIMARY_IMAGE_SIZES).filter((v) => v !== 1024))
+    const thumb = Math.max(...pixelSlots(PACK_THUMB_IMAGE_SIZES).filter((v) => v !== 1024))
+    expect(thumb).toBeLessThan(primary)
   })
 })
 

@@ -4,7 +4,7 @@ A digital catalog of the most popular, beloved, and acclaimed Everyday Carry bac
 
 Local-only and statically generated — there is no server, no API, and no database.
 
-> **Status: Phase 6 complete.** The app is whole: a filterable, sortable grid of the ingested catalog, and a prerendered detail page per pack. 17 of the ranked 19 packs are ingested — ranks 7 and 16 are reserved and deliberately absent ([ADR-033](./docs/decisions.md)), so rank gaps are expected. What is left is Phase 7, the test suite: `app/utils/catalog.ts` has no unit tests yet and there are no E2E tests at all. See [`implementation-plan.md`](./implementation-plan.md) for the architecture, ranked pack list, and build order.
+> **Status: Phase 7 complete.** The app is whole and tested: a filterable, sortable grid of the ingested catalog, a prerendered detail page per pack, 425 Vitest unit tests and 41 Playwright E2E tests. 17 of the ranked 19 packs are ingested — ranks 7 and 16 are reserved and deliberately absent ([ADR-033](./docs/decisions.md)), so rank gaps are expected. The E2E suite runs against `pnpm dev`, so prerendered output is still covered only by the manual checklist in [`implementation-plan.md`](./implementation-plan.md), which also holds the architecture, ranked pack list, and build order.
 
 ---
 
@@ -35,7 +35,7 @@ pnpm dev         # http://localhost:3000
 | `pnpm ingest` | Regenerate `app/data/catalog.json` and `public/images/` from `data/` |
 | `pnpm test` | Vitest unit tests |
 | `pnpm typecheck` | `nuxt typecheck` via vue-tsc |
-| `npx playwright test` | End-to-end tests _(not installed until Phase 7)_ |
+| `npx playwright test` | End-to-end tests (Chromium; starts the dev server itself). Also `pnpm test:e2e` |
 
 ## The card
 
@@ -99,7 +99,7 @@ See [`CLAUDE.md`](./CLAUDE.md) for the version ceilings and project invariants. 
 
 ## Testing
 
-`pnpm test` runs 251 Vitest unit tests over the pure logic in `app/utils/` — price and score formatting, score normalization across both review scales, carousel wraparound, and the 8-cell colorway grid at every boundary. End-to-end tests are Phase 7: the behaviors only observable in a browser, chiefly that the three bands really measure 65 / 15 / 20 and that the carousel label does not shift by a pixel as images cycle.
+`pnpm test` runs 425 Vitest unit tests over the pure logic in `app/utils/` — price and score formatting, score normalization across both review scales, carousel wraparound, and the 8-cell colorway grid at every boundary. `npx playwright test` runs the end-to-end suite from `tests/e2e/` in Chromium, starting `pnpm dev` on port 3000 itself — it covers the behaviors only observable in a browser, chiefly that the three bands really measure 65 / 15 / 20 and that the carousel label does not shift by a pixel as images cycle. Browser binaries are not installed by `pnpm install`; run `npx playwright install chromium` once after cloning.
 
 ## License and content
 

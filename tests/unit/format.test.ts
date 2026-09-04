@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { formatPrice, formatScore, normalizeScore, scoreSpokenLabel } from '../../app/utils/format'
+import {
+  formatCapacity,
+  formatCapturedDate,
+  formatPrice,
+  formatScore,
+  formatWeight,
+  normalizeScore,
+  scoreSpokenLabel,
+} from '../../app/utils/format'
 
 /**
  * `app/utils/format.ts` — display formatting and the normalized sort key.
@@ -133,5 +141,79 @@ describe('scoreSpokenLabel', () => {
 
   it('uses the same one-decimal rounding as the visible text', () => {
     expect(scoreSpokenLabel(5, 5, 'REI')).toContain('5.0 out of 5.0')
+  })
+})
+
+describe('formatCapacity', () => {
+  // Same rule as formatPrice's `.00`: whole litres are the common case and
+  // `24.0 L` reads as precision the spec sheet does not have.
+  it('drops a trailing .0 on whole litres', () => {
+    expect(formatCapacity(24)).toBe('24 L')
+    expect(formatCapacity(30)).toBe('30 L')
+  })
+
+  it('keeps one decimal when there is one', () => {
+    expect(formatCapacity(24.3)).toBe('24.3 L')
+    expect(formatCapacity(21.5)).toBe('21.5 L')
+  })
+
+  it('rounds to one decimal, and a value that rounds to whole loses the .0', () => {
+    expect(formatCapacity(24.04)).toBe('24 L')
+    expect(formatCapacity(24.06)).toBe('24.1 L')
+  })
+
+  it('returns empty string for non-finite input rather than "NaN L"', () => {
+    expect(formatCapacity(Number.NaN)).toBe('')
+    expect(formatCapacity(Number.POSITIVE_INFINITY)).toBe('')
+  })
+})
+
+describe('formatWeight', () => {
+  it('leads with grams — the unit the catalog stores — and adds pounds', () => {
+    expect(formatWeight(1406)).toBe('1,406 g (3.1 lb)')
+  })
+
+  it('groups thousands and rounds grams to whole', () => {
+    expect(formatWeight(1406.4)).toBe('1,406 g (3.1 lb)')
+    expect(formatWeight(999)).toBe('999 g (2.2 lb)')
+  })
+
+  it('converts at the real factor, not 450 or 500 g to the pound', () => {
+    expect(formatWeight(453.59237)).toBe('454 g (1.0 lb)')
+    expect(formatWeight(4535.9237)).toBe('4,536 g (10.0 lb)')
+  })
+
+  it('returns empty string for non-finite input', () => {
+    expect(formatWeight(Number.NaN)).toBe('')
+    expect(formatWeight(Number.POSITIVE_INFINITY)).toBe('')
+  })
+})
+
+describe('formatCapturedDate', () => {
+  it('renders an ISO instant as a short US date', () => {
+    expect(formatCapturedDate('2026-09-03T00:00:00Z')).toBe('Sep 3, 2026')
+    expect(formatCapturedDate('2026-01-15T12:00:00.000Z')).toBe('Jan 15, 2026')
+  })
+
+  /**
+   * The hydration guard. There is no server at runtime, so the date in the
+   * prerendered HTML is formatted on the build machine and re-formatted in the
+   * visitor's browser: any instant within a day's offset of midnight UTC has to
+   * resolve to the same calendar date in both, which only holds if the formatter
+   * pins `timeZone: 'UTC'`. These two instants are the ones that move — the
+   * first is Sep 4 in Tokyo, the second Sep 2 in New York.
+   */
+  it('reads the UTC calendar date, not the runner’s local one', () => {
+    expect(formatCapturedDate('2026-09-03T23:30:00Z')).toBe('Sep 3, 2026')
+    expect(formatCapturedDate('2026-09-03T00:30:00Z')).toBe('Sep 3, 2026')
+  })
+
+  it('does not zero-pad the day', () => {
+    expect(formatCapturedDate('2026-09-03T00:00:00Z')).not.toContain('03')
+  })
+
+  it('returns empty string for an unparseable date rather than "Invalid Date"', () => {
+    expect(formatCapturedDate('not a date')).toBe('')
+    expect(formatCapturedDate('')).toBe('')
   })
 })

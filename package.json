@@ -13,6 +13,7 @@
     "ingest": "node --experimental-strip-types scripts/ingest.ts",
     "sample-swatch": "node --experimental-strip-types scripts/sample-swatch.ts",
     "test": "vitest run --passWithNoTests",
+    "test:e2e": "playwright test",
     "typecheck": "nuxt typecheck",
     "postinstall": "nuxt prepare"
   },
@@ -22,6 +23,7 @@
     "zod": "^4.5.4"
   },
   "devDependencies": {
+    "@playwright/test": "1.62.1",
     "@tailwindcss/vite": "4.3.3",
     "sharp": "0.35.4",
     "tailwindcss": "4.3.3",
