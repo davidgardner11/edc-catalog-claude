@@ -85,6 +85,34 @@ export function useCatalogFilters(source: readonly Backpack[] = catalogBackpacks
   }
 
   /**
+   * The last patch handed to `commit` while its navigation is still in flight.
+   *
+   * `router.replace` is **async**: `route.query` — and therefore `filters` — does
+   * not update until the navigation resolves. Two commits in the same tick (the
+   * debounced search firing while a checkbox is ticked, a slider `change` landing
+   * with a sort change) would both read the pre-navigation query, and the second
+   * would overwrite the first with a URL that never mentions it. Merging onto the
+   * in-flight value instead of the route makes the second commit a patch on top
+   * of the first, so neither is lost (ADR-036).
+   *
+   * Not unit-testable without mounting a router, which would mean adding
+   * `@nuxt/test-utils` and `happy-dom`; it is E2E-observable once Playwright
+   * lands (Phase 7).
+   */
+  let inFlight: CatalogFilters | null = null
+
+  /**
+   * The filters as they will be once any in-flight navigation lands — the base
+   * every patch is computed against. The facet toggles need it as much as
+   * `commit` does: `toggleFacet` reads the current selection, so two boxes
+   * ticked in one tick would otherwise both toggle against the same route query
+   * and the second would drop the first.
+   */
+  function current(): CatalogFilters {
+    return inFlight ?? filters.value
+  }
+
+  /**
    * `replace`, not `push`. Every keystroke and checkbox would otherwise become
    * a history entry, and the back button's job here is to leave the catalog —
    * not to walk backwards through the letters of a search term. Navigating to a
@@ -92,10 +120,21 @@ export function useCatalogFilters(source: readonly Backpack[] = catalogBackpacks
    * that was replaced is the one being returned to.
    */
   function commit(patch: Partial<CatalogFilters>) {
-    const merged: CatalogFilters = { ...filters.value, ...patch }
+    const merged: CatalogFilters = { ...current(), ...patch }
+    inFlight = merged
     // `catalogQueryParams` returns `undefined` for anything at its default, and
     // vue-router drops undefined values — that is what keeps a clean URL clean.
-    router.replace({ query: { ...foreignQuery(), ...catalogQueryParams(merged) } })
+    // Foreign params are read from the route, not accumulated: this composable
+    // never writes them, so they cannot be stale.
+    const navigation = router.replace({ query: { ...foreignQuery(), ...catalogQueryParams(merged) } })
+    // Identity check, so a later commit's value is not cleared by an earlier
+    // commit settling. Both arms of `then` — a navigation that is aborted or
+    // redirected still ends the in-flight window, and an unhandled rejection here
+    // would surface as a console error rather than anything a user could act on.
+    const settle = () => {
+      if (inFlight === merged) inFlight = null
+    }
+    void navigation.then(settle, settle)
   }
 
   return {
@@ -117,13 +156,20 @@ export function useCatalogFilters(source: readonly Backpack[] = catalogBackpacks
     ready: readonly(ready),
 
     setSearch: (q: string) => commit({ q }),
-    toggleBrand: (slug: string) => commit({ brands: toggleFacet(filters.value.brands, slug) }),
+    toggleBrand: (slug: string) => commit({ brands: toggleFacet(current().brands, slug) }),
     toggleFamily: (family: ColorFamily) =>
-      commit({ families: toggleFacet(filters.value.families, family) }),
+      commit({ families: toggleFacet(current().families, family) }),
     setMaxPrice: (maxPrice: number | null) => commit({ maxPrice }),
     setMinScore: (minScore: number | null) => commit({ minScore }),
     setSort: (sort: SortKey) => commit({ sort }),
-    /** Clears filters AND sort; the "Clear all" affordance is all-or-nothing. */
-    reset: () => router.replace({ query: foreignQuery() }),
+    /**
+     * Clears filters AND sort; the "Clear all" affordance is all-or-nothing.
+     * Routed through `commit` rather than calling `router.replace` directly so it
+     * shares the in-flight accumulator above — otherwise a debounced search
+     * committed a tick earlier would be re-applied by the next commit after the
+     * reset had already cleared it. Every param is at its default, so
+     * `catalogQueryParams` is all-`undefined` and only `foreignQuery` survives.
+     */
+    reset: () => commit(DEFAULT_FILTERS),
   }
 }

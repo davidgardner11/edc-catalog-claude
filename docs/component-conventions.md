@@ -65,6 +65,10 @@ There are exactly two kinds, and no store (ADR-004).
 
 **Two local-draft patterns exist in `CatalogToolbar`, and both are deliberate.** The search input and the price range bind to a local `ref` and commit to the URL late — the search on a 200ms idle, the range on `@change` rather than `@input`. Without them, a `router.replace` runs per keystroke and per pixel of thumb drag. Both drafts are re-synced from `filters` by a watcher, so Back, "Clear all" and a chip removal all reach the control.
 
+**A draft's re-sync watcher compares raw values, and the codec is what keeps them comparable.** The search watcher is a plain `if (q !== searchDraft.value)`: the URL codec round trips `q` verbatim (ADR-036), so the committed value and the draft can no longer differ by whitespace alone. Do not add a `.trim()` to that comparison — it would be defending against a disagreement the codec cannot produce, and it would leave the next reader unable to tell which of the two is keeping the input stable. The same rule generalises: if a new draft/commit pair drifts, fix the codec, not the comparison.
+
+**The price slider's `step` is bound from `PRICE_STEP` in `~/utils/catalog`, never written as a literal.** `priceBounds` guarantees `max` is a whole number of steps above `min`, which is what makes the rightmost thumb position equal `bounds.max` — and therefore what makes the "No maximum" branch, its `aria-valuetext` and its `<output>` reachable at all (ADR-036). A hard-coded `step` in the markup can drift out of that agreement with nothing failing; that is exactly what it did.
+
 **The hydration gate.** `useCatalogFilters` reports `DEFAULT_FILTERS` until `onMounted`. The site is prerendered with no query string and there is no server at runtime, so a client that read `?brand=aer` on its first render would disagree with the served HTML. See ADR-034 point 4 — if you add UI that reads the query, it must be gated the same way or it will reintroduce the mismatch.
 
 ## Styling

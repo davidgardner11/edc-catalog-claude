@@ -24,6 +24,10 @@ export const catalogBackpacks: Backpack[] = catalogJson as unknown as Backpack[]
  * Acclaim rank is the catalog's canonical order (ADR-018). Ranks are sparse —
  * 7 and 16 are reserved and absent (ADR-033) — so never index by rank or
  * assume `rank === position + 1`.
+ *
+ * Sorted once, here, at module scope: the detail route's prev/next neighbours
+ * are the only consumer and used to re-derive the identical sort per component
+ * instance (ADR-036). Import this rather than sorting `catalogBackpacks` again.
  */
 export const catalogByRank: Backpack[] = [...catalogBackpacks].sort((a, b) => a.rank - b.rank)
 

@@ -7,6 +7,7 @@ import { normalizeScore } from '../../app/utils/format'
 import {
   DEFAULT_FILTERS,
   DEFAULT_SORT,
+  PRICE_STEP,
   QUERY_KEYS,
   SCORE_THRESHOLDS,
   SORT_OPTIONS,
@@ -281,17 +282,15 @@ describe('priceBounds', () => {
 
 describe('the price slider’s reachable positions', () => {
   /**
-   * `CatalogToolbar` binds `:min="bounds.min"` `:max="bounds.max"` with a
-   * hard-coded `step="5"`, so the values a user can actually select are
+   * `CatalogToolbar` binds `:min="bounds.min"` `:max="bounds.max"` with a fixed
+   * `:step="PRICE_STEP"`, so the values a user can actually select are
    * `min + step·n`. Two things follow that the bounds have to guarantee, and
-   * neither is checkable from the bounds alone.
-   *
-   * The constant below mirrors that literal because `app/utils/catalog.ts`
-   * exports no step, which is itself part of the defect — the markup and the
-   * bounds arithmetic are one decision held in two places that can silently
-   * disagree. The fix should export the step and this should import it.
+   * neither is checkable from the bounds alone — which is why `PRICE_STEP` is
+   * exported from `app/utils/catalog.ts` and imported here and by the toolbar,
+   * rather than written as a literal in either place. The step and the bounds
+   * are one decision; a test that restated the number would stop noticing when
+   * they disagreed.
    */
-  const PRICE_STEP = 5
   const bounds = priceBounds(catalogBackpacks)
   const highestSelectable = bounds.min + Math.floor((bounds.max - bounds.min) / PRICE_STEP) * PRICE_STEP
 
