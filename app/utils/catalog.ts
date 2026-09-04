@@ -109,47 +109,56 @@ export function brandSlug(brand: string): string {
     .replace(/^-+|-+$/g, '')
 }
 
+/**
+ * One selectable filter option: the value that goes in the URL, and the label
+ * shown beside its checkbox.
+ *
+ * **There is deliberately no `count`** (ADR-035). Phase 6 carried a
+ * whole-catalog tally per option; it was dropped because a catalog-wide number
+ * answers a question nobody asked ("how many packs are olive, ignoring my other
+ * filters?") while a results-narrow one shifts underneath a user mid-selection.
+ * The honest cost is that `white`, which matches nothing, now looks exactly like
+ * a facet that matches packs.
+ */
 export type Facet<T extends string> = {
   value: T
   label: string
-  /** Packs in the **whole catalog** carrying this value, not in the current results. */
-  count: number
 }
 
-/** Brand facets, alphabetical by display label, case-insensitively. */
+/**
+ * Brand facets, alphabetical by display label, case-insensitively.
+ *
+ * The **vocabulary comes from the data**: a brand exists as a filter because a
+ * pack in the catalog carries it. That is the opposite of `colorFacets` below,
+ * and the difference is why these stay two functions despite returning the same
+ * shape.
+ */
 export function brandFacets(packs: readonly Backpack[]): Facet<string>[] {
   const byslug = new Map<string, Facet<string>>()
   for (const pack of packs) {
     const value = brandSlug(pack.brand)
-    const existing = byslug.get(value)
-    if (existing) existing.count += 1
-    else byslug.set(value, { value, label: pack.brand, count: 1 })
+    // First pack to name a brand supplies its display label; later ones add
+    // nothing, so the whole loop is a distinct-brand collection.
+    if (!byslug.has(value)) byslug.set(value, { value, label: pack.brand })
   }
   return [...byslug.values()].sort((a, b) => a.label.localeCompare(b.label, 'en', { sensitivity: 'base' }))
 }
 
 /**
  * Colour facets are **exactly the 13 `ColorFamily` members** (ADR-022), in
- * `COLOR_FAMILIES` order, including any with a count of 0.
+ * `COLOR_FAMILIES` order, including members no pack currently carries.
  *
- * Deriving the list from the data instead would make the filter's vocabulary
- * shrink and grow as packs are ingested, which is the precise failure ADR-022
- * exists to prevent. A zero-count facet stays selectable — it is a true
- * statement about the catalog, and disabling it would hide that.
+ * The **vocabulary comes from the closed union**, never from the packs. Deriving
+ * it from the data would make the filter's vocabulary shrink and grow as packs
+ * are ingested, which is the precise failure ADR-022 exists to prevent. `white`
+ * matches zero packs today and still renders, still selectable: "no packs are
+ * white" is a true answer to a question a user is allowed to ask, and no facet
+ * is ever disabled. It takes no catalog argument at all — with the count gone
+ * there is nothing left here that the packs could inform, and a parameter that
+ * is accepted and ignored would invite someone to start reading it.
  */
-export function colorFacets(packs: readonly Backpack[]): Facet<ColorFamily>[] {
-  const counts = new Map<ColorFamily, number>()
-  for (const pack of packs) {
-    // A pack with three black colorways counts once for `black`.
-    for (const family of new Set(pack.colorways.map((colorway) => colorway.family))) {
-      counts.set(family, (counts.get(family) ?? 0) + 1)
-    }
-  }
-  return COLOR_FAMILIES.map((value) => ({
-    value,
-    label: colorFamilyLabel(value),
-    count: counts.get(value) ?? 0,
-  }))
+export function colorFacets(): Facet<ColorFamily>[] {
+  return COLOR_FAMILIES.map((value) => ({ value, label: colorFamilyLabel(value) }))
 }
 
 export type PriceBounds = { min: number; max: number }

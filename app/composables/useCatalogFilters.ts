@@ -49,11 +49,16 @@ export function useCatalogFilters(source: readonly Backpack[] = catalogBackpacks
   const route = useRoute()
   const router = useRouter()
 
-  /** Facets and bounds come from the FULL catalog, never the current results,
-   *  so the controls do not move around as the user narrows the list. */
+  /** Brand facets and price bounds come from the FULL catalog, never the current
+   *  results, so the controls do not move around as the user narrows the list.
+   *  Colour facets come from the `ColorFamily` union and not from the catalog at
+   *  all (ADR-022), which is why `colorFacets` takes no argument. `colors` is
+   *  therefore a `computed` with no reactive dependency — deliberately, and not
+   *  an oversight to unwrap: it keeps `bounds`/`brands`/`colors` a uniform ref
+   *  shape for the toolbar, at the cost of caching a value that cannot change. */
   const bounds = computed(() => priceBounds(source))
   const brands = computed(() => brandFacets(source))
-  const colors = computed(() => colorFacets(source))
+  const colors = computed(() => colorFacets())
 
   const ready = ref(false)
   onMounted(() => {
