@@ -510,7 +510,235 @@
     }
   },
   {
-    "rank": 10,
+    "rank": 6,
+    "slug": "tom-bihn-synapse-19",
+    "name": "Synapse 19",
+    "brand": "TOM BIHN",
+    "images": [
+      {
+        "base": "/images/tom-bihn-synapse-19/0",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 853,
+        "alt": "TOM BIHN Synapse 19 in Black 630 Ballistic with a Northwest Sky 200 Halcyon interior"
+      },
+      {
+        "base": "/images/tom-bihn-synapse-19/1",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 853,
+        "alt": "TOM BIHN Synapse 19 in Black 420 Spectron with a Northwest Sky 200 Halcyon interior"
+      },
+      {
+        "base": "/images/tom-bihn-synapse-19/2",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 853,
+        "alt": "TOM BIHN Synapse 19 in Aubergine 525 Ballistic"
+      },
+      {
+        "base": "/images/tom-bihn-synapse-19/3",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 853,
+        "alt": "TOM BIHN Synapse 19 in Wilderness 525 Ballistic with a Dusk 210 Cerylon interior"
+      },
+      {
+        "base": "/images/tom-bihn-synapse-19/4",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 853,
+        "alt": "TOM BIHN Synapse 19 in Deep Blue 525 Ballistic with a Coyote 200 Halcyon interior"
+      }
+    ],
+    "colorways": [
+      {
+        "name": "Black Spectron",
+        "hex": "#27262b",
+        "family": "black"
+      },
+      {
+        "name": "Black Ballistic",
+        "hex": "#1f1f1f",
+        "family": "black"
+      },
+      {
+        "name": "Aubergine",
+        "hex": "#27181f",
+        "family": "purple"
+      },
+      {
+        "name": "Burnt Orange",
+        "hex": "#8f3e15",
+        "family": "orange"
+      },
+      {
+        "name": "Deep Blue",
+        "hex": "#163246",
+        "family": "blue"
+      },
+      {
+        "name": "Mars Red",
+        "hex": "#621d1b",
+        "family": "red"
+      },
+      {
+        "name": "Raspberry",
+        "hex": "#81263f",
+        "family": "red"
+      },
+      {
+        "name": "Ursa",
+        "hex": "#3d352f",
+        "family": "brown"
+      },
+      {
+        "name": "Wilderness",
+        "hex": "#0f2719",
+        "family": "green"
+      },
+      {
+        "name": "Bordeaux",
+        "hex": "#7b2e37",
+        "family": "red"
+      },
+      {
+        "name": "Agave",
+        "hex": "#2c727e",
+        "family": "blue"
+      },
+      {
+        "name": "Nebulous Grey",
+        "hex": "#43464b",
+        "family": "grey"
+      }
+    ],
+    "price": {
+      "amountUsd": 255,
+      "retailer": "TOM BIHN",
+      "url": "https://www.tombihn.com/products/synapse-19",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "review": {
+      "score": 4.9,
+      "scale": 5,
+      "source": "TOM BIHN",
+      "url": "https://www.tombihn.com/products/synapse-19",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "specs": {
+      "capacityLiters": 19,
+      "weightGrams": 755,
+      "dimensions": "11.4\" W x 16\" H x 7.9\" D (290 x 410 x 200 mm)",
+      "material": "630d High Tenacity Ballistic nylon or 420d Spectron UHMWPE/nylon ripstop, 210d Cerylon / 200d Halcyon lining, YKK #8 water-repellent zippers"
+    }
+  },
+  {
+    "rank": 8,
+    "slug": "black-ember-citadel-r3-25l",
+    "name": "Citadel R3 25L",
+    "brand": "Black Ember",
+    "images": [
+      {
+        "base": "/images/black-ember-citadel-r3-25l/0",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Black Ember Citadel R3 25L — view 1 of 5"
+      },
+      {
+        "base": "/images/black-ember-citadel-r3-25l/1",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Black Ember Citadel R3 25L — view 2 of 5"
+      },
+      {
+        "base": "/images/black-ember-citadel-r3-25l/2",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Black Ember Citadel R3 25L — view 3 of 5"
+      },
+      {
+        "base": "/images/black-ember-citadel-r3-25l/3",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Black Ember Citadel R3 25L — view 4 of 5"
+      },
+      {
+        "base": "/images/black-ember-citadel-r3-25l/4",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Black Ember Citadel R3 25L — view 5 of 5"
+      }
+    ],
+    "colorways": [
+      {
+        "name": "Jet Black",
+        "hex": "#2e2e2e",
+        "family": "black"
+      },
+      {
+        "name": "Coyote",
+        "hex": "#846951",
+        "family": "brown"
+      }
+    ],
+    "price": {
+      "amountUsd": 285,
+      "retailer": "Black Ember",
+      "url": "https://blackember.com/products/citadel-25",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "review": {
+      "score": 4.77,
+      "scale": 5,
+      "source": "Black Ember",
+      "url": "https://blackember.com/products/citadel-25",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "specs": {
+      "capacityLiters": 25,
+      "weightGrams": 1600,
+      "dimensions": "20\" H x 12\" W x 7\" D (50 x 31 x 18 cm)",
+      "material": "EmberTex 1220x600 denier nylon 6 (PFAS-free), 200d matte-silver ripstop nylon lining, YKK AquaGuard zippers, T6 anodized aluminum hardware"
+    }
+  },
+  {
+    "rank": 9,
     "slug": "able-carry-max-edc",
     "name": "Max EDC 26L",
     "brand": "Able Carry",
@@ -624,7 +852,106 @@
     }
   },
   {
-    "rank": 12,
+    "rank": 10,
+    "slug": "mission-workshop-rhake-ls",
+    "name": "Rhake LS 22L",
+    "brand": "Mission Workshop",
+    "images": [
+      {
+        "base": "/images/mission-workshop-rhake-ls/0",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1707,
+        "alt": "Mission Workshop Rhake LS 22L — view 1 of 5"
+      },
+      {
+        "base": "/images/mission-workshop-rhake-ls/1",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1707,
+        "alt": "Mission Workshop Rhake LS 22L — view 2 of 5"
+      },
+      {
+        "base": "/images/mission-workshop-rhake-ls/2",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1707,
+        "alt": "Mission Workshop Rhake LS 22L — view 3 of 5"
+      },
+      {
+        "base": "/images/mission-workshop-rhake-ls/3",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1707,
+        "alt": "Mission Workshop Rhake LS 22L — view 4 of 5"
+      },
+      {
+        "base": "/images/mission-workshop-rhake-ls/4",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1707,
+        "alt": "Mission Workshop Rhake LS 22L — view 5 of 5"
+      }
+    ],
+    "colorways": [
+      {
+        "name": "Black VX",
+        "hex": "#222328",
+        "family": "black"
+      },
+      {
+        "name": "Olive VX",
+        "hex": "#403e32",
+        "family": "olive"
+      },
+      {
+        "name": "Gray VX",
+        "hex": "#575560",
+        "family": "grey"
+      },
+      {
+        "name": "Coyote VX",
+        "hex": "#925e24",
+        "family": "brown"
+      }
+    ],
+    "price": {
+      "amountUsd": 525,
+      "retailer": "Mission Workshop",
+      "url": "https://missionworkshop.com/products/rhake-ls-everyday-carry-backpack",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "review": {
+      "score": 3.75,
+      "scale": 5,
+      "source": "Nomads Nation",
+      "url": "https://nomadsnation.com/mission-workshop-rhake-ls-review/",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "specs": {
+      "capacityLiters": 22,
+      "weightGrams": 1497,
+      "dimensions": "19.5\" H x 13\" W x 5\" D",
+      "material": "Dimension Polyant VX-21"
+    }
+  },
+  {
+    "rank": 11,
     "slug": "alpaka-elements-backpack-pro",
     "name": "Elements Backpack Pro",
     "brand": "ALPAKA",
@@ -735,6 +1062,744 @@
       "weightGrams": 1300,
       "dimensions": "18.9\" H x 12.2\" W x 7.09\" D",
       "material": "840D ballistic nylon, YKK AquaGuard zippers"
+    }
+  },
+  {
+    "rank": 12,
+    "slug": "topo-designs-rover-pack-tech",
+    "name": "Rover Pack Tech",
+    "brand": "Topo Designs",
+    "images": [
+      {
+        "base": "/images/topo-designs-rover-pack-tech/0",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Topo Designs Rover Pack Tech — view 1 of 5"
+      },
+      {
+        "base": "/images/topo-designs-rover-pack-tech/1",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Topo Designs Rover Pack Tech — view 2 of 5"
+      },
+      {
+        "base": "/images/topo-designs-rover-pack-tech/2",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Topo Designs Rover Pack Tech — view 3 of 5"
+      },
+      {
+        "base": "/images/topo-designs-rover-pack-tech/3",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Topo Designs Rover Pack Tech — view 4 of 5"
+      },
+      {
+        "base": "/images/topo-designs-rover-pack-tech/4",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Topo Designs Rover Pack Tech — view 5 of 5"
+      }
+    ],
+    "colorways": [
+      {
+        "name": "Navy",
+        "hex": "#314256",
+        "family": "navy"
+      },
+      {
+        "name": "Black",
+        "hex": "#353439",
+        "family": "black"
+      }
+    ],
+    "price": {
+      "amountUsd": 149,
+      "retailer": "Topo Designs",
+      "url": "https://topodesigns.com/products/rover-pack-tech",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "review": {
+      "score": 8,
+      "scale": 10,
+      "source": "Pack Hacker",
+      "url": "https://www.packhacker.com/travel-gear/topo-designs/rover-pack-tech/",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "specs": {
+      "capacityLiters": 24.3,
+      "weightGrams": 816,
+      "dimensions": "17 in x 11 in x 5 in",
+      "material": "1000D recycled nylon (400D and 210D recycled nylon on liner and accents)"
+    }
+  },
+  {
+    "rank": 13,
+    "slug": "osprey-daylite-plus-20l",
+    "name": "Daylite Plus 20L",
+    "brand": "Osprey",
+    "images": [
+      {
+        "base": "/images/osprey-daylite-plus-20l/0",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Osprey Daylite Plus 20L — view 1 of 5"
+      },
+      {
+        "base": "/images/osprey-daylite-plus-20l/1",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Osprey Daylite Plus 20L — view 2 of 5"
+      },
+      {
+        "base": "/images/osprey-daylite-plus-20l/2",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Osprey Daylite Plus 20L — view 3 of 5"
+      },
+      {
+        "base": "/images/osprey-daylite-plus-20l/3",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Osprey Daylite Plus 20L — view 4 of 5"
+      },
+      {
+        "base": "/images/osprey-daylite-plus-20l/4",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Osprey Daylite Plus 20L — view 5 of 5"
+      }
+    ],
+    "colorways": [
+      {
+        "name": "Black",
+        "hex": "#292929",
+        "family": "black"
+      },
+      {
+        "name": "Tan Concrete",
+        "hex": "#7a7764",
+        "family": "tan"
+      },
+      {
+        "name": "Night Shift",
+        "hex": "#0a5072",
+        "family": "blue"
+      },
+      {
+        "name": "Greenbelt/Green Canopy",
+        "hex": "#2f5428",
+        "family": "green"
+      },
+      {
+        "name": "Blue Spikemoss/Alkaline",
+        "hex": "#0d788a",
+        "family": "blue"
+      },
+      {
+        "name": "Mystery White/Multi",
+        "hex": "#958b82",
+        "family": "multi"
+      },
+      {
+        "name": "Liquify Print Khaki/Pink",
+        "hex": "#6e353b",
+        "family": "multi"
+      },
+      {
+        "name": "Smoky Desert Print/Magma Brown",
+        "hex": "#736461",
+        "family": "multi"
+      },
+      {
+        "name": "Tumbleweed Yellow/Tunnel Vision",
+        "hex": "#a78231",
+        "family": "tan"
+      },
+      {
+        "name": "Umber/Tequila Sunrise",
+        "hex": "#a74d32",
+        "family": "orange"
+      },
+      {
+        "name": "Soundwave Grey/Latte Brown",
+        "hex": "#7b767c",
+        "family": "grey"
+      },
+      {
+        "name": "Magma Brown/Tungsten",
+        "hex": "#636967",
+        "family": "grey"
+      },
+      {
+        "name": "Cascade Blue/Latte Brown",
+        "hex": "#567071",
+        "family": "blue"
+      },
+      {
+        "name": "Histosol",
+        "hex": "#78623d",
+        "family": "brown"
+      }
+    ],
+    "price": {
+      "amountUsd": 79.95,
+      "retailer": "Outdoor Gear Exchange (GearX)",
+      "url": "https://www.gearx.com/products/osprey-daylite-plus-pack-h55jz-tan-concrete",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "review": {
+      "score": 7,
+      "scale": 10,
+      "source": "Pack Hacker",
+      "url": "https://www.packhacker.com/travel-gear/osprey/daylite-plus/",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "specs": {
+      "capacityLiters": 20,
+      "weightGrams": 544,
+      "dimensions": "18 in x 10 in x 9.5 in",
+      "material": "210D recycled nylon oxford, bluesign approved, PFC-free DWR coating"
+    }
+  },
+  {
+    "rank": 14,
+    "slug": "wandrd-prvke-21",
+    "name": "PRVKE 21L",
+    "brand": "WANDRD",
+    "images": [
+      {
+        "base": "/images/wandrd-prvke-21/0",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "WANDRD PRVKE 21L — view 1 of 5"
+      },
+      {
+        "base": "/images/wandrd-prvke-21/1",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "WANDRD PRVKE 21L — view 2 of 5"
+      },
+      {
+        "base": "/images/wandrd-prvke-21/2",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "WANDRD PRVKE 21L — view 3 of 5"
+      },
+      {
+        "base": "/images/wandrd-prvke-21/3",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "WANDRD PRVKE 21L — view 4 of 5"
+      },
+      {
+        "base": "/images/wandrd-prvke-21/4",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "WANDRD PRVKE 21L — view 5 of 5"
+      }
+    ],
+    "colorways": [
+      {
+        "name": "Black",
+        "hex": "#4f4f4f",
+        "family": "black"
+      },
+      {
+        "name": "Aegean Blue",
+        "hex": "#667183",
+        "family": "blue"
+      },
+      {
+        "name": "Wasatch Green",
+        "hex": "#848a7b",
+        "family": "green"
+      },
+      {
+        "name": "Sedona Orange",
+        "hex": "#da7041",
+        "family": "orange"
+      },
+      {
+        "name": "Atacama Clay",
+        "hex": "#ae887f",
+        "family": "orange"
+      },
+      {
+        "name": "Rhone Burgundy",
+        "hex": "#b05864",
+        "family": "red"
+      }
+    ],
+    "price": {
+      "amountUsd": 234,
+      "retailer": "WANDRD",
+      "url": "https://www.wandrd.com/products/prvke",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "review": {
+      "score": 7.5,
+      "scale": 10,
+      "source": "Pack Hacker",
+      "url": "https://www.packhacker.com/travel-gear/wandrd/prvke-21l/",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "specs": {
+      "capacityLiters": 21,
+      "weightGrams": 1352,
+      "dimensions": "19 in x 11 in x 6.5 in",
+      "material": "1680D ROBIC ballistic nylon, waterproof tarpaulin base, YKK zippers"
+    }
+  },
+  {
+    "rank": 15,
+    "slug": "the-brown-buffalo-concealpack-21l",
+    "name": "ConcealPack 21L",
+    "brand": "The Brown Buffalo",
+    "images": [
+      {
+        "base": "/images/the-brown-buffalo-concealpack-21l/0",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "The Brown Buffalo ConcealPack 21L — view 1 of 5"
+      },
+      {
+        "base": "/images/the-brown-buffalo-concealpack-21l/1",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "The Brown Buffalo ConcealPack 21L — view 2 of 5"
+      },
+      {
+        "base": "/images/the-brown-buffalo-concealpack-21l/2",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "The Brown Buffalo ConcealPack 21L — view 3 of 5"
+      },
+      {
+        "base": "/images/the-brown-buffalo-concealpack-21l/3",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "The Brown Buffalo ConcealPack 21L — view 4 of 5"
+      },
+      {
+        "base": "/images/the-brown-buffalo-concealpack-21l/4",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1600,
+        "alt": "The Brown Buffalo ConcealPack 21L — view 5 of 5"
+      }
+    ],
+    "colorways": [
+      {
+        "name": "Black Grid",
+        "hex": "#333236",
+        "family": "black"
+      },
+      {
+        "name": "Ballistic Black",
+        "hex": "#21201f",
+        "family": "black"
+      },
+      {
+        "name": "Ranger Green Ballistic",
+        "hex": "#634f42",
+        "family": "green"
+      },
+      {
+        "name": "Black Multicam",
+        "hex": "#302b2a",
+        "family": "multi"
+      }
+    ],
+    "price": {
+      "amountUsd": 229,
+      "retailer": "The Brown Buffalo",
+      "url": "https://www.thebrownbuffalo.com/products/conceal-pack-21l",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "review": {
+      "score": 7.5,
+      "scale": 10,
+      "source": "Pack Hacker",
+      "url": "https://www.packhacker.com/travel-gear/the-brown-buffalo/conceal-pack-21l/",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "specs": {
+      "capacityLiters": 21,
+      "weightGrams": 1315,
+      "dimensions": "19.5 in x 12 in x 6 in",
+      "material": "1050D CORDURA ballistic nylon (Multicam variant), Challenge Sailcloth EPX400, YKK zippers, ITW hardware"
+    }
+  },
+  {
+    "rank": 17,
+    "slug": "chrome-industries-barrage-22l-pack",
+    "name": "Barrage 22L Pack",
+    "brand": "Chrome Industries",
+    "images": [
+      {
+        "base": "/images/chrome-industries-barrage-22l-pack/0",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Chrome Industries Barrage 22L Pack — view 1 of 5"
+      },
+      {
+        "base": "/images/chrome-industries-barrage-22l-pack/1",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Chrome Industries Barrage 22L Pack — view 2 of 5"
+      },
+      {
+        "base": "/images/chrome-industries-barrage-22l-pack/2",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Chrome Industries Barrage 22L Pack — view 3 of 5"
+      },
+      {
+        "base": "/images/chrome-industries-barrage-22l-pack/3",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Chrome Industries Barrage 22L Pack — view 4 of 5"
+      },
+      {
+        "base": "/images/chrome-industries-barrage-22l-pack/4",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Chrome Industries Barrage 22L Pack — view 5 of 5"
+      }
+    ],
+    "colorways": [
+      {
+        "name": "Black",
+        "hex": "#1c1a1b",
+        "family": "black"
+      },
+      {
+        "name": "Coyote X",
+        "hex": "#393836",
+        "family": "brown"
+      },
+      {
+        "name": "Black XRF",
+        "hex": "#20201e",
+        "family": "black"
+      },
+      {
+        "name": "Moss X",
+        "hex": "#56542e",
+        "family": "green"
+      },
+      {
+        "name": "Amber X",
+        "hex": "#373936",
+        "family": "orange"
+      },
+      {
+        "name": "Castlerock Twill",
+        "hex": "#21221d",
+        "family": "grey"
+      }
+    ],
+    "price": {
+      "amountUsd": 175,
+      "retailer": "Chrome Industries",
+      "url": "https://chromeindustries.com/products/barrage-22l-pack",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "review": {
+      "score": 7.3,
+      "scale": 10,
+      "source": "Pack Hacker",
+      "url": "https://www.packhacker.com/travel-gear/chrome/barrage-cargo-backpack/",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "specs": {
+      "capacityLiters": 22,
+      "weightGrams": 1120,
+      "dimensions": "20\" H x 11\" W x 5.5\" D",
+      "material": "1050D recycled nylon (PFAS-free DWR) with 210D recycled nylon and welded TPE tarp liner"
+    }
+  },
+  {
+    "rank": 18,
+    "slug": "arktype-dashpack-ii",
+    "name": "Dashpack II",
+    "brand": "ARKTYPE",
+    "images": [
+      {
+        "base": "/images/arktype-dashpack-ii/0",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "ARKTYPE Dashpack II — view 1 of 5"
+      },
+      {
+        "base": "/images/arktype-dashpack-ii/1",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "ARKTYPE Dashpack II — view 2 of 5"
+      },
+      {
+        "base": "/images/arktype-dashpack-ii/2",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "ARKTYPE Dashpack II — view 3 of 5"
+      },
+      {
+        "base": "/images/arktype-dashpack-ii/3",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "ARKTYPE Dashpack Mark II interior organization"
+      },
+      {
+        "base": "/images/arktype-dashpack-ii/4",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "ARKTYPE Dashpack II — view 5 of 5"
+      }
+    ],
+    "colorways": [
+      {
+        "name": "Black",
+        "hex": "#3a3b40",
+        "family": "black"
+      },
+      {
+        "name": "Charcoal",
+        "hex": "#34353a",
+        "family": "grey"
+      }
+    ],
+    "price": {
+      "amountUsd": 198,
+      "retailer": "ARKTYPE",
+      "url": "https://www.arktypedesign.com/products/dashpack-black",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "review": {
+      "score": 7.6,
+      "scale": 10,
+      "source": "Pack Hacker",
+      "url": "https://www.packhacker.com/travel-gear/arktype/dashpack/",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "specs": {
+      "capacityLiters": 15,
+      "weightGrams": 907,
+      "dimensions": "18.5\" x 11\" x 4.5\"",
+      "material": "1680D DWR ballistic nylon with 210D double-walled ripstop nylon lining"
+    }
+  },
+  {
+    "rank": 19,
+    "slug": "filson-dryden-backpack",
+    "name": "Dryden Backpack",
+    "brand": "Filson",
+    "images": [
+      {
+        "base": "/images/filson-dryden-backpack/0",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1600,
+        "alt": "Filson Dryden Backpack — view 1 of 5"
+      },
+      {
+        "base": "/images/filson-dryden-backpack/1",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1600,
+        "alt": "Filson Dryden Backpack — view 2 of 5"
+      },
+      {
+        "base": "/images/filson-dryden-backpack/2",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1600,
+        "alt": "Filson Dryden Backpack — view 3 of 5"
+      },
+      {
+        "base": "/images/filson-dryden-backpack/3",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1280,
+        "alt": "Filson Dryden Backpack — view 4 of 5"
+      },
+      {
+        "base": "/images/filson-dryden-backpack/4",
+        "widths": [
+          640,
+          1280
+        ],
+        "width": 1280,
+        "height": 1600,
+        "alt": "Filson Dryden Backpack — view 5 of 5"
+      }
+    ],
+    "colorways": [
+      {
+        "name": "Black",
+        "hex": "#1d1a19",
+        "family": "black"
+      },
+      {
+        "name": "Otter Green",
+        "hex": "#514132",
+        "family": "green"
+      },
+      {
+        "name": "Whiskey",
+        "hex": "#5d3b20",
+        "family": "brown"
+      }
+    ],
+    "price": {
+      "amountUsd": 279,
+      "retailer": "Filson",
+      "url": "https://www.filson.com/products/dryden-backpack-black",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "review": {
+      "score": 7.6,
+      "scale": 10,
+      "source": "Pack Hacker",
+      "url": "https://www.packhacker.com/travel-gear/filson/dryden-backpack/",
+      "capturedAt": "2026-09-03T00:00:00Z"
+    },
+    "specs": {
+      "capacityLiters": 25.5,
+      "weightGrams": 1400,
+      "dimensions": "18\" H x 12.75\" W x 7\" D",
+      "material": "9-oz. 1000D nylon (ballistic weave) with bridle leather trim, nylon lining and webbing"
     }
   }
 ]

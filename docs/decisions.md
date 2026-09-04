@@ -392,3 +392,26 @@ ADR-031 inherited rank 8 from the discontinued Mystery Ranch Urban Assault 24 to
 - `backpackSchema` still allows `rank` up to 20. Deliberately left alone: a permissive ceiling costs nothing and tightening it is a pipeline change with no defect behind it. Uniqueness is what actually matters and is still enforced.
 - **Rank 7 (Bellroy) is still an open gap** and is unrelated to this. It is unresearched, not retired.
 - **Five of the original twenty have now been discontinued mid-project** — Citadel R2, Travel Pack 3, Urban Assault 24, Rhake VX, and the Catalyst 26 that was meant to replace one of them. A successor dying before it can be captured is a new failure shape: ADR-019's production check must be run against the *successor* too, not just the incumbent, before an inheritance is written into an ADR.
+
+## ADR-033 — Ranks 7 and 16 stay absent and reserved, rather than retired or filled
+**2026-09-03 · Accepted · Completes Phase 5 research**
+
+Phase 5 batches 3 and 4 researched every remaining rank. Seven were captured (12, 13, 14, 15, 17, 18, 19), bringing the catalog to **17 of the ranked 19**. Two could not be, and both failed on the same thing: a field `sourceSchema` requires could not be read off a live page.
+
+**Rank 7, Bellroy Classic Backpack Plus — blocked on `price` alone.** The pack is in production, and this round recovered a real Pack Hacker score (8.0/10, updated 2023-06-19), usable photographs and a colorway list. What is missing is a live USD price. bellroy.com is a client-rendered SPA with no JSON-LD and no Shopify product endpoints (confirmed 404 — it is not Shopify); Amazon returned 500, REI and Huckberry 403, Nordstrom and Nordstrom Rack were sold out, Zappos and Backcountry unusable. Two USD figures exist and neither qualifies: Pack Hacker's article text cites $189 direct in a review over three years old, and Carryology cites $179. A Philippine retailer has it live and in stock at PHP 13,005 (roughly $208), deliberately not converted.
+
+**Rank 16, Incase ICON Slim — blocked on both `price` and `review`.** The product page is live, not redirected, and still merchandised in the current Backpacks collection at $129.99 — but it reads "Coming Soon", shows 0 in stock and has no Add to Cart. No retailer carries this SKU; the Best Buy, B&H and Amazon listings found are an older generation with different SKUs and colorways. Pack Hacker has never reviewed the Slim: it scored the ICON Backpack 7.7/10 and the ICON Lite 7.3/10, which are different packs, and ADR-009 forbids borrowing a sibling's score.
+
+**Decision: leave both ranks absent, and keep the rank numbers reserved.** The list is not renumbered around the gaps, and no substitute is written in.
+
+**Why not retire, as ADR-032 did to rank 8.** ADR-032's basis was evidentiary: the brand was demonstrably exiting the category. Neither of these is that. Bellroy has not left the category — this is a fetch failure, not a product failure, and retiring an acclaimed pack because its retailer refused an HTTP request would let infrastructure decide editorial content. Incase's page is current and not redirected; "Coming Soon" most plausibly resolves on its own.
+
+**Why not fill either with the figures that exist.** The card claims "lowest available price", and ADR-017 makes that claim auditable by requiring a real comparison. A price lifted from three-year-old article prose was never compared to anything, and converting PHP 13,005 would launder local market pricing into a US price point. Both would make a rendered claim false. ADR-009's "a missing field is fine; a fabricated one corrupts the catalog silently" applies directly.
+
+**Why not relax the schema for rank 16.** Its price *is* readable; only the score is missing. Allowing a scoreless pack would mean a nullable `review`, which propagates into `ScoreBlock`, into Phase 6's score sort and filter, and into the normalized `score / scale` comparison — a real design change to accommodate one pack that may be back in stock shortly.
+
+**Consequences:**
+- The catalog ships **17 packs**, with 7 and 16 as documented holes. Rank gaps are expected and are not a defect; nothing renumbers.
+- **Recapture is the intended path.** Re-check Bellroy for a readable price and Incase for stock plus a Slim-specific review. Neither needs new research from scratch — batch 3's Bellroy findings are recorded in `data/seed.ts`.
+- `capacityLiters` is now verified for 17 of 19. **The capacity and price spreads that ADR-023 and ADR-031 withdrew stay withdrawn** until the last two land, rather than being restated against an incomplete list and restated again later.
+- Six of the original twenty have now been discontinued, retired or blocked mid-project. Sourcing attrition is the dominant risk on this project, well ahead of anything technical.

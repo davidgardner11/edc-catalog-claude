@@ -1,0 +1,44 @@
+{
+  "slug": "wandrd-prvke-21",
+  "productUrl": "https://www.wandrd.com/products/prvke",
+  "notes": "Captured 2026-09-03 from WANDRD's own Shopify storefront: the rendered product page plus each colorway's public product JSON (https://www.wandrd.com/products/prvke-21l-in-<color>.js). wandrd.com/robots.txt is a standard Shopify agent-facing robots.txt (Allow on product/collection pages) so this fetch is permitted. This is the current PRVKE 21L V4 generation - bag-only variant, not a Photography or Pro Photography Bundle. IN PRODUCTION: Black, Wasatch Green, Sedona Orange, Atacama Clay and Rhone Burgundy all report available:true at $234.00 with no compare_at_price; Aegean Blue reports available:false (out of stock, not discontinued - it is still a listed V4 colorway) so it is captured but flagged. A separate 'PRVKE 21L V3 in Yuma Tan' listing exists at $153.30 (compare_at $219.00) - this is the older V3 generation being cleared out, not the current V4 pack this rank captures, so it was excluded from both colorways and price comparison rather than used as a lower price. A 'High-Gloss Black' V4 slug appears in search results but 404s on the storefront's own .js endpoint, so it could not be confirmed as a live listing and was not included. PRICE COMPARISON: brand-direct $234.00 bag-only is the only figure captured. B&H Photo carries a bag-only V4 listing (PK21-BK-4) but the product page returned HTTP 403; Adorama's V4 listings found in search were Photography Bundles (bag + camera cube), a different, non-comparable product, and were not used. REVIEW: Pack Hacker's WANDRD PRVKE 21L review (7.5/10, updated 2025-03-04) reads as reviewing the same 'PRVKE 21L' model line WANDRD currently sells as V4 (its stated dimensions/weight are close to the brand's own current 19x11x6.5in / 2.98lb spec), but the review page does not itself say 'V4' anywhere in the fetched content, and the review predates some of the V4 photography on the current site. A human should confirm this score attaches to the current generation before trusting it uncritically. All six colorway hexes were sampled with `pnpm sample-swatch` from WANDRD's own full-resolution (1000px) 'Angled' product photograph for that colorway; swatchSource records which. No family overrides were needed - colorFamilyFromName resolves 'Black' -> black, 'Aegean Blue' -> blue, 'Wasatch Green' -> green, 'Sedona Orange' -> orange, 'Atacama Clay' -> orange (via the 'clay' keyword), 'Rhone Burgundy' -> red (via 'burgundy'), all reasonably against the sampled colours.",
+  "images": [
+    { "url": "https://cdn.shopify.com/s/files/1/0255/0218/7600/files/PRVKE_21L_V4_-_Black_-_Angled.png?v=1769108807" },
+    { "url": "https://cdn.shopify.com/s/files/1/0255/0218/7600/files/PRVKE_21L_V4_-_Wasatch_Green_-_Angled.png?v=1769108784" },
+    { "url": "https://cdn.shopify.com/s/files/1/0255/0218/7600/files/PRVKE_21L_V4_-_Sedona_Orange_-_Angled.png?v=1753233877" },
+    { "url": "https://cdn.shopify.com/s/files/1/0255/0218/7600/files/PRVKE_21L_V4_-_Rhone_Burgundy_-_Angled.png?v=1753233995" },
+    { "url": "https://cdn.shopify.com/s/files/1/0255/0218/7600/files/PRVKE_21L_V4_-_Atacama_Clay_-_Angled.png?v=1753234210" }
+  ],
+  "colorways": [
+    { "name": "Black", "hex": "#4f4f4f", "swatchSource": "https://cdn.shopify.com/s/files/1/0255/0218/7600/files/PRVKE_21L_V4_-_Black_-_Angled.png?v=1769108807" },
+    { "name": "Aegean Blue", "hex": "#667183", "swatchSource": "https://cdn.shopify.com/s/files/1/0255/0218/7600/files/PRVKE_21L_V4_-_Aegean_Blue_-_Angled.png?v=1753233582" },
+    { "name": "Wasatch Green", "hex": "#848a7b", "swatchSource": "https://cdn.shopify.com/s/files/1/0255/0218/7600/files/PRVKE_21L_V4_-_Wasatch_Green_-_Angled.png?v=1769108784" },
+    { "name": "Sedona Orange", "hex": "#da7041", "swatchSource": "https://cdn.shopify.com/s/files/1/0255/0218/7600/files/PRVKE_21L_V4_-_Sedona_Orange_-_Angled.png?v=1753233877" },
+    { "name": "Atacama Clay", "hex": "#ae887f", "swatchSource": "https://cdn.shopify.com/s/files/1/0255/0218/7600/files/PRVKE_21L_V4_-_Atacama_Clay_-_Angled.png?v=1753234210" },
+    { "name": "Rhone Burgundy", "hex": "#b05864", "swatchSource": "https://cdn.shopify.com/s/files/1/0255/0218/7600/files/PRVKE_21L_V4_-_Rhone_Burgundy_-_Angled.png?v=1753233995" }
+  ],
+  "price": {
+    "amountUsd": 234,
+    "retailer": "WANDRD",
+    "url": "https://www.wandrd.com/products/prvke",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "priceComparison": [
+    { "retailer": "WANDRD", "url": "https://www.wandrd.com/products/prvke", "amountUsd": 234, "outcome": "captured - brand-direct, bag-only V4, no compare_at_price on any in-stock colorway" },
+    { "retailer": "B&H Photo", "url": "https://www.bhphotovideo.com/c/product/1904219-REG/wandrd_pk21_bk_4_prvke_backpack_v4_black.html", "outcome": "not captured - HTTP 403" },
+    { "retailer": "Adorama", "outcome": "not captured - only Photography Bundle (bag + camera cube) listings found, a different, non-comparable product" }
+  ],
+  "review": {
+    "score": 7.5,
+    "scale": 10,
+    "source": "Pack Hacker",
+    "url": "https://www.packhacker.com/travel-gear/wandrd/prvke-21l/",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "specs": {
+    "capacityLiters": 21,
+    "weightGrams": 1352,
+    "dimensions": "19 in x 11 in x 6.5 in",
+    "material": "1680D ROBIC ballistic nylon, waterproof tarpaulin base, YKK zippers"
+  }
+}

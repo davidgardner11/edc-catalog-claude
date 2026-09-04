@@ -1,0 +1,57 @@
+{
+  "slug": "osprey-daylite-plus-20l",
+  "productUrl": "https://www.osprey.com/daylite-plus-dayltpluss21-795",
+  "notes": "Captured 2026-09-03. BRAND-DIRECT WAS UNREACHABLE: every osprey.com path tried - the US product page, the EU product page (osprey.com/eu/...), a colorway-specific slug (daylitetm-plus-driftshade-backpack), and even /robots.txt - returned HTTP 403 to every fetch attempt. This is a full brand-direct block, not a single blocked page. Per the fallback order (brand-direct -> major retailer -> manual capture), retailers were tried next: REI, Dick's Sporting Goods, Scuba.com, Ascent Outdoors and B&H-style Amazon rendering all either 403'd or returned JS-loaded pages with no price in the fetched HTML. Two retailers succeeded: Active Endeavors (Shoplightspeed storefront, $80.00, generic product photography only, no colorway-specific images) and gearx.com / Outdoor Gear Exchange (Shopify storefront, $79.95 shown alongside a $80.00 reference price, with clean per-colorway image filenames e.g. 'dayliteplus_f24_side_tanconcrete', 'dayliteplus_f24_side_nightshift' - used for both the carousel and the swatch sampling because it is the only source that reliably maps a photo to a colour name). GearX's $79.95 is the lower of the two and is recorded as price; nothing indicated it was a temporary promo (no percent-off banner, no strikethrough). SPECS: capacity and weight/dimensions come from Pack Hacker's own review (20L, 1.2 lb, 18 x 10 x 9.5 in, 210D recycled nylon oxford) since Pack Hacker independently measures the product; gearx's spec block gives very slightly different figures (1.29 lb, 18.9 x 11.02 x 9.45 in) which likely reflects Osprey's own published spec sheet rather than a measurement - both are close enough to be the same pack, and a human should reconcile them against osprey.com once it is reachable. COLORWAYS: Osprey sells this pack in at least 14 named colourways (gearx's own listing pages: Tan Concrete, Blue Spikemoss/Alkaline, Greenbelt/Green Canopy, Black, Liquify Print Khaki/Pink, Night Shift, Smoky Desert Print/Magma Brown, Tumbleweed Yellow/Tunnel Vision, Umber/Tequila Sunrise, Soundwave Grey/Latte Brown, Magma Brown/Tungsten, Cascade Blue/Latte Brown, Histosol, Mystery White/Multi). All 14 hexes were sampled with `pnpm sample-swatch` from gearx's own per-colorway photograph; the exact official Osprey punctuation for the compound names (slash vs space) could not be confirmed since osprey.com itself was unreachable, so the slash placement here is my best-effort formatting, not copied verbatim off a brand page - a human should correct it once osprey.com is reachable. FAMILY OVERRIDES: 'Night Shift' has no colour word at all (sampled #0a5072, clearly blue) - colorFamilyFromName returns null on it and ingest would fail without an override, so family is set to 'blue'; this is also a genuine gap in app/utils/color.ts worth flagging, since 'night' maps to nothing today. 'Mystery White/Multi' would default to 'white' (matching only the 'white' keyword) despite being a print - the bare word 'multi' is not itself in the multi keyword list (only 'multicam' is), which is a second color.ts gap worth flagging; overridden here to 'multi'. 'Tumbleweed Yellow/Tunnel Vision' (#a78231, mustard-gold) and 'Umber/Tequila Sunrise' (#a74d32, terracotta) both have no matching keyword at all (yellow and umber are not in the table) and were overridden to 'tan' and 'orange' respectively by closest visual match to the sampled hex. 'Histosol' (a soil-taxonomy name Osprey uses as a print name, #78623d) also matches nothing and was overridden to 'brown'. 'Magma Brown/Tungsten' would default to 'brown' via the literal word 'brown', but the sampled photo (#636967) reads distinctly grey-green, not brown - overridden to 'grey' since the default here would be misleading rather than merely imprecise. All other names (Tan Concrete, Blue Spikemoss/Alkaline, Greenbelt/Green Canopy, Black, Liquify Print Khaki/Pink, Smoky Desert Print/Magma Brown, Soundwave Grey/Latte Brown, Cascade Blue/Latte Brown) resolve correctly against their sampled hex with no override. Carousel images use the five most broadly-stocked colourways (Black, Tan Concrete, Night Shift, Greenbelt/Green Canopy, Mystery White/Multi) rather than the seasonal prints, all from gearx.com since no brand-direct image could be fetched.",
+  "images": [
+    { "url": "https://www.gearx.com/cdn/shop/files/dayltpluss21_s21_side_black_d8c6f66b-bfbe-47f6-8638-e400fd7ca5cf.jpg" },
+    { "url": "https://www.gearx.com/cdn/shop/files/dayliteplus_f24_side_tanconcrete_1_1.jpg" },
+    { "url": "https://www.gearx.com/cdn/shop/files/dayliteplus_f24_side_nightshift_07dcb485-1f28-40a3-9b21-26a6932ca61c.jpg" },
+    { "url": "https://www.gearx.com/cdn/shop/files/dayliteplus_f24_side_greenbeltgreencanopy_3c71309e-0ed1-4e3f-96e2-69d7f5217838.jpg" },
+    { "url": "https://www.gearx.com/cdn/shop/files/DaylitePlus_S26_Side_MysteryWhiteMulti_Hi-res.webp?v=1773932282&width=1946" }
+  ],
+  "colorways": [
+    { "name": "Black", "hex": "#292929", "swatchSource": "https://www.gearx.com/cdn/shop/files/dayltpluss21_s21_side_black_d8c6f66b-bfbe-47f6-8638-e400fd7ca5cf.jpg" },
+    { "name": "Tan Concrete", "hex": "#7a7764", "swatchSource": "https://www.gearx.com/cdn/shop/files/dayliteplus_f24_side_tanconcrete_1_1.jpg" },
+    { "name": "Night Shift", "hex": "#0a5072", "family": "blue", "swatchSource": "https://www.gearx.com/cdn/shop/files/dayliteplus_f24_side_nightshift_07dcb485-1f28-40a3-9b21-26a6932ca61c.jpg" },
+    { "name": "Greenbelt/Green Canopy", "hex": "#2f5428", "swatchSource": "https://www.gearx.com/cdn/shop/files/dayliteplus_f24_side_greenbeltgreencanopy_3c71309e-0ed1-4e3f-96e2-69d7f5217838.jpg" },
+    { "name": "Blue Spikemoss/Alkaline", "hex": "#0d788a", "swatchSource": "https://www.gearx.com/cdn/shop/files/dayliteplus_f24_front_bluespikemossalkaline_1_24ffcd19-5053-4969-a3df-48d20e22c366.jpg" },
+    { "name": "Mystery White/Multi", "hex": "#958b82", "family": "multi", "swatchSource": "https://www.gearx.com/cdn/shop/files/DaylitePlus_S26_Side_MysteryWhiteMulti_Hi-res.webp?v=1773932282&width=1946" },
+    { "name": "Liquify Print Khaki/Pink", "hex": "#6e353b", "swatchSource": "https://www.gearx.com/cdn/shop/files/dayliteplus_f24_side_liquifyprintkakiopink_2_d701fc7f-06f8-4bbc-bd85-79b2948fff30.jpg" },
+    { "name": "Smoky Desert Print/Magma Brown", "hex": "#736461", "swatchSource": "https://www.gearx.com/cdn/shop/files/dayliteplus_f24_side_smokydesertprintmagmabrown_dfc9052e-5956-4f31-9e4b-88311e0e0bf0.jpg" },
+    { "name": "Tumbleweed Yellow/Tunnel Vision", "hex": "#a78231", "family": "tan", "swatchSource": "https://www.gearx.com/cdn/shop/files/dayliteplus_f24_side_tumbleweedyellowtunnelvision_1_19364f7d-425c-41ff-8b21-638f7b15b1a7.jpg" },
+    { "name": "Umber/Tequila Sunrise", "hex": "#a74d32", "family": "orange", "swatchSource": "https://www.gearx.com/cdn/shop/files/dayliteplus_f24_side_umbertequilasunrise_1_8d0132a4-6a74-4d1c-afc7-f7c8a3d2f53d.jpg" },
+    { "name": "Soundwave Grey/Latte Brown", "hex": "#7b767c", "swatchSource": "https://www.gearx.com/cdn/shop/files/dayliteplus_s25_side_soundwavegreylattebrown_1_4d6cdc5a-e3bc-45ae-8538-e03cdc13a44e.jpg" },
+    { "name": "Magma Brown/Tungsten", "hex": "#636967", "family": "grey", "swatchSource": "https://www.gearx.com/cdn/shop/files/dayliteplus_s25_side_magmabrowntungsten_1_138d980f-2bd6-4b33-8f20-43d9b943b52c.jpg" },
+    { "name": "Cascade Blue/Latte Brown", "hex": "#567071", "swatchSource": "https://www.gearx.com/cdn/shop/files/dayliteplus_s25_side_cascadebluelattebrown_9defb371-0d58-4313-8378-00abea56ed9f.jpg" },
+    { "name": "Histosol", "hex": "#78623d", "family": "brown", "swatchSource": "https://www.gearx.com/cdn/shop/files/osprey-dayliteplus-histosol_766a14b4-84dc-4cd1-9303-f25cef36492b.jpg" }
+  ],
+  "price": {
+    "amountUsd": 79.95,
+    "retailer": "Outdoor Gear Exchange (GearX)",
+    "url": "https://www.gearx.com/products/osprey-daylite-plus-pack-h55jz-tan-concrete",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "priceComparison": [
+    { "retailer": "Osprey", "url": "https://www.osprey.com/daylite-plus-dayltpluss21-795", "outcome": "not captured - HTTP 403 on every osprey.com path tried (US product page, EU product page, colorway variant page, robots.txt)" },
+    { "retailer": "Outdoor Gear Exchange (GearX)", "url": "https://www.gearx.com/products/osprey-daylite-plus-pack-h55jz-tan-concrete", "amountUsd": 79.95, "outcome": "captured - no discount banner or strikethrough price shown" },
+    { "retailer": "Active Endeavors", "url": "https://www.activeendeavors.com/daylite-plus-backpack-20l.html", "amountUsd": 80.00, "outcome": "captured - matches GearX within $0.05, not the lowest" },
+    { "retailer": "REI", "url": "https://www.rei.com/product/186383/osprey-daylite-plus-pack", "outcome": "not captured - HTTP 403" },
+    { "retailer": "Dick's Sporting Goods", "outcome": "not captured - HTTP 403" },
+    { "retailer": "Scuba.com", "outcome": "not captured - HTTP 403" },
+    { "retailer": "Amazon", "url": "https://www.amazon.com/Osprey-Daylite-Plus-Commuter-Backpack/dp/B0D92HZMK2", "outcome": "not captured - price is loaded client-side; the fetched HTML contained no price" },
+    { "retailer": "Ascent Outdoors", "outcome": "not captured - page content did not include a price in the fetched HTML" }
+  ],
+  "review": {
+    "score": 7.0,
+    "scale": 10,
+    "source": "Pack Hacker",
+    "url": "https://www.packhacker.com/travel-gear/osprey/daylite-plus/",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "specs": {
+    "capacityLiters": 20,
+    "weightGrams": 544,
+    "dimensions": "18 in x 10 in x 9.5 in",
+    "material": "210D recycled nylon oxford, bluesign approved, PFC-free DWR coating"
+  }
+}

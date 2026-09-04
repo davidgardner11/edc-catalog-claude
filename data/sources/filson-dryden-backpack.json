@@ -1,0 +1,41 @@
+{
+  "slug": "filson-dryden-backpack",
+  "productUrl": "https://www.filson.com/products/dryden-backpack-black",
+  "notes": "Captured 2026-09-03. The plan calls this 'Dryden Backpack (Ballistic Nylon)' to distinguish it from Filson's other Dryden fabrics (Tin Cloth, Rugged Twill); the current product page itself no longer uses the words 'ballistic nylon' anywhere - material is described only as '9-oz. 1000D nylon + Bridle Leather + nylon lining + nylon webbing', with copy noting 1000D nylon 'has the same weave pattern as ballistic nylon'. Huckberry's listings for the same pack are still titled 'Dryden Ballistic Nylon Backpack', confirming this is the same product the plan means. filson.com's rendered product pages would not yield a price to WebFetch (client-side rendering), so price, exact image URLs and stock status were read from the store's own Shopify product JSON endpoint (https://www.filson.com/products/dryden-backpack-black.json etc.) rather than the HTML page - the same technique the GORUCK capture used. That endpoint gives $279.00 for all three colorways (Black, Otter Green, Whiskey), materially higher than the $225 and $265 figures found in a Stridewise review and older search-indexed Huckberry snippets - those are likely stale/historical or sale prices; $279 is what the brand's live storefront returns today. Weight is Pack Hacker's independently measured 3 lb (1.4 kg); Filson's own spec sheet states 2.7 lb but does not appear in the machine-readable product JSON, so the measured figure is used and the discrepancy is noted here rather than silently picking one. Colorway 'Whiskey' matches no keyword in app/utils/color.ts (no 'tan'/'brown'/'amber'/etc token), so family is set explicitly to brown here, matching its sampled dark-brown hex.",
+  "images": [
+    { "url": "https://cdn.shopify.com/s/files/1/0657/0557/4552/files/c8f6f765eab6b197f347528927ced8fbd808873425dce10fbbbc5f03f53879ca.png?v=1787596280" },
+    { "url": "https://cdn.shopify.com/s/files/1/0657/0557/4552/files/debbdd1e006fe384da0799ae3fbbb1ac680594251527d7d6181a63bc202e64e0.png?v=1787596283" },
+    { "url": "https://cdn.shopify.com/s/files/1/0657/0557/4552/files/c20c72d044359a7b638e3aa7bee23deea217ae61000b38009a5a7a084d8a040f.png?v=1787596287" },
+    { "url": "https://cdn.shopify.com/s/files/1/0657/0557/4552/files/32b229e6c262bbca9d94995045045af5028e56a3f11d455ebee65ba6c59a7d85.png?v=1787349663" },
+    { "url": "https://cdn.shopify.com/s/files/1/0657/0557/4552/files/832b2b49bfc4bfafc8edac7e4465967d918f0f1df356821301cb54b34a5fdebc.jpg?v=1787349320" }
+  ],
+  "colorways": [
+    { "name": "Black", "hex": "#1d1a19", "swatchSource": "https://cdn.shopify.com/s/files/1/0657/0557/4552/files/c8f6f765eab6b197f347528927ced8fbd808873425dce10fbbbc5f03f53879ca.png?v=1787596280" },
+    { "name": "Otter Green", "hex": "#514132", "swatchSource": "https://cdn.shopify.com/s/files/1/0657/0557/4552/files/32b229e6c262bbca9d94995045045af5028e56a3f11d455ebee65ba6c59a7d85.png?v=1787349663" },
+    { "name": "Whiskey", "hex": "#5d3b20", "family": "brown", "swatchSource": "https://cdn.shopify.com/s/files/1/0657/0557/4552/files/832b2b49bfc4bfafc8edac7e4465967d918f0f1df356821301cb54b34a5fdebc.jpg?v=1787349320" }
+  ],
+  "price": {
+    "amountUsd": 279,
+    "retailer": "Filson",
+    "url": "https://www.filson.com/products/dryden-backpack-black",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "priceComparison": [
+    { "retailer": "Filson", "url": "https://www.filson.com/products/dryden-backpack-black", "amountUsd": 279, "outcome": "captured - brand-direct, via storefront product JSON, in stock ('Only a few left - Order soon')" },
+    { "retailer": "Huckberry", "url": "https://huckberry.com/store/filson/category/p/61071-dryden-ballistic-nylon-backpack", "outcome": "not captured - HTTP 403" },
+    { "retailer": "Amazon", "url": "https://www.amazon.com/Filson-Dryden-Backpack/dp/B0GM6SJBGS", "outcome": "not captured - HTTP 500" }
+  ],
+  "review": {
+    "score": 7.6,
+    "scale": 10,
+    "source": "Pack Hacker",
+    "url": "https://www.packhacker.com/travel-gear/filson/dryden-backpack/",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "specs": {
+    "capacityLiters": 25.5,
+    "weightGrams": 1400,
+    "dimensions": "18\" H x 12.75\" W x 7\" D",
+    "material": "9-oz. 1000D nylon (ballistic weave) with bridle leather trim, nylon lining and webbing"
+  }
+}

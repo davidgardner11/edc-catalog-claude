@@ -1,0 +1,41 @@
+{
+  "slug": "arktype-dashpack-ii",
+  "productUrl": "https://www.arktypedesign.com/products/dashpack-black",
+  "notes": "Captured 2026-09-03 from arktypedesign.com. Confirmed in production and in stock ('The Dashpack is now in stock.') - Arktype is a very small brand as the plan flags, but the product page is live, not a 404 or redirect. This is the Mark II: the product description reads 'Our best seller - now with additional organization. Mark II now has two new interior YKK zipper pockets, a new sidearm D-ring, and interior ceiling D-ring for added utility,' and one gallery image is explicitly captioned 'Inside - Mark II'. The only numeric review found - Pack Hacker, 7.6/10 - is titled simply 'ARKTYPE Dashpack Review' and its own spec block still lists the pre-Mark-II 15L capacity with no variant marker; Pack Hacker's brand page lists no separate Mark II review. The physical spec (1680D DWR ballistic nylon, 15L, 18.5x11x4.5in, 2lb) is unchanged between generations per Arktype's own copy, so the score is recorded here as the best available evidence for the current product, but it may predate the interior-pocket refresh and should be revisited if Pack Hacker (or another enthusiast outlet) publishes a Mark-II-specific review. A third colorway, 'Dashpack - Special Edition Waxed Canvas - Black' ($228, heavier canvas shell), exists on the same site but is a different fabric and price point, not merely a color of this product, so it is excluded from colorways/price here. Product images were requested at a Shopify '_1946x' width; the CDN served back the true original 1024x1024 files (upscale not honored past source resolution), so these are full-resolution originals despite the URL suffix.",
+  "images": [
+    { "url": "https://www.arktypedesign.com/cdn/shop/products/ARKTYPE_Dashpack_Backpack_-_Black_-_Perspective_1946x.jpg" },
+    { "url": "https://www.arktypedesign.com/cdn/shop/products/ARKTYPE_Dashpack_Backpack_-_Black_-_Side_1946x.jpg" },
+    { "url": "https://www.arktypedesign.com/cdn/shop/products/ARKTYPE_Dashpack_Backpack_-_Black_-_Front_1946x.jpg" },
+    { "url": "https://www.arktypedesign.com/cdn/shop/products/ARKTYPE_Dashpack_Backpack_-_Black_-_Inside_-_Mark_II_1946x.jpg", "alt": "ARKTYPE Dashpack Mark II interior organization" },
+    { "url": "https://www.arktypedesign.com/cdn/shop/products/ARKTYPE_Dashpack_Backpack_-_Charcoal_-_Perspective_-_Straps_-_Dark_bd9d0c2b-32b8-42c1-8f2c-8e440383f24e_1946x.jpg" }
+  ],
+  "colorways": [
+    { "name": "Black", "hex": "#3a3b40", "swatchSource": "https://www.arktypedesign.com/cdn/shop/products/ARKTYPE_Dashpack_Backpack_-_Black_-_Perspective_1946x.jpg" },
+    { "name": "Charcoal", "hex": "#34353a", "swatchSource": "https://www.arktypedesign.com/cdn/shop/products/ARKTYPE_Dashpack_Backpack_-_Charcoal_-_Perspective_-_Straps_-_Dark_bd9d0c2b-32b8-42c1-8f2c-8e440383f24e_1946x.jpg" }
+  ],
+  "price": {
+    "amountUsd": 198,
+    "retailer": "ARKTYPE",
+    "url": "https://www.arktypedesign.com/products/dashpack-black",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "priceComparison": [
+    { "retailer": "ARKTYPE", "url": "https://www.arktypedesign.com/products/dashpack-black", "amountUsd": 198, "outcome": "captured - brand-direct, in stock" },
+    { "retailer": "Uncrate Supply", "url": "https://shop.uncrate.com/products/dashpack-15l-black", "amountUsd": 198, "outcome": "not captured for price purposes - matches brand price but marked sold out ('Final Sale / No Returns Sold out')" },
+    { "retailer": "Huckberry", "url": "https://huckberry.com/store/arktype-design", "outcome": "not captured - HTTP 403" },
+    { "retailer": "Mukama", "url": "https://www.mukama.com/products/arktype-dashpack-15-l", "outcome": "not captured - EU retailer listed in EUR (229,00 EUR), not a comparable USD price, and its own purchase button reads 'No longer available' despite showing stock" }
+  ],
+  "review": {
+    "score": 7.6,
+    "scale": 10,
+    "source": "Pack Hacker",
+    "url": "https://www.packhacker.com/travel-gear/arktype/dashpack/",
+    "capturedAt": "2026-09-03T00:00:00Z"
+  },
+  "specs": {
+    "capacityLiters": 15,
+    "weightGrams": 907,
+    "dimensions": "18.5\" x 11\" x 4.5\"",
+    "material": "1680D DWR ballistic nylon with 210D double-walled ripstop nylon lining"
+  }
+}

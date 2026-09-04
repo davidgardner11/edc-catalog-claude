@@ -104,7 +104,7 @@ Ranked on **cross-source critical acclaim** — Carryology Carry Awards, Pack Ha
 | 4 | Aer | Travel Pack 3 Small 28L | "One of the most beloved EDC go-anywhere packs ever". *Discontinued; rank deliberately kept on the TP3 rather than inherited to the Travel Pack 4 — ADR-026* |
 | 5 | Aer | City Pack Pro 2 20L (base fabric) | S-tier; the zero-regret daily driver |
 | 6 | Tom Bihn | Synapse 19 | Long-running cult classic, US-made |
-| 7 | Bellroy | Classic Backpack Plus | Best-selling gateway EDC pack |
+| 7 | Bellroy | Classic Backpack Plus | Best-selling gateway EDC pack. *Not captured — no live USD price readable from any host; rank reserved, not retired — ADR-033* |
 | 8 | Black Ember | Citadel R3 25L | Best weatherproof; modular hardshell. *Replaces discontinued R2; rank inherited — ADR-019* |
 | 9 | Able Carry | Max EDC 26L | Enthusiast darling, Carry Awards regular |
 | 10 | Mission Workshop | Rhake LS | Best commuter/cycling; weatherproof VX-21. *Replaces discontinued Rhake VX; rank inherited — ADR-031* |
@@ -113,16 +113,16 @@ Ranked on **cross-source critical acclaim** — Carryology Carry Awards, Pack Ha
 | 13 | Osprey | Daylite Plus 20L | Highest-volume seller on the list |
 | 14 | WANDRD | PRVKE 21 | Photo/EDC crossover standard |
 | 15 | The Brown Buffalo | ConcealPack 21L | Best small-batch |
-| 16 | Incase | ICON Slim | Long-standing tech-EDC staple |
-| 17 | Chrome Industries | Barrage Cargo | Messenger heritage, weatherproof roll-top |
+| 16 | Incase | ICON Slim | Long-standing tech-EDC staple. *Not captured — page live but "Coming Soon", 0 stock, and no Slim-specific review exists; rank reserved, not retired — ADR-033* |
+| 17 | Chrome Industries | Barrage 22L Pack | Messenger heritage, weatherproof roll-top. *Chrome renamed the line; the old "Barrage Cargo Backpack" URL 404s and this is the same pack, not an inheritance — ADR-033* |
 | 18 | Arktype | Dashpack II | Minimalist favorite |
-| 19 | Filson | Dryden Ballistic Nylon | Heritage/professional entry |
+| 19 | Filson | Dryden Backpack | Heritage/professional entry. *Filson's own copy has dropped "ballistic nylon" for "1000D nylon"; Huckberry still lists the identical pack under the old name* |
 
-18 distinct brands (Aer twice) — Mystery Ranch was retired at rank 8 (ADR-032). **Neither spread is stated any more.** The price range previously here ("$60–$435") is withdrawn: the Rhake LS researched at $525, above its ceiling (ADR-031). The capacity range ("14–30L") was withdrawn earlier for being wrong at both ends (ADR-023). Restate both from captured data once Phase 5 completes, rather than patching an endpoint.
+18 distinct brands (Aer twice) — Mystery Ranch was retired at rank 8 (ADR-032). **Neither spread is stated any more.** The price range previously here ("$60–$435") is withdrawn: the Rhake LS researched at $525, above its ceiling (ADR-031). The capacity range ("14–30L") was withdrawn earlier for being wrong at both ends (ADR-023). Both stay withdrawn: **17 of the 19 are captured**, and ADR-033 holds the restatement until ranks 7 and 16 land rather than stating a spread twice. For reference, the 17 in hand run $79.95–$525 and 15–30L, and the two absentees would move only the floors — Incase is $129.99 at 19L or 14.5L (its own page says both), Bellroy 22L at an unverified price.
 
 **Before researching any pack, confirm it is still in production** (ADR-019). Incase ICON Slim and Arktype Dashpack II are the most likely to have been superseded.
 
-**Capacity is unverified for half of this table** (ADR-023). Four spot-checks in 2026-09 found two problems: the **Aer Travel Pack 3 is 35L**, above the 30L ceiling the old spread claimed and arguably outside "EDC"; and the **Incase ICON Slim is now 19L**, not the 14.5L that produced the old 14L floor. Verified fine: Chrome Barrage Cargo 18→22L, Arktype Dashpack 15L. The rank-4 question that spot-check raised — which Travel Pack 3 size rank 4 means — is settled: **the 28L Small**, both sizes having since been discontinued (ADR-026). Phase 4 added GORUCK GR1 **26L**, Able Carry Max EDC **26L** and ALPAKA Elements Backpack Pro **26L**; Phase 5 batch 1 added EVERGOODS CPL **24L**, Peak Design Everyday Backpack **30L**, Aer Travel Pack 3 Small **28L** and Aer City Pack Pro 2 **20L** — 10 of 20 now verified, still not enough to restate the spread. Capture `capacityLiters` for every remaining pack in Phase 5, then restate the spread from the data.
+**Capacity is unverified for half of this table** (ADR-023). Four spot-checks in 2026-09 found two problems: the **Aer Travel Pack 3 is 35L**, above the 30L ceiling the old spread claimed and arguably outside "EDC"; and the **Incase ICON Slim is now 19L**, not the 14.5L that produced the old 14L floor. Verified fine: Chrome Barrage Cargo 18→22L, Arktype Dashpack 15L. The rank-4 question that spot-check raised — which Travel Pack 3 size rank 4 means — is settled: **the 28L Small**, both sizes having since been discontinued (ADR-026). Phase 4 added GORUCK GR1 **26L**, Able Carry Max EDC **26L** and ALPAKA Elements Backpack Pro **26L**; Phase 5 batch 1 added EVERGOODS CPL **24L**, Peak Design Everyday Backpack **30L**, Aer Travel Pack 3 Small **28L** and Aer City Pack Pro 2 **20L**. Batches 3 and 4 finished the job for everything reachable: Topo Rover Pack Tech **24.3L**, Osprey Daylite Plus **20L**, WANDRD PRVKE **21L**, Brown Buffalo ConcealPack **21L**, Chrome Barrage **22L**, Arktype Dashpack II **15L**, Filson Dryden **25.5L**. That is **17 of 19 verified** — every rank except the two ADR-033 left absent. Two of the four original spot-checks needed revising again on capture: Chrome is **19–22L** on its current spec block, not the 18→22L recorded here, and the Incase figure could not be settled at all because the brand's own page states 19L in the title and 14.5L in the spec string on the same page. Restate the spread once 7 and 16 land.
 
 ---
 
@@ -228,11 +228,11 @@ Shell is `aspect-[5/7] min-w-[260px] max-w-[320px] rounded-xl border shadow-sm o
 2. **Types + fixtures** — `app/types/backpack.ts` and 3 hand-written fixture packs with placeholder images, so components can be built and tested before any research happens. ADR-009's ban on synthetic imagery governs catalog content, not dev fixtures.
 3. **Card components** — build the whole card against fixtures. This is where the 65/15/20 split, carousel wraparound, and swatch grid get nailed down.
 4. **Ingest pipeline** — scripts + zod schema, proven end-to-end on 3 real packs. *Done: GORUCK GR1 26L (rank 3), Able Carry Max EDC (10), ALPAKA Elements Backpack Pro (12).*
-5. **Research + ingest 20** — the slow part, run in batches of ~5. Now cheap to verify, because the UI already exists.
+5. **Research + ingest 20** — the slow part, run in batches of ~5. Now cheap to verify, because the UI already exists. *Research complete: 17 of 19 captured across four batches. Ranks 7 (Bellroy) and 16 (Incase) are reserved and absent — ADR-033. The scope figure in this line is historical; ADR-032 cut the list to 19.*
 6. **Catalog shell** — toolbar, filters, sort, detail route.
 7. **Tests + verification.**
 
-Steps 1–4 are the ones worth your review; step 5 is mechanical once the pipeline is proven.
+Steps 1–4 are the ones worth your review; step 5 is mechanical once the pipeline is proven — with the caveat that step 5 turned out to carry the project's real risk, and it was sourcing, not code. Six of the original twenty were discontinued, retired or unreachable mid-project, and five separate ADRs (019, 026, 031, 032, 033) exist only to record what to do when a ranked pack stops being purchasable.
 
 ---
 
