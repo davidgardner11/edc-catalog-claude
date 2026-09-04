@@ -4,13 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Status
 
-**Phase 4 complete — the pipeline is proven.** The card renders (`app/types/backpack.ts`, `app/utils/{format,color,cycle,image}.ts`, and the six components `BackpackCard`, `CardCarousel`, `CardLabel`, `ColorwayGrid`, `PriceBlock`, `ScoreBlock`), and `pnpm ingest` works end to end: `scripts/{ingest,fetch-images,process-images,build-catalog}.ts` plus `scripts/lib/`, driven by `data/seed.ts` and `data/sources/{slug}.json`. `pnpm typecheck`, `pnpm test` (251 unit tests) and `pnpm generate` all pass.
+**Phase 6 complete — the app is whole.** The card renders, `pnpm ingest` works end to end (`scripts/{ingest,fetch-images,process-images,build-catalog}.ts` plus `scripts/lib/`, driven by `data/seed.ts` and `data/sources/{slug}.json`), and the shell is built: `CatalogToolbar` + `FacetCheckboxGroup` (search over brand and model; brand, colour, price and rating filters; sort by rank, price or rating), `app/composables/useCatalogFilters.ts` backed by URL query params, and a prerendered `/pack/[slug]` with `PackGallery`. All the rules live in `app/utils/catalog.ts`, which is pure. `pnpm typecheck`, `pnpm test` (251 unit tests) and `pnpm generate` all pass; generate emits 17 detail pages.
 
-Two things that surprise people. **`app/pages/index.vue` still imports `app/data/fixtures.ts`, not `catalog.json`** — the one-line swap is Phase 6, so the page shows the three fixtures even though a real catalog exists on disk. And **only 3 of the ranked 20 are ingested**; the other 17 are Phase 5. Still missing entirely: the toolbar, filters and sort, the `/pack/[slug]` detail route, and any E2E test.
+Two things that surprise people. **The index page reads `app/data/catalog.json` now**, via `app/data/catalog.ts` — the only module that imports the JSON. `app/data/fixtures.ts` stays in the tree as the unit tests' harness, not as page content. And **the catalog is 17 packs, not 19**: ranks 7 and 16 are reserved and deliberately absent (ADR-033), so rank gaps are expected and nothing renumbers. Still missing: any test for `app/utils/catalog.ts`, and any E2E test at all — that is Phase 7.
 
 `implementation-plan.md` is the source of truth for architecture, data model, the ranked pack list, ingest design, and build order. Read it before starting work. When implementation diverges from it, update the plan in the same change rather than letting the two drift.
 
-Build order is defined there; next up is Phase 5 — research and ingest the remaining 17 packs, in batches of about five.
+Build order is defined there; next up is Phase 7 — the test suite, per the plan's Verification section.
 
 ## Where things are written down
 
@@ -62,7 +62,7 @@ Every one of these looks stale and is not. Verify against the plan before changi
 
 A local-only, statically generated catalog. `nuxt generate` produces pure static output — **there is no server at runtime**: no API routes, no database, no runtime data fetching, no SSR-only APIs.
 
-Consequently there is no state library. The catalog is a build-time JSON import; the only real state is search/filter/sort, which lives in a composable backed by URL query params so views are bookmarkable. Carousel index is local `ref` state per card.
+Consequently there is no state library. The catalog is a build-time JSON import; the only real state is search/filter/sort, which lives in `app/composables/useCatalogFilters.ts` backed by URL query params so views are bookmarkable. Carousel index is local `ref` state per card. `app/data/catalog.ts` is the only module that imports `catalog.json`.
 
 ### Data and images are build artifacts
 
@@ -74,12 +74,14 @@ Images are emitted per width as `public/images/{slug}/{n}-{w}.{avif,webp}` for `
 
 - **`swatchSource` is provenance, not carousel content** (ADR-027). A colorway's `swatchSource` may point at any brand photograph and usually is *not* one of the pack's 1-5 carousel images; `images` and `colorways` are disjoint. The image cap puts no limit on how many colorways can be sampled, and a hex without a `swatchSource` is still incomplete (ADR-025). Colour accuracy is **best-effort, not hex-identical** (ADR-029): never retune the sampler or hand-edit a hex to make a swatch look better — a sampled value that looks dark is working as intended.
 - **`ColorFamily` is a closed union of 13 values** (ADR-022), defined in `app/types/backpack.ts`. Ingest maps free-form colorway names onto exactly those members and the toolbar's colour filter facets on exactly those members — if either side invents its own list they disagree silently. Widen the union in the type file; never work around it with a loose `string`.
-- **Capacities in the plan's ranked-19 table are unverified** (ADR-023). The stated capacity spread was wrong at both ends and has been withdrawn. Do not quote a capacity range until Phase 5 captures `capacityLiters` per pack.
+- **Per-pack capacities are verified; the catalog's capacity *spread* is still withdrawn** (ADR-023, ADR-033). Phase 5 captured `specs.capacityLiters` for all 17 ingested packs, so quoting one pack's capacity from the catalog is fine. The summary range is a different claim: it stays unstated until ranks 7 and 16 land, so it is restated once from complete data rather than twice (ADR-033). The 17 in hand run 15–30L — reference, not a spread to publish.
 - **Review scales differ per pack.** `review.scale` is 5.0 (retailer) or 10.0 (enthusiast review sites). Display uses raw `score`/`scale`; **sorting and filtering must use `score / scale` normalized to 0–1.** Conflating these is the easiest bug to introduce here.
 - **Card geometry is uniform across every card.** `aspect-[5/7]`, inner `grid grid-rows-[65fr_15fr_20fr]` — three bands: carousel 65%, brand+name 15%, meta row 20% (ADR-021). Use `fr`, **never** `h-[65%]`/`h-[15%]`/`h-[20%]`; fractional rows are what keep the split exact and immune to content pushing it around — but `fr` alone is not enough: every band also needs `min-h-0`, or its automatic min-content floor lets a tall child stretch it (ADR-024). The model name must `truncate` — a wrapping name grows band 2 and breaks the ratio. Band 3 is three columns: colorway grid, price over retailer, score over `review.source`.
 - **The carousel label must not move or re-render** when the image changes. Since ADR-021 this is structural for free: the label lives in band 2, a different grid row from the carousel, so nothing that changes on image swap can reach it. Do not reintroduce an overlay label on the card.
 - **The colorway grid always renders exactly 8 cells (4 cols × 2 rows)**: ghost-padded at 8 or fewer; above 8, cell 8 becomes a `>` pager showing 7 colorways per page. The pager stays in cell 8 on every page, including a partial last page.
 - **Everything cyclable on a card wraps.** The carousel (last→first, first→last) and the colorway pager (last page→first page). Use modulo, never bounds-clamping, and never render a disabled control. The pager's handler must `stopPropagation` so it does not navigate to the detail route.
+- **Filter state is the URL, and a default is an absent parameter** (ADR-034). Never write `?sort=rank` or `?q=`. `useCatalogFilters` also ignores the query until `onMounted` — the site is prerendered with no query string and there is no server at runtime, so reading it during the first client render is a hydration mismatch. Any new UI that reads the query must be gated the same way.
+- **`/pack/[slug]` pages exist only because the index links to them.** There is no prerender route list; `nitro.prerender.crawlLinks` follows what `/` renders at build time, which is the unfiltered catalog. A change that hides packs on first render silently stops generating their pages — `pnpm generate` reporting one `/pack/…` route per pack is the check.
 
 ## Subagents
 

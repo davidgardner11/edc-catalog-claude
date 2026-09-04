@@ -38,3 +38,17 @@ export function fallbackSrc(image: CarouselImage, format: ImageFormat = 'webp'):
  * variant, which is exactly why 640 is the smaller of the two widths.
  */
 export const CARD_IMAGE_SIZES = '320px'
+
+/**
+ * `sizes` for the detail route's gallery (`PackGallery`), which is not width-
+ * pinned the way a card is.
+ *
+ * The largest emitted variant is 1280w (ADR-005), so the primary slot is capped
+ * at 560 CSS px on purpose: a 2x display then asks for 1120w and still gets a
+ * real 1280w file rather than an upscale. Below `lg` the media column is full
+ * width, hence `100vw`.
+ */
+export const PACK_PRIMARY_IMAGE_SIZES = '(min-width: 1024px) 560px, 100vw'
+
+/** Secondary gallery images sit two-up under the primary, at roughly half its width. */
+export const PACK_THUMB_IMAGE_SIZES = '(min-width: 1024px) 272px, 45vw'

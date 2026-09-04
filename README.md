@@ -4,7 +4,7 @@ A digital catalog of the most popular, beloved, and acclaimed Everyday Carry bac
 
 Local-only and statically generated — there is no server, no API, and no database.
 
-> **Status: Phase 4 complete.** The card renders and the ingest pipeline is proven end to end on 3 of the ranked 20 packs. `app/pages/index.vue` still renders the hand-written fixtures rather than the generated catalog — that swap comes with the toolbar in Phase 6. Sections below marked _(pending)_ are filled in as the build progresses. See [`implementation-plan.md`](./implementation-plan.md) for the architecture, ranked pack list, and build order.
+> **Status: Phase 6 complete.** The app is whole: a filterable, sortable grid of the ingested catalog, and a prerendered detail page per pack. 17 of the ranked 19 packs are ingested — ranks 7 and 16 are reserved and deliberately absent ([ADR-033](./docs/decisions.md)), so rank gaps are expected. What is left is Phase 7, the test suite: `app/utils/catalog.ts` has no unit tests yet and there are no E2E tests at all. See [`implementation-plan.md`](./implementation-plan.md) for the architecture, ranked pack list, and build order.
 
 ---
 
@@ -22,7 +22,7 @@ pnpm ingest      # downloads + processes product images, builds app/data/catalog
 pnpm dev         # http://localhost:3000
 ```
 
-`pnpm ingest` currently ingests the three packs in `data/seed.ts`; Phase 5 fills in the other seventeen. Useful flags: `--only=slug[,slug]` to restrict a run, `--skip-fetch` to rebuild from the cache alone, `--reencode` to force every AVIF/WebP variant to be regenerated. Setting `INGEST_OFFLINE=1` makes any outbound request throw, which is how the "no re-download" guarantee is verified rather than assumed.
+`pnpm ingest` ingests every pack in `data/seed.ts` that has a capture in `data/sources/`; that is 17 of 19 today. Useful flags: `--only=slug[,slug]` to restrict a run, `--skip-fetch` to rebuild from the cache alone, `--reencode` to force every AVIF/WebP variant to be regenerated. Setting `INGEST_OFFLINE=1` makes any outbound request throw, which is how the "no re-download" guarantee is verified rather than assumed.
 
 `pnpm ingest` is network-bound on a cold run. It caches originals in `.ingest-cache/` (also gitignored), so re-running to retune image processing does not re-download anything. Deleting `public/images/` and re-running rebuilds from that cache without touching the network.
 
@@ -59,14 +59,16 @@ Full detail in the [implementation plan](./implementation-plan.md); the reasonin
 ```
 app/
   app.vue              root component
-  pages/               file-based routes (index.vue; /pack/[slug] pending — Phase 6)
+  pages/               file-based routes: index.vue and pack/[slug].vue
   assets/css/main.css  Tailwind entry + @theme tokens
-  components/          BackpackCard, CardCarousel, CardLabel, ColorwayGrid, PriceBlock, ScoreBlock
-  composables/         URL-query-backed filter/sort state        (pending — Phase 6)
-  utils/               pure logic: format, color, cycle, image
+  components/          card: BackpackCard, CardCarousel, CardLabel, ColorwayGrid, PriceBlock, ScoreBlock
+                       shell: CatalogToolbar, FacetCheckboxGroup, PackGallery
+  composables/         useCatalogFilters — URL-query-backed filter/sort state
+  utils/               pure logic: format, color, cycle, image, catalog
   types/backpack.ts    the data contract
   data/catalog.json    build artifact from `pnpm ingest`         (committed)
-  data/fixtures.ts     3 hand-written packs; what index.vue renders today
+  data/catalog.ts      the only module that imports catalog.json
+  data/fixtures.ts     3 hand-written packs; the unit tests' harness, not page content
 scripts/
   ingest.ts            pipeline entry — preflight, fetch, process, build
   fetch-images.ts      download ≤5 originals → .ingest-cache/{slug}/
@@ -75,7 +77,7 @@ scripts/
   lib/                 paths, robots-aware http, zod schemas, logging
 data/
   seed.ts              the ranked list: rank, slug, name, brand, rationale
-  sources/{slug}.json  per-pack research capture   (3 of 20 — rest is Phase 5)
+  sources/{slug}.json  per-pack research capture   (17 of 19 — see ADR-033)
 .ingest-cache/         downloaded originals                      (gitignored)
 docs/                  decision log and working notes
 .claude/               subagent definitions
@@ -87,9 +89,9 @@ Nuxt 4 keeps source under `app/` — there are no root-level `pages/` or `compon
 
 ## Data
 
-_(3 of 20 packs ingested — the rest is Phase 5)_
+_(17 of the ranked 19 ingested; ranks 7 and 16 are reserved and absent — [ADR-033](./docs/decisions.md))_
 
-Prices and review scores are **point-in-time snapshots**, each stamped with `capturedAt`. Nothing in this catalog is live pricing. Review scores keep their source's own scale rather than being normalized on write.
+Prices and review scores are **point-in-time snapshots**, each stamped with `capturedAt` and shown with it on the detail page. Nothing in this catalog is live pricing. Review scores keep their source's own scale (5.0 for retailers, 10.0 for enthusiast sites) rather than being normalized on write — so the UI displays the raw `score`/`scale` pair, and the rating filter and the rating sort compare `score / scale` instead ([ADR-010](./docs/decisions.md)).
 
 ## Development
 
