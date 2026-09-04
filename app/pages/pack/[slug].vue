@@ -13,7 +13,7 @@
  * `useRoute().params` is a static-route lookup here, not runtime data fetching:
  * the catalog is a bundled build-time import (ADR-004).
  */
-import { catalogBackpacks, findBackpack } from '~/data/catalog'
+import { catalogByRank, findBackpack } from '~/data/catalog'
 import { formatCapacity, formatCapturedDate, formatWeight } from '~/utils/format'
 import { colorFamilyLabel } from '~/utils/color'
 
@@ -30,11 +30,15 @@ if (!pack.value) {
 
 const fullName = computed(() => `${pack.value?.brand} ${pack.value?.name}`)
 
-/** Neighbours in acclaim order, for prev/next links at the foot of the page. */
-const ordered = computed(() => [...catalogBackpacks].sort((a, b) => a.rank - b.rank))
-const position = computed(() => ordered.value.findIndex((entry) => entry.slug === slug.value))
-const previousPack = computed(() => ordered.value[position.value - 1])
-const nextPack = computed(() => ordered.value[position.value + 1])
+/**
+ * Neighbours in acclaim order, for prev/next links at the foot of the page.
+ * `catalogByRank` is imported rather than re-sorted here: the catalog is a
+ * frozen build-time import, so the sort is a module constant, not per-instance
+ * derived state (ADR-036).
+ */
+const position = computed(() => catalogByRank.findIndex((entry) => entry.slug === slug.value))
+const previousPack = computed(() => catalogByRank[position.value - 1])
+const nextPack = computed(() => catalogByRank[position.value + 1])
 
 useHead(() => ({
   title: pack.value ? `${fullName.value} — EDC Catalog` : 'Pack not found',

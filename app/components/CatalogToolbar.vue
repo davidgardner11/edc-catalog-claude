@@ -20,7 +20,7 @@ import type { ColorFamily } from '~/types/backpack'
 import { useCatalogFilters } from '~/composables/useCatalogFilters'
 import { colorFamilyLabel } from '~/utils/color'
 import { formatPrice } from '~/utils/format'
-import { SCORE_THRESHOLDS, SORT_OPTIONS, formatScoreThreshold } from '~/utils/catalog'
+import { PRICE_STEP, SCORE_THRESHOLDS, SORT_OPTIONS, formatScoreThreshold } from '~/utils/catalog'
 import type { SortKey } from '~/utils/catalog'
 
 const {
@@ -212,7 +212,15 @@ const chips = computed<FilterChip[]>(() => {
             Maximum price
           </legend>
           <!-- A single native range: the catalog's floor is $79.95, so a
-               two-thumb range would only ever be used from the top. -->
+               two-thumb range would only ever be used from the top.
+
+               `step` is bound from `PRICE_STEP` rather than written as a literal
+               (ADR-036). `priceBounds` guarantees `max` is a whole number of
+               steps above `min`, which is what makes the rightmost position
+               equal `bounds.max` — and therefore what makes `commitPrice`'s
+               "No maximum" branch, the `aria-valuetext` and the `<output>` below
+               reachable. A hard-coded step here could drift out of that
+               agreement without anything failing. -->
           <input
             id="catalog-max-price"
             v-model.number="priceDraft"
@@ -220,7 +228,7 @@ const chips = computed<FilterChip[]>(() => {
             class="w-full accent-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
             :min="bounds.min"
             :max="bounds.max"
-            step="5"
+            :step="PRICE_STEP"
             :aria-valuetext="priceDraft >= bounds.max ? 'No maximum' : `Up to ${formatPrice(priceDraft)}`"
             @change="commitPrice"
           >

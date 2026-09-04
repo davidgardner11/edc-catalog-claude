@@ -164,16 +164,37 @@ export function colorFacets(): Facet<ColorFamily>[] {
 export type PriceBounds = { min: number; max: number }
 
 /**
- * Whole-dollar bounds for the price slider, widened outward
- * (`floor(min)` / `ceil(max)`) so the cheapest and most expensive packs are
- * always inside the range. Bounds are computed from the **full** catalog, never
- * from the filtered results, so the slider's track does not move underneath the
- * thumb as other filters change.
+ * The price slider's step, in whole dollars. **Exported so the toolbar binds it
+ * rather than hard-coding `step="5"`** (ADR-036): the step and the bounds
+ * together decide which ceilings a user can actually select, so a literal in the
+ * markup and the arithmetic here could silently disagree.
+ */
+export const PRICE_STEP = 5
+
+/**
+ * Whole-dollar bounds for the price slider. Computed from the **full** catalog,
+ * never from the filtered results, so the slider's track does not move
+ * underneath the thumb as other filters change.
+ *
+ * Both bounds round **up**, and that asymmetry is the point (ADR-036). Every
+ * value on this slider is consumed as a *ceiling* — `filterBackpacks` rejects a
+ * pack when `amountUsd > maxPrice` — so `floor`ing the low bound would narrow
+ * the range rather than widen it: with a $79.95 cheapest pack, `min = 79` is a
+ * leftmost position that matches nothing at all. `ceil` on both ends is what
+ * makes "the cheapest and most expensive packs are always inside the range"
+ * true at both ends.
+ *
+ * `max` is then pushed up to a whole number of `PRICE_STEP`s above `min`, so
+ * `max` is itself reachable from `min` in whole steps. Without that, the thumb
+ * at full right lands below `max` — leaving the dearest pack filtered out and
+ * the toolbar's "No maximum" branch (`priceDraft >= bounds.max`) unreachable.
  */
 export function priceBounds(packs: readonly Backpack[]): PriceBounds {
   if (packs.length === 0) return { min: 0, max: 0 }
   const amounts = packs.map((pack) => pack.price.amountUsd)
-  return { min: Math.floor(Math.min(...amounts)), max: Math.ceil(Math.max(...amounts)) }
+  const min = Math.ceil(Math.min(...amounts))
+  const dearest = Math.ceil(Math.max(...amounts))
+  return { min, max: min + Math.ceil((dearest - min) / PRICE_STEP) * PRICE_STEP }
 }
 
 /** Selectable floors for the rating filter, as fractions of each pack's own scale. */
@@ -298,20 +319,51 @@ export function parseCatalogQuery(
   const families = new Set<string>(COLOR_FAMILIES)
 
   const rawSort = readParam(query, 'sort').trim()
+  const rawQ = readParam(query, 'q')
   const rawMaxPrice = Number.parseFloat(readParam(query, 'maxPrice'))
   const rawMinScore = Number.parseFloat(readParam(query, 'minScore'))
 
   return {
-    q: readParam(query, 'q').trim(),
+    // Lossless (ADR-036): whatever the user typed survives the round trip,
+    // including the space after a word they are still typing. A whitespace-only
+    // term is the one exception — it carries no search, so it collapses to the
+    // default and drops out of the URL entirely. Trimming for *matching* happens
+    // in `matchesSearch` / `isDefaultFilters` / `activeFilterCount`.
+    q: rawQ.trim() === '' ? '' : rawQ,
     brands: readList(query, 'brand', brands),
     families: readList(query, 'color', families) as ColorFamily[],
-    maxPrice:
-      Number.isFinite(rawMaxPrice) && rawMaxPrice < bounds.max
-        ? Math.max(bounds.min, Math.round(rawMaxPrice))
-        : null,
-    minScore: Number.isFinite(rawMinScore) && rawMinScore > 0 ? Math.min(1, rawMinScore) : null,
+    maxPrice: readMaxPrice(rawMaxPrice, bounds),
+    minScore: readMinScore(rawMinScore),
     sort: isSortKey(rawSort) ? rawSort : DEFAULT_SORT,
   }
+}
+
+/**
+ * Clamp into the slider's range, **then** test against the ceiling — in that
+ * order (ADR-036). Testing first lets `?maxPrice=524.6` through the guard and
+ * rounds it up to the ceiling afterwards, producing a "filter" the encoder
+ * writes as `maxPrice=525` and the next parse discards: the same URL meaning two
+ * different things depending on how many times it has been through the codec.
+ */
+function readMaxPrice(raw: number, bounds: PriceBounds): number | null {
+  if (!Number.isFinite(raw)) return null
+  const ceiling = Math.max(bounds.min, Math.round(raw))
+  return ceiling >= bounds.max ? null : ceiling
+}
+
+/**
+ * `minScore` is a **closed set**, not a range (ADR-036): the only values the
+ * rating radios can render as selected are `SCORE_THRESHOLDS`, which they test
+ * with `===`. Anything else is treated like an unknown sort key or an unknown
+ * brand slug and falls back to the default, rather than becoming a filter that
+ * removes packs with no control showing it as set and none able to clear it.
+ * Being a closed set is also what makes `toFixed(2)` a lossless encoding.
+ */
+function readMinScore(raw: number): number | null {
+  if (!Number.isFinite(raw)) return null
+  // Tolerance, not `===`: the value has been through `toFixed(2)` and back, and
+  // decimal fractions do not survive that bit-identically in general.
+  return SCORE_THRESHOLDS.find((threshold) => Math.abs(threshold - raw) < 1e-9) ?? null
 }
 
 /**
@@ -323,14 +375,19 @@ export function parseCatalogQuery(
  * `undefined` — not `''` — is the removal signal vue-router understands.
  */
 export function catalogQueryParams(filters: CatalogFilters): Record<string, string | undefined> {
-  const q = filters.q.trim()
   return {
-    q: q === '' ? undefined : q,
+    // Written verbatim, not trimmed (ADR-036). The toolbar re-syncs its input
+    // from the committed value, so a codec that rewrites its payload would edit
+    // the box under the user's cursor mid-word. `?q=peak+` in the URL is the
+    // accepted cost. A whitespace-only term is still no search, so it is omitted.
+    q: filters.q.trim() === '' ? undefined : filters.q,
     brand: filters.brands.length > 0 ? [...filters.brands].join(',') : undefined,
     color: filters.families.length > 0 ? [...filters.families].join(',') : undefined,
     maxPrice: filters.maxPrice === null ? undefined : String(filters.maxPrice),
-    // Two decimals: thresholds are 0.70-0.90, and `String(0.7000000001)` in a
-    // URL would be an eyesore that also breaks equality with the select option.
+    // Two decimals: the parser only ever yields a `SCORE_THRESHOLDS` member
+    // (0.70-0.90), all of which are exact at two places, so this is lossless.
+    // `String(0.7000000001)` in a URL would be an eyesore that also breaks
+    // equality with the radio it is supposed to select.
     minScore: filters.minScore === null ? undefined : filters.minScore.toFixed(2),
     sort: filters.sort === DEFAULT_SORT ? undefined : filters.sort,
   }
