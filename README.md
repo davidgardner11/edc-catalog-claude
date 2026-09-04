@@ -1,4 +1,4 @@
-# EDC Catalog
+# Everyday Carry (EDC) Backpack Catalog App
 
 A digital catalog of the most popular, beloved, and acclaimed Everyday Carry backpacks, presented as playing-card-proportioned cards (5:7 portrait) in a browsable, filterable grid.
 
