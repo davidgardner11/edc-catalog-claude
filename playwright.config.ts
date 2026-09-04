@@ -1,6 +1,11 @@
 import { defineConfig, devices } from '@playwright/test'
 
-const PORT = 3000
+// Overridable because `reuseExistingServer` below will happily attach to
+// whatever is already on this port — including a different app. That is not
+// hypothetical: a sibling checkout serving :3000 once made all 41 specs fail
+// with "element not found" against someone else's markup. `PW_PORT=3100 npx
+// playwright test` gets a clean server of our own.
+const PORT = Number(process.env.PW_PORT ?? 3000)
 const BASE_URL = `http://localhost:${PORT}`
 
 // E2E config. Specs live in tests/e2e only — tests/unit is Vitest's, and the
@@ -34,7 +39,7 @@ export default defineConfig({
   // nuxt.config.ts does not override devServer. reuseExistingServer keeps a
   // dev server you already have running usable locally, but never on CI.
   webServer: {
-    command: 'pnpm dev',
+    command: `pnpm dev --port ${PORT}`,
     url: BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
