@@ -1,0 +1,124 @@
+import type { Backpack, ColorFamily } from '~/types/backpack'
+import { catalogBackpacks } from '~/data/catalog'
+import {
+  DEFAULT_FILTERS,
+  QUERY_KEYS,
+  activeFilterCount,
+  applyCatalogFilters,
+  brandFacets,
+  catalogQueryParams,
+  colorFacets,
+  isDefaultFilters,
+  parseCatalogQuery,
+  priceBounds,
+  toggleFacet,
+} from '~/utils/catalog'
+import type { CatalogFilters, SortKey } from '~/utils/catalog'
+
+/**
+ * The catalog's search / filter / sort state, and the **only** state in this
+ * app beyond a card's local carousel and pager refs (ADR-004).
+ *
+ * There is no store, and there must not be one. The state lives in the URL:
+ * `useRoute().query` is the single source of truth, so a filtered view is
+ * bookmarkable, shareable and survives a reload, none of which a store gives
+ * you. Every component that needs the state calls this composable directly —
+ * the page and the toolbar each do — and they agree because they are both
+ * reading the same URL, not because anything was passed between them. That is
+ * why the toolbar takes no props and emits no events.
+ *
+ * All of the rules (what matches, what sorts, how a param is spelled) are in
+ * `~/utils/catalog`, which is pure and unit-testable. This file is plumbing.
+ *
+ * ## The hydration gate
+ *
+ * `nuxt generate` prerenders `/` with **no query string** — there is no server
+ * at runtime, so a request for `/?brand=aer` is served that same HTML file.
+ * The client, though, resolves its route from the real URL and knows the query
+ * on its very first render, before hydration. Filtering immediately would make
+ * the first client render disagree with the prerendered markup and produce a
+ * hydration mismatch.
+ *
+ * So the query is ignored until `onMounted`. Prerender and the first client
+ * render both see `DEFAULT_FILTERS` and therefore the same DOM; the filters
+ * apply one tick later. The visible cost is a brief flash of the full catalog
+ * when you open a filtered link — the alternative, a mismatch, silently
+ * discards the server DOM and re-renders anyway.
+ */
+export function useCatalogFilters(source: readonly Backpack[] = catalogBackpacks) {
+  const route = useRoute()
+  const router = useRouter()
+
+  /** Facets and bounds come from the FULL catalog, never the current results,
+   *  so the controls do not move around as the user narrows the list. */
+  const bounds = computed(() => priceBounds(source))
+  const brands = computed(() => brandFacets(source))
+  const colors = computed(() => colorFacets(source))
+
+  const ready = ref(false)
+  onMounted(() => {
+    ready.value = true
+  })
+
+  const filters = computed<CatalogFilters>(() =>
+    ready.value ? parseCatalogQuery(route.query, source) : DEFAULT_FILTERS,
+  )
+
+  const results = computed(() => applyCatalogFilters(source, filters.value))
+  /** Catalog size, for "showing N of M". 17, not 19 — ranks 7 and 16 are absent (ADR-033). */
+  const total = computed(() => source.length)
+  const activeCount = computed(() => activeFilterCount(filters.value))
+  const isFiltered = computed(() => !isDefaultFilters(filters.value))
+
+  /** Query params this composable does not own are carried through untouched. */
+  // Return type is inferred (vue-router's `LocationQueryValue`), not annotated:
+  // widening it to `unknown` makes it unassignable to `LocationQueryRaw`.
+  function foreignQuery() {
+    return Object.fromEntries(
+      Object.entries(route.query).filter(([key]) => !(QUERY_KEYS as readonly string[]).includes(key)),
+    )
+  }
+
+  /**
+   * `replace`, not `push`. Every keystroke and checkbox would otherwise become
+   * a history entry, and the back button's job here is to leave the catalog —
+   * not to walk backwards through the letters of a search term. Navigating to a
+   * detail page and back still restores the filtered URL, because the entry
+   * that was replaced is the one being returned to.
+   */
+  function commit(patch: Partial<CatalogFilters>) {
+    const merged: CatalogFilters = { ...filters.value, ...patch }
+    // `catalogQueryParams` returns `undefined` for anything at its default, and
+    // vue-router drops undefined values — that is what keeps a clean URL clean.
+    router.replace({ query: { ...foreignQuery(), ...catalogQueryParams(merged) } })
+  }
+
+  return {
+    /**
+     * A `computed` with no setter, deliberately: filters are mutated through the
+     * setters below so that every change goes through the URL. Not wrapped in
+     * `readonly()` — that would add a `DeepReadonly` layer to every consumer's
+     * types for no extra safety, since the object is rebuilt on each read.
+     */
+    filters,
+    results,
+    total,
+    bounds,
+    brands,
+    colors,
+    activeCount,
+    isFiltered,
+    /** False during prerender and the first client render — see "hydration gate". */
+    ready: readonly(ready),
+
+    setSearch: (q: string) => commit({ q }),
+    toggleBrand: (slug: string) => commit({ brands: toggleFacet(filters.value.brands, slug) }),
+    toggleFamily: (family: ColorFamily) =>
+      commit({ families: toggleFacet(filters.value.families, family) }),
+    setMaxPrice: (maxPrice: number | null) => commit({ maxPrice }),
+    setMinScore: (minScore: number | null) => commit({ minScore }),
+    setSort: (sort: SortKey) => commit({ sort }),
+    /** Clears filters AND sort; the "Clear all" affordance is all-or-nothing. */
+    reset: () => router.replace({ query: foreignQuery() }),
+  }
+}

@@ -1,0 +1,336 @@
+import type { Backpack, ColorFamily } from '~/types/backpack'
+// Sibling utils are imported RELATIVELY, not via `~/utils/...`. These are the
+// first runtime (non-type-only) imports between modules in `app/utils/`, and
+// the `~` alias is a Nuxt/Vite resolution, not a Node one — a relative path
+// keeps this module graph loadable by a plain `vitest` run and by
+// `node --experimental-strip-types`, neither of which is alias-aware, without
+// adding a runner config. Type-only imports still use `~` because they are
+// erased before anything resolves them.
+import { COLOR_FAMILIES, colorFamilyLabel } from './color'
+import { normalizeScore } from './format'
+
+/**
+ * Search, filter and sort for the catalog grid — the whole rule set, pure and
+ * free of Vue.
+ *
+ * `app/composables/useCatalogFilters.ts` is only the URL plumbing around this
+ * module: it reads `route.query`, calls `parseCatalogQuery` here, and writes
+ * `catalogQueryParams` back. Everything with a boundary case — the empty query,
+ * an unknown facet value, an out-of-range price, the normalized score
+ * comparison — is here so it is unit-testable without mounting anything, per
+ * the logic-placement rule in `docs/component-conventions.md`.
+ *
+ * **The score rule (ADR-010).** `review.scale` is 5.0 for retailer reviews and
+ * 10.0 for enthusiast sites, so raw `score` is not comparable across packs:
+ * 4.9/5.0 (0.98) beats 8.6/10.0 (0.86) but loses on the raw number. Every
+ * comparison in this module goes through `normalizeScore`. Display never does.
+ */
+
+export type SortKey = 'rank' | 'price-asc' | 'price-desc' | 'score-desc'
+
+export const SORT_OPTIONS = [
+  { value: 'rank', label: 'Acclaim rank' },
+  { value: 'price-asc', label: 'Price: low to high' },
+  { value: 'price-desc', label: 'Price: high to low' },
+  { value: 'score-desc', label: 'Rating: high to low' },
+] as const satisfies ReadonlyArray<{ value: SortKey; label: string }>
+
+export const DEFAULT_SORT: SortKey = 'rank'
+
+function isSortKey(value: string): value is SortKey {
+  return SORT_OPTIONS.some((option) => option.value === value)
+}
+
+/**
+ * `maxPrice` and `minScore` are `null` when unset rather than sentinel numbers,
+ * so "no ceiling" is never confused with "ceiling happens to equal the most
+ * expensive pack" — the second is a filter the user set and the URL should
+ * record; the first is not.
+ */
+export type CatalogFilters = {
+  /** Free text over brand and model name. */
+  q: string
+  /** Brand *slugs* (see `brandSlug`), not display names. */
+  brands: string[]
+  families: ColorFamily[]
+  /** Inclusive USD ceiling. */
+  maxPrice: number | null
+  /** Inclusive floor on `score / scale`, 0-1 (ADR-010). Never a raw score. */
+  minScore: number | null
+  sort: SortKey
+}
+
+export const DEFAULT_FILTERS: CatalogFilters = {
+  q: '',
+  brands: [],
+  families: [],
+  maxPrice: null,
+  minScore: null,
+  sort: DEFAULT_SORT,
+}
+
+/** True when nothing is set — i.e. the URL should carry no catalog params. */
+export function isDefaultFilters(filters: CatalogFilters): boolean {
+  return (
+    filters.q.trim() === '' &&
+    filters.brands.length === 0 &&
+    filters.families.length === 0 &&
+    filters.maxPrice === null &&
+    filters.minScore === null &&
+    filters.sort === DEFAULT_SORT
+  )
+}
+
+/** How many *filters* are active. Sort is an ordering, not a filter, so it is excluded. */
+export function activeFilterCount(filters: CatalogFilters): number {
+  return (
+    (filters.q.trim() === '' ? 0 : 1) +
+    filters.brands.length +
+    filters.families.length +
+    (filters.maxPrice === null ? 0 : 1) +
+    (filters.minScore === null ? 0 : 1)
+  )
+}
+
+/**
+ * `"Peak Design"` -> `"peak-design"`, `"The Brown Buffalo"` -> `"the-brown-buffalo"`.
+ *
+ * Brands are filtered by slug rather than display name so the URL stays
+ * readable and stable: `?brand=peak-design` survives a brand rendering its own
+ * name in a new case (`TOM BIHN` vs `Tom Bihn`), which display-name matching
+ * would not. Slugs are only ever produced from catalog data and compared with
+ * each other, so this never has to round-trip back to a display name — the
+ * facet list carries the label.
+ */
+export function brandSlug(brand: string): string {
+  return brand
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+export type Facet<T extends string> = {
+  value: T
+  label: string
+  /** Packs in the **whole catalog** carrying this value, not in the current results. */
+  count: number
+}
+
+/** Brand facets, alphabetical by display label, case-insensitively. */
+export function brandFacets(packs: readonly Backpack[]): Facet<string>[] {
+  const byslug = new Map<string, Facet<string>>()
+  for (const pack of packs) {
+    const value = brandSlug(pack.brand)
+    const existing = byslug.get(value)
+    if (existing) existing.count += 1
+    else byslug.set(value, { value, label: pack.brand, count: 1 })
+  }
+  return [...byslug.values()].sort((a, b) => a.label.localeCompare(b.label, 'en', { sensitivity: 'base' }))
+}
+
+/**
+ * Colour facets are **exactly the 13 `ColorFamily` members** (ADR-022), in
+ * `COLOR_FAMILIES` order, including any with a count of 0.
+ *
+ * Deriving the list from the data instead would make the filter's vocabulary
+ * shrink and grow as packs are ingested, which is the precise failure ADR-022
+ * exists to prevent. A zero-count facet stays selectable — it is a true
+ * statement about the catalog, and disabling it would hide that.
+ */
+export function colorFacets(packs: readonly Backpack[]): Facet<ColorFamily>[] {
+  const counts = new Map<ColorFamily, number>()
+  for (const pack of packs) {
+    // A pack with three black colorways counts once for `black`.
+    for (const family of new Set(pack.colorways.map((colorway) => colorway.family))) {
+      counts.set(family, (counts.get(family) ?? 0) + 1)
+    }
+  }
+  return COLOR_FAMILIES.map((value) => ({
+    value,
+    label: colorFamilyLabel(value),
+    count: counts.get(value) ?? 0,
+  }))
+}
+
+export type PriceBounds = { min: number; max: number }
+
+/**
+ * Whole-dollar bounds for the price slider, widened outward
+ * (`floor(min)` / `ceil(max)`) so the cheapest and most expensive packs are
+ * always inside the range. Bounds are computed from the **full** catalog, never
+ * from the filtered results, so the slider's track does not move underneath the
+ * thumb as other filters change.
+ */
+export function priceBounds(packs: readonly Backpack[]): PriceBounds {
+  if (packs.length === 0) return { min: 0, max: 0 }
+  const amounts = packs.map((pack) => pack.price.amountUsd)
+  return { min: Math.floor(Math.min(...amounts)), max: Math.ceil(Math.max(...amounts)) }
+}
+
+/** Selectable floors for the rating filter, as fractions of each pack's own scale. */
+export const SCORE_THRESHOLDS: readonly number[] = [0.7, 0.75, 0.8, 0.85, 0.9]
+
+/** `0.75` -> `"75%"`. The rating filter's only display rule. */
+export function formatScoreThreshold(threshold: number): string {
+  return `${Math.round(threshold * 100)}%`
+}
+
+/**
+ * Case-insensitive AND-of-terms over `"Brand Name"`. Splitting on whitespace is
+ * what makes `"aer city"` and `"city aer"` both find the City Pack Pro 2 — a
+ * single substring test would match neither.
+ */
+export function matchesSearch(pack: Backpack, query: string): boolean {
+  const terms = query.toLowerCase().split(/\s+/).filter(Boolean)
+  if (terms.length === 0) return true
+  const haystack = `${pack.brand} ${pack.name}`.toLowerCase()
+  return terms.every((term) => haystack.includes(term))
+}
+
+export function filterBackpacks(packs: readonly Backpack[], filters: CatalogFilters): Backpack[] {
+  const brands = new Set(filters.brands)
+  const families = new Set<ColorFamily>(filters.families)
+
+  return packs.filter((pack) => {
+    if (!matchesSearch(pack, filters.q)) return false
+    if (brands.size > 0 && !brands.has(brandSlug(pack.brand))) return false
+    // OR within the colour facet: a pack matches if ANY of its colorways is in
+    // the selected set. AND would mean "available in black AND olive", which is
+    // not what a shopper ticking two colours is asking.
+    if (families.size > 0 && !pack.colorways.some((colorway) => families.has(colorway.family))) return false
+    if (filters.maxPrice !== null && pack.price.amountUsd > filters.maxPrice) return false
+    // ADR-010: normalized, never the raw score.
+    if (filters.minScore !== null && normalizeScore(pack.review.score, pack.review.scale) < filters.minScore) {
+      return false
+    }
+    return true
+  })
+}
+
+/**
+ * Total order. Every comparator falls back to `rank`, so the output is fully
+ * deterministic even where two packs share a price or a normalized score —
+ * relying on `Array.prototype.sort` stability would make the result depend on
+ * the input order, and the input order changes with the filters.
+ */
+export function sortBackpacks(packs: readonly Backpack[], sort: SortKey): Backpack[] {
+  const byRank = (a: Backpack, b: Backpack) => a.rank - b.rank
+  const sorted = [...packs]
+
+  switch (sort) {
+    case 'price-asc':
+      return sorted.sort((a, b) => a.price.amountUsd - b.price.amountUsd || byRank(a, b))
+    case 'price-desc':
+      return sorted.sort((a, b) => b.price.amountUsd - a.price.amountUsd || byRank(a, b))
+    case 'score-desc':
+      // ADR-010 again, and this is the sort the ADR was written about: sorting
+      // on `score` alone puts every 10.0-scale pack above every 5.0-scale one.
+      return sorted.sort(
+        (a, b) =>
+          normalizeScore(b.review.score, b.review.scale) - normalizeScore(a.review.score, a.review.scale) ||
+          byRank(a, b),
+      )
+    case 'rank':
+    default:
+      return sorted.sort(byRank)
+  }
+}
+
+export function applyCatalogFilters(packs: readonly Backpack[], filters: CatalogFilters): Backpack[] {
+  return sortBackpacks(filterBackpacks(packs, filters), filters.sort)
+}
+
+/* -------------------------------------------------------------------------- */
+/* URL query encoding (ADR-034)                                               */
+/* -------------------------------------------------------------------------- */
+
+/** Query parameter names, in the order they are written to the URL. */
+export const QUERY_KEYS = ['q', 'brand', 'color', 'maxPrice', 'minScore', 'sort'] as const
+
+/** A `LocationQuery` value: string, null, or a repeated-param array of those. */
+type QueryValue = string | null | undefined | (string | null)[]
+
+/** Last-wins for a repeated param, so `?sort=rank&sort=price-asc` is not a crash. */
+function readParam(query: Record<string, QueryValue>, key: string): string {
+  const raw = query[key]
+  const value = Array.isArray(raw) ? raw[raw.length - 1] : raw
+  return typeof value === 'string' ? value : ''
+}
+
+/** Comma-separated lists, deduplicated, empties dropped, unknown values dropped. */
+function readList(query: Record<string, QueryValue>, key: string, allowed: ReadonlySet<string>): string[] {
+  const parts = readParam(query, key)
+    .split(',')
+    .map((part) => part.trim().toLowerCase())
+    .filter((part) => part !== '' && allowed.has(part))
+  return [...new Set(parts)]
+}
+
+/**
+ * Read filters out of a route query. **Total and forgiving**: a hand-edited or
+ * stale URL never throws and never yields an out-of-range filter — unknown
+ * brands, unknown colour families, unparseable numbers and unknown sort keys
+ * all fall back to their default. A bookmark that silently drops one dead facet
+ * is better than a page that errors, and packs do disappear: ranks 7 and 16 are
+ * absent by decision (ADR-033) and any pack can be retired between visits.
+ *
+ * Takes the catalog rather than a bounds object because both allowlists it
+ * needs — the brand slugs and the price ceiling — are properties of the data. A
+ * `maxPrice` at or above the catalog ceiling is not a filter at all, and
+ * normalizing it to `null` here is what keeps `parse -> encode` a round trip:
+ * the encoder would have dropped it anyway.
+ */
+export function parseCatalogQuery(
+  query: Record<string, QueryValue>,
+  packs: readonly Backpack[],
+): CatalogFilters {
+  const bounds = priceBounds(packs)
+  const brands = new Set(packs.map((pack) => brandSlug(pack.brand)))
+  const families = new Set<string>(COLOR_FAMILIES)
+
+  const rawSort = readParam(query, 'sort').trim()
+  const rawMaxPrice = Number.parseFloat(readParam(query, 'maxPrice'))
+  const rawMinScore = Number.parseFloat(readParam(query, 'minScore'))
+
+  return {
+    q: readParam(query, 'q').trim(),
+    brands: readList(query, 'brand', brands),
+    families: readList(query, 'color', families) as ColorFamily[],
+    maxPrice:
+      Number.isFinite(rawMaxPrice) && rawMaxPrice < bounds.max
+        ? Math.max(bounds.min, Math.round(rawMaxPrice))
+        : null,
+    minScore: Number.isFinite(rawMinScore) && rawMinScore > 0 ? Math.min(1, rawMinScore) : null,
+    sort: isSortKey(rawSort) ? rawSort : DEFAULT_SORT,
+  }
+}
+
+/**
+ * Encode filters as a query object. **A parameter at its default value is
+ * omitted entirely** (ADR-034) rather than written as `q=` or `sort=rank`, so
+ * the unfiltered catalog is `/` with a clean URL and every param present in a
+ * URL is one the user actually chose.
+ *
+ * `undefined` — not `''` — is the removal signal vue-router understands.
+ */
+export function catalogQueryParams(filters: CatalogFilters): Record<string, string | undefined> {
+  const q = filters.q.trim()
+  return {
+    q: q === '' ? undefined : q,
+    brand: filters.brands.length > 0 ? [...filters.brands].join(',') : undefined,
+    color: filters.families.length > 0 ? [...filters.families].join(',') : undefined,
+    maxPrice: filters.maxPrice === null ? undefined : String(filters.maxPrice),
+    // Two decimals: thresholds are 0.70-0.90, and `String(0.7000000001)` in a
+    // URL would be an eyesore that also breaks equality with the select option.
+    minScore: filters.minScore === null ? undefined : filters.minScore.toFixed(2),
+    sort: filters.sort === DEFAULT_SORT ? undefined : filters.sort,
+  }
+}
+
+/**
+ * Toggle a value in a facet selection, preserving order of first selection so
+ * the URL does not churn when a box is unticked and reticked.
+ */
+export function toggleFacet<T extends string>(selected: readonly T[], value: T): T[] {
+  return selected.includes(value) ? selected.filter((item) => item !== value) : [...selected, value]
+}
