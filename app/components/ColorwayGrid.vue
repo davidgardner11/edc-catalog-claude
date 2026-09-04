@@ -34,7 +34,12 @@ function goNextPage(event: MouseEvent) {
 </script>
 
 <template>
-  <div class="flex min-w-0 flex-col gap-1">
+  <!--
+    `items-center` centres the `w-fit` grid inside band 3's first column;
+    `justify-center` supplies the vertical centring the band container gave up
+    when its cells were made to stretch for the dividers (ADR-038).
+  -->
+  <div class="flex min-w-0 flex-col items-center justify-center gap-1 px-1">
     <div
       class="grid w-fit grid-cols-4 grid-rows-2 gap-1"
       role="group"

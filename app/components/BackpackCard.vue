@@ -45,13 +45,39 @@ const fullName = computed(() => `${props.backpack.brand} ${props.backpack.name}`
     />
 
     <!--
-      grid-cols-[auto_1fr_1fr]: column 1 sizes to the fixed 4-wide swatch grid,
-      leaving price and score equal shares of the remainder.
+      grid-cols-3: equal thirds, so each cell has room to centre its own
+      content (ADR-038). Column 1 was previously `auto`, sized exactly to the
+      68px swatch grid, which left nothing to centre within.
+
+      No `items-center`: cells stretch to the full band height so their
+      `border-l` dividers meet the top border and the card's bottom edge
+      instead of floating as stubs (measured: 32px of a 72px band before).
+      Each cell centres its own content vertically instead.
+
+      No `gap` and no `px` here either, for a different reason — with padding
+      on the container the rules land at thirds of the *padded box*, 12px
+      inboard of the thirds of the card; with a gap, the whole gap falls on one
+      side of each rule. Cell padding is capped at `px-2`: at the 260px card
+      the tracks are 86px and the swatch grid's min-content is 68px, so more
+      than 9px a side makes it overflow cell 1 and cross the divider, breaking
+      ADR-015's 8 visible cells. Invisible at 320px. See ADR-038.
     -->
-    <div class="grid min-h-0 grid-cols-[auto_1fr_1fr] items-center gap-2 overflow-hidden border-t border-card-border px-3">
+    <div class="grid min-h-0 grid-cols-3 overflow-hidden border-t border-card-border">
       <ColorwayGrid :colorways="backpack.colorways" :label="fullName" />
-      <PriceBlock :amount-usd="backpack.price.amountUsd" :retailer="backpack.price.retailer" />
+      <!--
+        `text-center`, not `justify-items-center` on the container: that would
+        shrink-wrap each cell to its content, and `truncate` needs a box
+        narrower than its text to ellipsize. Passed here rather than set inside
+        PriceBlock/ScoreBlock because both are also used on the detail route,
+        which does not inherit the card's constraints (component-conventions).
+      -->
+      <PriceBlock
+        class="border-l border-card-border px-1 text-center"
+        :amount-usd="backpack.price.amountUsd"
+        :retailer="backpack.price.retailer"
+      />
       <ScoreBlock
+        class="border-l border-card-border px-1 text-center"
         :score="backpack.review.score"
         :scale="backpack.review.scale"
         :source="backpack.review.source"
