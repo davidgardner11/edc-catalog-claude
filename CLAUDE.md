@@ -43,7 +43,7 @@ pnpm is the package manager (pnpm 9.15.9, Node 24.19 local).
 | `pnpm typecheck` | `nuxt typecheck` via vue-tsc |
 | `npx playwright test` | E2E, Chromium only; single spec via `npx playwright test tests/e2e/<file>.spec.ts`. Also aliased as `pnpm test:e2e`. `playwright.config.ts` starts `pnpm dev` on :3000 itself (`webServer`, `reuseExistingServer` off in CI), so do not start one first |
 
-`pnpm typecheck` prints `[Vue] Resolve plugin path failed: vue-router/volar/...` warnings. They are cosmetic: vue-tsc 3.3.11 looks for Volar plugin subpaths that vue-router 5 no longer exports. The exit code and TS error count are what matter.
+`pnpm typecheck` is silent on success at the pinned versions — it prints only the pnpm script header. The `[Vue] Resolve plugin path failed: vue-router/volar/...` warnings that ADR-025-era runs printed no longer appear (checked 2026-09-11 with vue-tsc 3.3.11 / Nuxt 4.5.2); if they come back after a dependency change they are still cosmetic, and the exit code and TS error count are what matter.
 
 **`pnpm typecheck` does not cover `scripts/` or `data/`** — neither is in any tsconfig project, and `@types/node` is not installed, so the ingest pipeline is checked only by running it (ADR-025).
 
