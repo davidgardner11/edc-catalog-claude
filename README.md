@@ -1,20 +1,29 @@
 # Everyday Carry (EDC) Backpack Catalog App
 
-A digital catalog of the most popular, beloved, and acclaimed Everyday Carry backpacks, presented as playing-card-proportioned cards (5:7 portrait) in a browsable, filterable grid.
+## Overview 
 
-Local-only and statically generated — there is no server, no API, and no database.
+A digital catalog of the most popular, beloved, and acclaimed Everyday Carry (EDC) Backpacks, disoplayed as a catalog on a filterable grid.
 
-> **Status: Phase 7 complete.** The app is whole and tested: a filterable, sortable grid of the ingested catalog, a prerendered detail page per pack, 425 Vitest unit tests and 41 Playwright E2E tests. 17 of the ranked 19 packs are ingested — ranks 7 and 16 are reserved and deliberately absent ([ADR-033](./docs/decisions.md)), so rank gaps are expected. The E2E suite runs against `pnpm dev`, so prerendered output is still covered only by the manual checklist in [`implementation-plan.md`](./implementation-plan.md), which also holds the architecture, ranked pack list, and build order.
+Statically-generated for local-use only due to copyrighted images. No server, no API, and no database.
 
----
+### Approach
 
-## Setup
+Implemented using **Sub-agents** (`/.claude/agents/`) over several Claude sessions. The primary Claude Agent acted as **Supervisor/Eng Mgr** under my direction.  
+
+- **Result:** app is complete and fully-tested: a filterable, sortable grid of the ingested catalog, with a details page per pack. 
+- **Test Automation:** 25 Vitest unit tests and 41 Playwright E2E tests. E2E suite runs against `pnpm dev`.
+- **Ingestion:** 17 of 20 packs were ingested. 3 were deliberately ignored ([ADR-033](./docs/decisions.md)). 
+- [implementation-plan.md](./implementation-plan.md) contains the architecture, ranked list of 20 backpacks and build order.
+
+## Initial Setup 
 
 > ⚠️ **A fresh clone will not render anything until you run `pnpm ingest`.**
 >
-> Product photos are copyrighted, and this repository is public, so `public/images/` is gitignored and never committed ([ADR-012](./docs/decisions.md)). `app/data/catalog.json` is also a build artifact, but it *is* committed ([ADR-030](./docs/decisions.md)) so the app builds on a fresh clone without fetching from a retailer CDN. Both come from the ingest pipeline and must never be hand-edited — **a fresh clone builds, but renders no images until `pnpm ingest` runs.**
+Product photos are copyrighted, and this repository is public, so `public/images/` is gitignored and never committed ([ADR-012](./docs/decisions.md)).  
 
-**Requirements:** Node `^22.19 || ^24.11 || >=26` and pnpm.
+`app/data/catalog.json` is also a build artifact, but it *is* committed ([ADR-030](./docs/decisions.md)) so the app builds on a fresh clone without fetching from a retailer CDN. 
+
+**Requirements:** Node `^24.11 || >=26` and `pnpm`.
 
 ```bash
 pnpm install
@@ -22,9 +31,9 @@ pnpm ingest      # downloads + processes product images, builds app/data/catalog
 pnpm dev         # http://localhost:3000
 ```
 
-`pnpm ingest` ingests every pack in `data/seed.ts` that has a capture in `data/sources/`; that is 17 of 19 today. Useful flags: `--only=slug[,slug]` to restrict a run, `--skip-fetch` to rebuild from the cache alone, `--reencode` to force every AVIF/WebP variant to be regenerated. Setting `INGEST_OFFLINE=1` makes any outbound request throw, which is how the "no re-download" guarantee is verified rather than assumed.
+`pnpm ingest` ingests every backpack in `data/seed.ts` that has a capture in `data/sources/`; Useful flags: `--only=slug[,slug]` to restrict a run, `--skip-fetch` to rebuild from the cache alone, `--reencode` to force every AVIF/WebP variant to be regenerated. Setting `INGEST_OFFLINE=1` makes any outbound request throw, useful for verifying "no re-download" guarantee.
 
-`pnpm ingest` is network-bound on a cold run. It caches originals in `.ingest-cache/` (also gitignored), so re-running to retune image processing does not re-download anything. Deleting `public/images/` and re-running rebuilds from that cache without touching the network.
+`pnpm ingest` caches data in `.ingest-cache/` (gitignored), so re-running to retune image processing does not re-download anything. Deleting `public/images/` and re-running rebuilds from that cache without touching the network.
 
 ## Commands
 
@@ -37,9 +46,9 @@ pnpm dev         # http://localhost:3000
 | `pnpm typecheck` | `nuxt typecheck` via vue-tsc |
 | `npx playwright test` | End-to-end tests (Chromium; starts the dev server itself). Also `pnpm test:e2e` |
 
-## The card
+## The Backpack Card
 
-Each card is a 5:7 portrait split into three bands — 65 / 15 / 20 ([ADR-021](./docs/decisions.md)):
+Each backpack card is split into three sections — 65 / 15 / 20 ([ADR-021](./docs/decisions.md)):
 
 - **Top 65%** — an infinite image carousel, completely unobstructed. Clicking the right half advances, the left half retreats, and both wrap.
 - **Middle 15%** — the brand in small uppercase over the model name in bold. Because it is its own grid row rather than an overlay, it cannot move or re-render as the images cycle.
@@ -52,7 +61,7 @@ Each card is a 5:7 portrait split into three bands — 65 / 15 / 20 ([ADR-021](.
 - **No state library** — the catalog is a build-time JSON import; filter and sort state lives in URL query params
 - **Ingest pipeline** (`scripts/`) — downloads images, processes them with sharp into AVIF + WebP at two widths, and validates the catalog with zod
 
-Full detail in the [implementation plan](./implementation-plan.md); the reasoning behind each choice is in [`docs/decisions.md`](./docs/decisions.md).
+Full detail in the [implementation plan](./implementation-plan.md); the reasoning behind each decision is stored as an Architecture Decisions Record (ADR) in [`docs/decisions.md`](./docs/decisions.md).
 
 ## Project layout
 
@@ -89,9 +98,7 @@ Nuxt 4 keeps source under `app/` — there are no root-level `pages/` or `compon
 
 ## Data
 
-_(17 of the ranked 19 ingested; ranks 7 and 16 are reserved and absent — [ADR-033](./docs/decisions.md))_
-
-Prices and review scores are **point-in-time snapshots**, each stamped with `capturedAt` and shown with it on the detail page. Nothing in this catalog is live pricing. Review scores keep their source's own scale (5.0 for retailers, 10.0 for enthusiast sites) rather than being normalized on write — so the UI displays the raw `score`/`scale` pair, and the rating filter and the rating sort compare `score / scale` instead ([ADR-010](./docs/decisions.md)).
+Prices and review scores are **point-in-time snapshots**, displayed with timestamps on the backpage detail page. Review scores retain their original scale (5.0 for retailers, 10.0 for enthusiast sites). Thus, the **rating** filter and the **rating sort** compare by `score / scale` (per [ADR-010](./docs/decisions.md)).
 
 ## Development
 
@@ -99,8 +106,9 @@ See [`CLAUDE.md`](./CLAUDE.md) for the version ceilings and project invariants. 
 
 ## Testing
 
-`pnpm test` runs 425 Vitest unit tests over the pure logic in `app/utils/` — price and score formatting, score normalization across both review scales, carousel wraparound, and the 8-cell colorway grid at every boundary. `npx playwright test` runs the end-to-end suite from `tests/e2e/` in Chromium, starting `pnpm dev` on port 3000 itself — it covers the behaviors only observable in a browser, chiefly that the three bands really measure 65 / 15 / 20 and that the carousel label does not shift by a pixel as images cycle. Browser binaries are not installed by `pnpm install`; run `npx playwright install chromium` once after cloning.
+- `pnpm test` runs 425 Vitest **unit tests** over the app logic in `app/utils/` — price and score formatting, score normalization across both review scales, carousel wraparound, and the 8-cell colorway grid at every boundary. 
+- `npx playwright test` runs the **end-to-end test suite** from `tests/e2e/` in Chromium, starting `pnpm dev` on port 3000 itself — it covers the behaviors only observable in a browser, chiefly that the three bands really measure 65 / 15 / 20 and that the carousel label does not shift by a pixel as images cycle. Browser binaries are not installed by `pnpm install`; run `npx playwright install chromium` once after cloning.
 
 ## License and content
 
-Code is this repository's own. **Product images and product data are not** — photos come from brand and retailer sites and remain their owners' property. That is why images are gitignored rather than committed, and why this catalog is intended for local use rather than public deployment.
+**Product images and product data are not licensed** — photos come from brand and retailer sites and remain their owners' property. Thus, images are gitignored rather than committed, and this catalog app is for local use only.
